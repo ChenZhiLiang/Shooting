@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="查询"
+        android:layout_alignParentLeft="true"
+        android:padding="@dimen/dp_10"
+        android:id="@+id/tv_left"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="中间"
+        android:visibility="gone"
+        android:id="@+id/tv_center"
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/dp_10"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="新建"
+       android:layout_alignParentRight="true"
+        android:padding="@dimen/dp_10"
+        android:id="@+id/tv_right"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:background="#dfdfdf"
+        android:layout_below="@id/tv_right"
+        android:layout_height="1dp"/>
+</RelativeLayout>

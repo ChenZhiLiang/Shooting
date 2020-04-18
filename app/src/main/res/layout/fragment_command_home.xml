@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="wrap_content"
+        android:id="@+id/scroview"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:layout_alignParentRight="true"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:paddingTop="@dimen/album_dp_20"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:text=""
+                android:visibility="gone"
+                android:gravity="center"
+                android:id="@+id/title"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="250dp"
+                android:background="#ededed"
+                android:layout_below="@id/title"
+                android:id="@+id/line"
+                android:layout_height="1dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:id="@+id/lv_state"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="当前进行：第X组第X轮射击"
+                    android:id="@+id/tv_now_times"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:id="@+id/rootview_01"
+                android:layout_below="@+id/lv_state"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="射击类型："
+                        android:layout_centerVertical="true"
+                        android:id="@+id/lable_01"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_height="wrap_content" />
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:layout_width="wrap_content"
+                        android:hint="请选择任务类型"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/lable_01"
+                        android:id="@+id/sp_slect_task_type"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:text="导入数据"
+                android:background="#DCDCDC"
+                android:id="@+id/home_input_data"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_below="@+id/rootview_01"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:text="新建任务"
+                android:layout_toRightOf="@+id/home_input_data"
+                android:background="#DCDCDC"
+                android:id="@+id/home_input_bt"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_below="@+id/rootview_01"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_width="wrap_content"
+                android:text="人员签到"
+                android:visibility="gone"
+                android:background="#DCDCDC"
+                android:id="@+id/home_humen_qd"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toRightOf="@id/home_input_bt"
+                android:layout_below="@+id/rootview_01"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_width="wrap_content"
+                android:text="开始任务"
+                android:visibility="gone"
+                android:background="#DCDCDC"
+                android:id="@+id/bt_home_start_task"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_10"
+
+                android:layout_below="@+id/home_input_bt"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_width="wrap_content"
+                android:text="结束任务"
+                android:visibility="gone"
+                android:background="#DCDCDC"
+                android:id="@+id/bt_home_finish_task"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toRightOf="@+id/bt_home_start_task"
+                android:layout_below="@+id/home_input_bt"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="250dp"
+                android:background="#ededed"
+                android:layout_below="@id/bt_home_start_task"
+                android:id="@+id/line2"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_height="1dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="进行中："
+                android:id="@+id/label_02"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_below="@+id/line2"
+                android:layout_marginTop="15dp"
+                android:layout_height="wrap_content" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:layout_width="wrap_content"
+                android:hint="第X轮"
+                android:layout_below="@+id/line2"
+                android:layout_toRightOf="@id/label_02"
+                android:id="@+id/home_sp_selct_times"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/label_01"
+                android:text="组别："
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_below="@+id/home_sp_selct_times"
+
+
+                android:layout_height="wrap_content" />
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:layout_width="wrap_content"
+                android:hint="第X组"
+                android:layout_below="@+id/home_sp_selct_times"
+                android:layout_toRightOf="@id/label_01"
+                android:id="@+id/home_sp_selct_group"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_below="@id/home_sp_selct_group"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="250dp"
+                    android:background="#ededed"
+                    android:layout_below="@id/bt_home_start_current_times"
+                    android:id="@+id/line8"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_height="1dp" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:text="开始第X轮第X组射击"
+                        android:background="#DCDCDC"
+                        android:padding="5dp"
+                        android:id="@+id/bt_home_start_current_times"
+                        android:layout_height="wrap_content" />
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:text="退出"
+                        android:background="#DCDCDC"
+                        android:padding="5dp"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:id="@+id/bt_home_finsh_current_times"
+                        android:layout_toRightOf="@id/bt_home_start_current_times"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:background="#ededed"
+                    android:layout_below="@id/bt_home_start_current_times"
+                    android:id="@+id/line3"
+                    android:layout_height="1dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="口令管理："
+                    android:visibility="gone"
+                    android:padding="@dimen/dp_10"
+                    android:layout_height="wrap_content" />
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:layout_width="wrap_content"
+                    android:hint="选择口令"
+                    android:visibility="gone"
+                    android:id="@+id/sp_home_order_sel"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+    <LinearLayout
+        android:padding="@dimen/dp_10"
+        android:background="#1f443c"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_toLeftOf="@+id/scroview"
+        android:id="@+id/cm_view"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="选择画面"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_gravity="center"
+            android:id="@+id/sp_home_sle_camera"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="#000000"
+            android:layout_height="match_parent">
+            <ua.polohalo.zoomabletextureview.ZoomableTextureView
+                android:src="@drawable/shootpic"
+                android:id="@+id/tr_view_cm"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

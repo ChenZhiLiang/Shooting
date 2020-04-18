@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#1e433B" /><!-- 背景填充颜色 -->
+    <corners android:radius="@dimen/album_dp_20" /><!-- 边角圆弧的半径 -->
+</shape>

@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/selector_onclick"
+    android:id="@+id/ll_model_item">
+
+    <TextView
+        android:id="@+id/tv_modle_name"
+        android:layout_width="368dp"
+        android:layout_height="@dimen/album_dp_50"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="@dimen/sp_14" />
+</LinearLayout>

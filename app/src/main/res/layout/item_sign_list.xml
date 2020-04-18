@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/rl_sign_item"
+    android:layout_height="wrap_content">
+<TextView
+    android:layout_width="wrap_content"
+    android:text="名字："
+    android:padding="@dimen/dp_10"
+    android:id="@+id/lable_01"
+    android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/lable_01"
+        android:padding="@dimen/dp_10"
+        android:text="射击队员名称"
+        android:id="@+id/tv_sign_list_user_name"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:padding="@dimen/dp_10"
+        android:text="状态: 未签到"
+        android:background="#12EDFE"
+        android:id="@+id/tv_sign_list_status"
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content" />
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_below="@id/tv_sign_list_user_name"
+    android:background="#dfdfdf"
+    android:layout_height="1dp" />
+
+</RelativeLayout>

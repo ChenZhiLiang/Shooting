@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<TextView
+    android:layout_width="match_parent"
+    android:id="@+id/label_01"
+    android:padding="@dimen/dp_10"
+    android:text="成绩详情"
+    android:layout_alignParentTop="true"
+    android:gravity="center"
+    android:background="#dcdcdc"
+    android:layout_height="wrap_content" />
+
+
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:id="@+id/left_top"
+        android:layout_below="@+id/label_01"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="100dp"
+            android:gravity="center"
+            android:id="@+id/tv_left_corner"
+            android:padding="10dp"
+            android:text=""
+            android:textStyle="bold"
+
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+        <com.tianfan.shooting.admin.ui.SyncHorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_below="@+id/label_01"
+            android:background="#e8a34f"
+
+            android:id="@+id/hv_title"
+            android:layout_toRightOf="@id/left_top"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:id="@+id/lv_name"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"/>
+        </com.tianfan.shooting.admin.ui.SyncHorizontalScrollView>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/left_top"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/lv_column"
+                android:layout_height="match_parent"/>
+            <com.tianfan.shooting.admin.ui.SyncHorizontalScrollView
+                android:layout_width="match_parent"
+                android:id="@+id/hv_content"
+                android:layout_toRightOf="@id/lv_column"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:id="@+id/lv_shows_table"
+                    android:visibility="visible"
+                    android:layout_height="match_parent">
+                </LinearLayout>
+            </com.tianfan.shooting.admin.ui.SyncHorizontalScrollView>
+        </RelativeLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+
+    <com.kelin.scrollablepanel.library.ScrollablePanel
+        android:id="@+id/scrollable_panel"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_below="@+id/label_01"
+        android:layout_height="match_parent" />
+
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="导出到EXcel文档"
+        android:visibility="gone"
+        android:id="@+id/bt_hs_details_out_data"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>

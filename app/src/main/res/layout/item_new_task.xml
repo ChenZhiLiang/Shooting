@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="第一组："
+        android:layout_gravity="center"
+        android:background="@color/crane_button_focus"
+        android:id="@+id/tv_group_name"
+        android:layout_height="wrap_content"/>
+    <com.yanzhenjie.recyclerview.SwipeRecyclerView
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/album_dp_20"
+        android:id="@+id/list_view_for_child_item"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

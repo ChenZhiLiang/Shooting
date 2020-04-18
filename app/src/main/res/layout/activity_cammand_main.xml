@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_bg">
+
+    <me.majiajie.pagerbottomtabstrip.PageNavigationView
+        android:id="@+id/comander_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="#FFF"
+        android:elevation="8dp"
+        android:visibility="gone"
+
+        />
+
+    <RelativeLayout
+        android:id="@+id/comander_frag_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/comander_bottom_navigation"
+        android:visibility="gone">
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/iv_shoot"
+                android:layout_width="@dimen/album_dp_200"
+                android:layout_height="@dimen/album_dp_200"
+                android:background="@drawable/shoot_bg"
+                android:scaleType="centerCrop"
+                android:layout_marginRight="@dimen/album_dp_50"
+                android:layout_marginLeft="@dimen/album_dp_50"
+                />
+
+            <Button
+                android:id="@+id/iv_ziliao"
+                android:layout_width="@dimen/album_dp_200"
+                android:layout_height="@dimen/album_dp_200"
+                android:background="@drawable/renwu_bg"
+                android:scaleType="centerCrop"
+                android:layout_marginRight="@dimen/album_dp_50"
+                android:layout_marginLeft="@dimen/album_dp_50"                />
+
+            <Button
+                android:id="@+id/iv_zhihui"
+                android:layout_width="@dimen/album_dp_200"
+                android:layout_height="@dimen/album_dp_200"
+                android:background="@drawable/zhihui_bg"
+                android:scaleType="centerCrop"
+                android:layout_marginRight="@dimen/album_dp_50"
+                android:layout_marginLeft="@dimen/album_dp_50"                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/album_sp_16">
+
+            <Button
+                android:id="@+id/iv_fenxi"
+                android:layout_width="@dimen/album_dp_200"
+                android:layout_height="@dimen/album_dp_200"
+                android:layout_marginRight="@dimen/album_dp_50"
+                android:background="@drawable/fenxi_bg"
+                android:scaleType="centerCrop"/>
+
+            <Button
+                android:id="@+id/iv_setup"
+                android:layout_width="@dimen/album_dp_200"
+                android:layout_height="@dimen/album_dp_200"
+                android:layout_marginLeft="@dimen/album_dp_50"
+                android:background="@drawable/setup_bg"
+                android:scaleType="centerCrop"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

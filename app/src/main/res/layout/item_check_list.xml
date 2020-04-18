@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+   <TextView
+       android:layout_width="wrap_content"
+       android:text="任务名称:"
+       android:padding="@dimen/dp_10"
+       android:id="@+id/label_01"
+       android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="20190723哒哒哒射击任务:"
+        android:padding="@dimen/dp_10"
+        android:layout_toRightOf="@id/label_01"
+        android:id="@+id/name"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="创建时间:"
+        android:padding="@dimen/dp_10"
+      android:layout_below="@id/name"
+        android:id="@+id/label_02"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="某年某月某日:"
+        android:padding="@dimen/dp_10"
+        android:layout_below="@id/name"
+        android:layout_toRightOf="@id/label_02"
+        android:id="@+id/check_create_time"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:background="#dedede"
+        android:layout_below="@id/time"
+        android:layout_height="1dp" />
+</RelativeLayout>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/rootview_01"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="返回"
+            android:layout_alignParentLeft="true"
+            android:padding="@dimen/dp_10"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="增加"
+            android:padding="@dimen/dp_10"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/title"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="提交"
+            android:padding="@dimen/dp_10"
+            android:id="@+id/summit"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="match_parent"
+            android:background="#ededed"
+            android:layout_below="@id/title"
+            android:id="@+id/line01"
+            android:layout_height="1dp" />
+
+    </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_below="@id/rootview_01"
+        android:layout_above="@id/rootview_02"
+        android:id="@+id/list_add_qe_activity"
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/rootview_02"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:background="#dedede"
+            android:layout_height="1dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="类型："
+                android:padding="@dimen/dp_10"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:background="@null"
+                android:hint="装备名称"
+                android:id="@+id/ed_name"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:padding="@dimen/dp_10"
+                android:text="数量："
+                android:layout_height="wrap_content" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:background="@null"
+                android:hint="数量"
+                android:inputType="number"
+                android:id="@+id/ed_number"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:padding="@dimen/dp_10"
+                android:text="单位："
+                android:layout_height="wrap_content" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:background="@null"
+                android:hint="单位"
+
+                android:id="@+id/ed_type"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_width="wrap_content"
+                android:text="增加"
+                android:id="@+id/add_bt"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

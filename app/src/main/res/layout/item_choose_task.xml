@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/history_item_root"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:text="任务名字"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:id="@+id/item_task_name"
+            android:padding="@dimen/dp_10"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="match_parent"
+            android:text="创建时间"
+            android:id="@+id/item_task_create_time"
+            android:padding="@dimen/dp_10"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_below="@id/item_task_name"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="match_parent"
+            android:background="#cecece"
+            android:layout_below="@id/item_task_create_time"
+            android:layout_height="1dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#282828"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_margin="@dimen/dp_10"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_return_home" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="器材管理"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+
+        <ImageView
+            android:id="@+id/iv_clear"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="@dimen/dp_10"
+            android:src="@drawable/icon_delete" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1f443c"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/album_sp_16">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="准备器材清单" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清点器材数量" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="装车器材确认" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="出发器材运送" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_equip"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#1f443c"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/album_sp_16"
+        android:paddingRight="@dimen/album_sp_16">
+
+        <TextView
+            android:id="@+id/tv_equip_model"
+            android:layout_width="400dp"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/album_dp_30"
+            android:background="@drawable/equipment_bg"
+            android:drawableRight="@mipmap/triangle_down"
+            android:gravity="center"
+            android:paddingRight="24dp"
+            android:text="请选择训练模板"
+            android:textColor="@color/white"
+            android:textSize="@dimen/album_sp_14" />
+
+        <include layout="@layout/layout_equip" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_equip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none" />
+
+                <Button
+                    android:id="@+id/btn_add_task_equip"
+                    android:layout_width="@dimen/album_dp_100"
+                    android:layout_height="@dimen/album_dp_30"
+                    android:background="@drawable/bg_view_gb_create_task"
+                    android:layout_margin="@dimen/album_sp_16"
+                    android:layout_gravity="center_horizontal"
+                    android:text="添加器材"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14" />
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+</LinearLayout>

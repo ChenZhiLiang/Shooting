@@ -1,0 +1,192 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.tianfan.shooting"
+        minSdkVersion 20
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilter("arm64-v8a")
+            abiFilter("armeabi-v7a")
+            abiFilter("x86")
+            abiFilter("x86_64")
+        }
+        buildConfigField 'String', 'RTSP_KEY', '\"6D75724D7A4A36526D343041574668656F61656E772B5A76636D63755A57467A65575268636E64706269356C59584E356347786865575679567778576F502F44346B566863336C4559584A33615735555A57467453584E55614756435A584E30497A49774D546B355A57467A65513D3D\"'
+        buildConfigField 'String', 'RTSP_URL', '"rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov"'
+    }
+    lintOptions {
+        disable 'GoogleAppIndexingWarning'
+        abortOnError false
+        checkReleaseBuilds false
+    }
+    useLibrary 'org.apache.http.legacy'
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res/', 'src/main/res/child-irms']
+            resources.srcDirs = ['src']
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+repositories {
+    maven {
+        url "http://dl.bintray.com/lukaville/maven"
+    }
+    mavenCentral()
+}
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//        api files('libs/audiopairsdk.jar')
+//        api files('libs/json_simple-1.1.jar')
+//        api files('libs/libToUProxy.jar')
+//        api files('libs/SmartConfig.jar')
+//        api files('libs/zxing.jar')
+    implementation 'androidx.multidex:multidex:2.0.0'
+
+    //noinspection GradleCompatible
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+
+    //    VLC视频播放库
+
+    //    implementation 'de.mrmaffen:libvlc-android:2.1.12@aar'
+
+    //    implementation 'com.yyl.vlc:vlc-android-sdk:3.1.7'
+//        implementation 'org.videolan:vlc-lib-android:3.1.7'
+
+    //    implementation 'de.mrmaffen:vlc-android-sdk:1.9.8'
+
+    //    文件选择工具
+    implementation 'com.vincent.filepicker:MultiTypeFilePicker:1.0.8'
+    implementation 'me.rosuh:AndroidFilePicker:0.4.5'
+
+    //视图注入
+
+    //引入ButterKnife
+    implementation 'com.jakewharton:butterknife:10.0.0'
+
+    //    kapt "com.jakewharton:butterknife-compiler:10.0.0"
+
+    //    api 'com.jakewharton:butterknife:9.0.0-rc1'
+    implementation 'com.jakewharton:butterknife-annotations:10.0.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+
+    //日志框架
+    implementation 'com.apkfuns.logutils:library:1.7.5'
+    implementation 'com.vise.xiaoyaoyou:viselog:1.1.2'
+
+    //阿里fastJon
+    implementation 'com.alibaba:fastjson:1.2.58'
+    implementation 'com.alibaba:fastjson:1.1.71.android'
+
+    //使用retrofit作为网络请求的库
+    implementation 'com.squareup.retrofit2:retrofit:2.0.2'
+
+    //添加数据解析依赖
+    implementation 'com.squareup.retrofit2:converter-gson:2.0.2'
+//        api 'com.squareup.okhttp3:okhttp:3.1.2'
+
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.squareup.okio:okio:1.13.0'
+
+    implementation 'io.netty:netty-all:4.1.9.Final'
+
+    //权限申请
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.3@aar'
+    implementation 'com.yanzhenjie:album:2.1.2'
+    implementation 'com.rmtheis:tess-two:9.0.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.0.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.1.2'
+    implementation 'com.alibaba:fastjson:1.2.58'
+    implementation 'com.alibaba:fastjson:1.1.71.android'
+    //加载动画
+    implementation 'com.github.limxing:Android-PromptDialog:1.1.3'
+    implementation 'com.elvishew:xlog:1.6.1'
+    //流媒体播放框架
+    //    # required, enough for most devices.
+    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+    //下拉框
+    implementation 'com.jaredrummler:material-spinner:1.3.1'
+    //刷新组件
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-31'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-31'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    //版本 23以上（必须）
+    //快速适配器
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+    //底部导航栏
+    implementation 'me.majiajie:pager-bottom-tab-strip:2.3.0'
+    //二维码扫描
+    implementation 'com.acker:simplezxing:1.2'
+    //
+    //数据转表格功能
+    implementation 'com.github.huangyanbin:SmartTable:2.2.0'
+    implementation 'com.evrencoskun.library:tableview:0.8.8'
+    implementation 'androidx.core:core-ktx:+'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.yanzhenjie.recyclerview:x:1.3.2'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation project(path: ':library-easy-rtsp')
+    implementation 'ua.polohalo.zoomabletextureview:zoomabletextureview:1.0.0'
+    implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
+    //    添加侧滑删除
+    implementation 'com.dsiner.lib:slidelayout:1.0.3'
+    //    滚动选择
+    implementation 'com.contrarywind:Android-PickerView:4.1.9'
+    implementation 'com.contrarywind:wheelview:4.1.0'
+    implementation 'com.evrencoskun.library:tableview:0.8.8'
+    implementation 'com.github.f0ris.sweetalert:library:1.5.1'
+    implementation 'com.github.RmondJone:LockTableView:1.1.2'
+    implementation 'com.kelin.scrollablepanel:library:1.2.0'
+//        api 'com.github.bumptech.glide:glide:4.8.0'
+//        api 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+//        annotationProcessor 'com.github.bumptech.glide:compiler:.8.0'
+    implementation project(path: ':commentnetutils')
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.github.f0ris.sweetalert:library:1.5.1'
+//        api   'jsc.kit.wheel:wheel-view:0.5.4'
+//      图片选择
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.4.9'
+
+    implementation 'com.makeramen:roundedimageview:2.2.1'
+
+    //加载动画
+    implementation 'com.wang.avi:library:2.1.3'
+}

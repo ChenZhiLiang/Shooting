@@ -1,5 +1,6 @@
 package com.tianfan.shooting.admin.taskdata;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,19 +20,24 @@ import com.tianfan.shooting.admin.mvp.view.TaskTeamView;
 import com.tianfan.shooting.base.BaseFragment;
 import com.tianfan.shooting.bean.TaskPersonBean;
 import com.tianfan.shooting.bean.TaskRankBean;
-import com.tianfan.shooting.bean.TaskRankItemBean;
+import com.tianfan.shooting.network.okhttp.callback.ResultCallback;
+import com.tianfan.shooting.tools.SweetAlertDialogTools;
 import com.tianfan.shooting.utills.Utils;
 import com.tianfan.shooting.view.AddTaskPersonDialog;
 import com.tianfan.shooting.view.EditTaskPersonDialog;
 import com.tianfan.shooting.view.hrecycler.HRecyclerView;
+import com.tianfan.shooting.view.sweetalert.SweetAlertDialog;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import me.rosuh.filepicker.config.FilePickerManager;
+
+import static com.tianfan.shooting.admin.taskdata.FraDuiyuan.IMPORT_TASK_PERSON;
 
 /**
  * 队列管理
@@ -43,6 +49,8 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
     TextView tv_title;
     @BindView(R.id.iv_back)
     ImageView iv_back;
+    @BindView(R.id.input_by_excel)
+    ImageView input_by_excel;
     @BindView(R.id.iv_init_liedui)
     ImageView iv_init_liedui;
     @BindView(R.id.iv_clear)
@@ -54,8 +62,6 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
 
     private String task_id;
     private String task_name;
-    private int task_row_count;//行数
-    private int task_row_persons;//列数
     private TaskRankPresenter mTaskRankPresenter;
     private TaskTeamPresenter mTaskTeamPresenter;
     private TaskRankListAdapter mTaskRankListAdapter;
@@ -64,12 +70,10 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
     private AddTaskPersonDialog mAddTaskPersonDialog;
     private String headUri;//头像url
     private EditTaskPersonDialog mEditTaskPersonDialog;
-    public static FragLieDui getInstance(String task_id,String task_name,int task_row_count,int task_row_persons) {
+    public static FragLieDui getInstance(String task_id,String task_name) {
         FragLieDui hf = new FragLieDui();
         hf.task_id = task_id;
         hf.task_name = task_name;
-        hf.task_row_count = task_row_count;
-        hf.task_row_persons = task_row_persons;
         return hf;
     }
 
@@ -88,8 +92,8 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
         tv_title.setText(task_name+"-列队管理");
         mTaskTeamPresenter = new TaskTeamPresenter(this);
         mTaskRankPresenter = new TaskRankPresenter(this);
-        headerListData = new String[task_row_persons];
-        for (int i = 0; i < task_row_persons; i++) {
+        headerListData = new String[10];
+        for (int i = 0; i < 10; i++) {
             headerListData[i] = (i+1)+ "号靶";
         }
         mHrecyclerview.setHeaderListData(headerListData);
@@ -98,8 +102,12 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
 
     @Override
     public void initData() {
-        mTaskTeamPresenter.recordTaskPersonScore(task_id);
+        mTaskTeamPresenter.recordTaskPersonScore(task_id,true);
     }
+    private void onRefresh() {
+        mTaskTeamPresenter.recordTaskPersonScore(task_id,false);
+    }
+
 
     @Override
     public void FindTaskPersonResult(Object result) {
@@ -112,32 +120,26 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
             for (int i = 0;i<jsonArray.size();i++){
                 JSONObject itemsObject = JSONObject.parseObject(jsonArray.get(i).toString());
                 String items = itemsObject.getString(String.valueOf(i+1));
-                Log.e("items:",items);
-                List<TaskRankItemBean> mDatas = JSONArray.parseArray(items, TaskRankItemBean.class);
+                List<TaskPersonBean> mDatas = JSONArray.parseArray(items, TaskPersonBean.class);
                 if (mDatas.size() > 0) {
                     //当前最大数
                     int maxPersonCol = mDatas.get(mDatas.size() - 1).getPerson_col();
                     for (int j = 0; j < maxPersonCol; j++) {
                         int config = j + 1;
                         if (mDatas.get(j).getPerson_col() != config) {
-                            mDatas.add(j, new TaskRankItemBean());
+                            mDatas.add(j, new TaskPersonBean());
                         }
                     }
-
                 }
-                if (mDatas.size() < task_row_persons) {
-                    mDatas.add(new TaskRankItemBean());
-                }
-
                 TaskRankBean mTaskRankBean = new TaskRankBean();
                 mTaskRankBean.setDatas(mDatas);
                 mTaskRankDatas.add(mTaskRankBean);
             }
 
-            mTaskRankListAdapter = new TaskRankListAdapter(mActivity, mTaskRankDatas, task_row_persons, new TaskRankListAdapter.OnItemClickListener() {
+            mTaskRankListAdapter = new TaskRankListAdapter(mActivity, mTaskRankDatas, new TaskRankListAdapter.OnItemClickListener() {
                 @Override
                 public void onItemChildClick(int parentPostion, int childPosition) {
-                    TaskRankItemBean data =  mTaskRankDatas.get(parentPostion).getDatas().get(childPosition);
+                    TaskPersonBean data =  mTaskRankDatas.get(parentPostion).getDatas().get(childPosition);
                     //添加
                     if (data!=null&& TextUtils.isEmpty(data.getTask_id())){
                         int person_row  = parentPostion+1;//行数
@@ -146,11 +148,40 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
                             @Override
                             public void onResult(String person_name, String person_idno, String person_orga, String person_role, String person_row, String person_col, String picUri) {
                                 headUri = picUri;
-                                mTaskTeamPresenter.addTaskPerson(task_id, person_idno, person_name, person_orga, person_role, person_row, person_col,task_person_type);                            }
+                                //查询该分组和靶位是否有人
+                                mTaskTeamPresenter.queryTaskPerson(task_id, "", person_row, person_col, new ResultCallback() {
+                                    @Override
+                                    public void onSuccess(Object result) {
+                                        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+                                        int code = jsonObject.getIntValue("code");
+                                        if (code == 1) {
+                                            String datas = jsonObject.getString("datas");
+                                            List<TaskPersonBean> mDatas = JSONArray.parseArray(datas, TaskPersonBean.class);
+                                            if (mDatas.size()>0){
+                                                showLoadFailMsg("该分组的靶位已有人，请重新输入分组或者靶位");
+                                            }else {
+                                                mTaskTeamPresenter.addTaskPerson(task_id, person_idno, person_name, person_orga, person_role, person_row, person_col);
+
+                                            }
+                                        } else if (code==2){
+                                            mTaskTeamPresenter.addTaskPerson(task_id, person_idno, person_name, person_orga, person_role, person_row, person_col);
+
+                                        }else {
+                                            Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Object result) {
+                                        showLoadFailMsg(result.toString());
+                                    }
+                                });
+
+                            }
                         });
                         mAddTaskPersonDialog.show();
                     }else {//修改
-                        mEditTaskPersonDialog = new EditTaskPersonDialog(mActivity, data, mTaskTeamPresenter,task_person_type);
+                        mEditTaskPersonDialog = new EditTaskPersonDialog(mActivity, data, mTaskTeamPresenter);
                         mEditTaskPersonDialog.show();
                     }
 
@@ -175,14 +206,14 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
                     mAddTaskPersonDialog.dismiss();
                 }
                 showLoadFailMsg("添加成功");
-                initData();
+                onRefresh();
             } else {
                 String data = jsonObject.getString("data");
                 TaskPersonBean personBean = JSONObject.parseObject(data, TaskPersonBean.class);
                 if (personBean != null) {
                     File file = new File(headUri);
                     if (file.exists()) {
-                        mTaskTeamPresenter.uploadTaskPersonHead(personBean.getTask_id(), personBean.getPerson_id(), file,task_person_type);
+                        mTaskTeamPresenter.uploadTaskPersonHead(personBean.getTask_id(), personBean.getPerson_id(), file);
                     } else {
                         showLoadFailMsg("头像不存在");
                     }
@@ -203,7 +234,7 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
                 mEditTaskPersonDialog.dismiss();
             }
             showLoadFailMsg("修改队员成功");
-            initData();
+            onRefresh();
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
@@ -218,7 +249,7 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
                 mEditTaskPersonDialog.dismiss();
             }
             showLoadFailMsg("删除队员成功");
-           initData();
+            onRefresh();
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
@@ -235,7 +266,7 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
             } else {
                 showLoadFailMsg("队员更换头像成功");
             }
-            initData();
+            onRefresh();
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
 
@@ -244,7 +275,26 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
 
     @Override
     public void ImportTaskPersonGroupResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 0) {
+            showLoadFailMsg(jsonObject.getString("message"));
+            onRefresh();
+        } else {
+            showLoadFailMsg(jsonObject.getString("message"));
 
+        }
+    }
+
+    @Override
+    public void SetTaskPersonStatusResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code==1){
+            onRefresh();
+        }else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
     }
 
     @Override
@@ -252,7 +302,7 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code == 1) {
-            initData();
+            onRefresh();
         }
         showLoadFailMsg(jsonObject.getString("message"));
     }
@@ -278,52 +328,62 @@ public class FragLieDui extends BaseFragment implements TaskTeamView , TaskRankV
         Toast.makeText(mActivity,err,Toast.LENGTH_SHORT).show();
     }
 
-    @OnClick({R.id.iv_back,R.id.iv_clear,R.id.iv_init_liedui})
+    @OnClick({R.id.iv_back,R.id.iv_clear,R.id.iv_init_liedui,R.id.input_by_excel})
     public void onClick(View v) {
         if (v==iv_back){
             getActivity().finish();
         }else if (v==iv_init_liedui){
             //队员数据置入
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                    .setCancelText("取消")
-                    .setConfirmText("是")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
-                            mTaskRankPresenter.createTaskPersonRowcol(task_id);
-                        }
-                    })
-                    .setTitleText("温馨提示")
-                    .setContentText("是否置入队员数据？")
-                    .show();
+            SweetAlertDialogTools.ShowDialog(getActivity(), "是否置入队员数据？", new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismiss();
+                    mTaskRankPresenter.createTaskPersonRowcol(task_id);
+                }
+            });
+
+        }else if (v==input_by_excel){
+            FilePickerManager.INSTANCE.from(this).maxSelectable(1).forResult(IMPORT_TASK_PERSON);
 
         }else if (v==iv_clear){
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                    .setCancelText("取消")
-                    .setConfirmText("是")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
-                            List<String>personIds = new ArrayList<>();
-                            for (int i = 0; i < mTaskRankDatas.size(); i++) {
-                                for (int j=0;j<mTaskRankDatas.get(i).getDatas().size();j++){
-                                    if (!TextUtils.isEmpty(mTaskRankDatas.get(i).getDatas().get(j).getPerson_id())){
-                                        personIds.add(mTaskRankDatas.get(i).getDatas().get(j).getPerson_id());
-                                    }
-                                }
+
+
+            SweetAlertDialogTools.ShowDialog(getActivity(), "是否要清空队列？", new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismiss();
+                    List<String>personIds = new ArrayList<>();
+                    for (int i = 0; i < mTaskRankDatas.size(); i++) {
+                        for (int j=0;j<mTaskRankDatas.get(i).getDatas().size();j++){
+                            if (!TextUtils.isEmpty(mTaskRankDatas.get(i).getDatas().get(j).getPerson_id())){
+                                personIds.add(mTaskRankDatas.get(i).getDatas().get(j).getPerson_id());
                             }
-                            mTaskTeamPresenter.removeTaskPerson(task_id, Utils.listToString(personIds),task_person_type);
                         }
-                    })
-                    .setTitleText("温馨提示")
-                    .setContentText("是否要清空队列？")
-                    .show();
+                    }
+                    mTaskTeamPresenter.removeTaskPerson(task_id, Utils.listToString(personIds));
+                }
+            });
         }
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("requestCode", "----" + requestCode);
+        Log.e("resultCode", "----" + resultCode);
+        if (requestCode == IMPORT_TASK_PERSON) {
+            if (FilePickerManager.INSTANCE.obtainData().size() > 0) {
+                String result = FilePickerManager.INSTANCE.obtainData().get(0);
+                File file = new File(result);
+                if (file.exists()) {
+                    File tempFile = Utils.nioTransferCopy(file);
+                    if (tempFile.exists()) {
+                        mTaskTeamPresenter.importTaskPersonGroup(task_id, tempFile);
+                    }
+                }
+            }
+        }
+    }
   /*  @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (view == null) {

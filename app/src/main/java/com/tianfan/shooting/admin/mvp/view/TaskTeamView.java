@@ -11,7 +11,6 @@ import com.tianfan.shooting.base.BaseView;
  * 修改时间：2020/4/11 11:14
  */
 public interface TaskTeamView extends BaseView {
-
     /**
      *  @author
      *  @time
@@ -56,5 +55,6 @@ public interface TaskTeamView extends BaseView {
      */
     void ImportTaskPersonGroupResult(Object result);
 
+    void SetTaskPersonStatusResult(Object result);
 
 }

@@ -12,13 +12,13 @@ import java.util.List;
  */
 public class TaskRankBean {
 
-    private List<TaskRankItemBean> datas;
+    private List<TaskPersonBean> datas;
 
-    public List<TaskRankItemBean> getDatas() {
+    public List<TaskPersonBean> getDatas() {
         return datas;
     }
 
-    public void setDatas(List<TaskRankItemBean> datas) {
+    public void setDatas(List<TaskPersonBean> datas) {
         this.datas = datas;
     }
 }

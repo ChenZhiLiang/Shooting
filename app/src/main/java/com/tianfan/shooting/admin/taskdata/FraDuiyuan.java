@@ -20,9 +20,12 @@ import com.tianfan.shooting.admin.mvp.presenter.TaskTeamPresenter;
 import com.tianfan.shooting.admin.mvp.view.TaskTeamView;
 import com.tianfan.shooting.base.BaseFragment;
 import com.tianfan.shooting.bean.TaskPersonBean;
+import com.tianfan.shooting.network.okhttp.callback.ResultCallback;
+import com.tianfan.shooting.tools.SweetAlertDialogTools;
 import com.tianfan.shooting.utills.Utils;
 import com.tianfan.shooting.view.AddTaskPersonDialog;
 import com.tianfan.shooting.view.EditTaskPersonDialog;
+import com.tianfan.shooting.view.sweetalert.SweetAlertDialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +35,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import me.rosuh.filepicker.config.FilePickerManager;
 
 /**
@@ -69,7 +71,7 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
     private EditTaskPersonDialog mEditTaskPersonDialog;
 
     public static final int IMPORT_TASK_PERSON = 1123;
-    private int task_person_type = 1;
+    private int task_person_type = 2;
 
     public static FraDuiyuan getInstance(String task_id,String task_name) {
         FraDuiyuan hf = new FraDuiyuan();
@@ -98,7 +100,7 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 smrefresh.finishRefresh();
-                mTaskTeamPresenter.findTaskPerson(task_id, task_person_type,false);
+                mTaskTeamPresenter.findTaskPerson(task_id,false);
             }
         });
 
@@ -122,11 +124,11 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
 
     @Override
     public void initData() {
-        mTaskTeamPresenter.findTaskPerson(task_id, task_person_type,true);
+        mTaskTeamPresenter.findTaskPerson(task_id,true);
     }
 
     private void onRefresh() {
-        mTaskTeamPresenter.findTaskPerson(task_id, task_person_type,false);
+        mTaskTeamPresenter.findTaskPerson(task_id,false);
     }
 
     @OnClick({R.id.iv_return_home, R.id.iv_create, R.id.iv_ed_user, R.id.input_by_excel, R.id.iv_delete})
@@ -140,7 +142,31 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
                     @Override
                     public void onResult(String person_name, String person_idno, String person_orga, String person_role, String person_row, String person_col, String picUri) {
                         headUri = picUri;
-                        mTaskTeamPresenter.addTaskPerson(task_id, person_idno, person_name, person_orga, person_role, person_row, person_col,task_person_type);
+                        //查询该分组和靶位是否有人
+                        mTaskTeamPresenter.queryTaskPerson(task_id, "", person_row, person_col, new ResultCallback() {
+                            @Override
+                            public void onSuccess(Object result) {
+                                JSONObject jsonObject = JSONObject.parseObject(result.toString());
+                                int code = jsonObject.getIntValue("code");
+                                if (code == 1) {
+                                    String datas = jsonObject.getString("datas");
+                                    List<TaskPersonBean> mDatas = JSONArray.parseArray(datas, TaskPersonBean.class);
+                                    if (mDatas.size()>0){
+                                        showLoadFailMsg("该分组的靶位已有人，请重新输入分组或者靶位");
+                                    }else {
+                                        mTaskTeamPresenter.addTaskPerson(task_id, person_idno, person_name, person_orga, person_role, person_row, person_col);
+
+                                    }
+                                } else {
+                                    Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                            @Override
+                            public void onFailure(Object result) {
+                                showLoadFailMsg(result.toString());
+                            }
+                        });
                     }
                 });
                 mAddTaskPersonDialog.show();
@@ -159,7 +185,7 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
                 } else if (seletCount > 1) {
                     showLoadFailMsg("一次只能修改一个队员信息");
                 } else {
-                    mEditTaskPersonDialog = new EditTaskPersonDialog(mActivity, mTaskPersonDatas.get(seletPosition), mTaskTeamPresenter,task_person_type);
+                    mEditTaskPersonDialog = new EditTaskPersonDialog(mActivity, mTaskPersonDatas.get(seletPosition), mTaskTeamPresenter);
                     mEditTaskPersonDialog.show();
                 }
                 break;
@@ -177,22 +203,19 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
                 if (personIds.size() == 0) {
                     showLoadFailMsg("请选择队员");
                 } else {
-                    new SweetAlertDialog(mActivity, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("温馨提示")
-                            .setContentText("确定删除选中的队员吗？")
-                            .setConfirmText("确定")
-                            .setCancelText("取消")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    sDialog.dismiss();
-                                    mTaskTeamPresenter.removeTaskPerson(task_id, Utils.listToString(personIds),task_person_type);
-                                }
-                            }).show();
+                    SweetAlertDialogTools.ShowDialog(mActivity, "确定删除选中的队员吗？", new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                            mTaskTeamPresenter.removeTaskPerson(task_id, Utils.listToString(personIds));
+
+                        }
+                    });
                 }
                 break;
         }
     }
+
 
     @Override
     public void FindTaskPersonResult(Object result) {
@@ -229,7 +252,7 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
                 if (personBean != null) {
                     File file = new File(headUri);
                     if (file.exists()) {
-                        mTaskTeamPresenter.uploadTaskPersonHead(personBean.getTask_id(), personBean.getPerson_id(), file,task_person_type);
+                        mTaskTeamPresenter.uploadTaskPersonHead(personBean.getTask_id(), personBean.getPerson_id(), file);
                     } else {
                         showLoadFailMsg("头像不存在");
                     }
@@ -261,6 +284,9 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code == 1) {
+            if (mEditTaskPersonDialog!=null&&mEditTaskPersonDialog.isShowing()) {
+                mEditTaskPersonDialog.dismiss();
+            }
             showLoadFailMsg("删除队员成功");
             onRefresh();
         } else {
@@ -300,6 +326,18 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
     }
 
     @Override
+    public void SetTaskPersonStatusResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code==1){
+            onRefresh();
+        }else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
+    }
+
+
+    @Override
     public void showProgress() {
         mLoadingDialog.show();
     }
@@ -327,7 +365,7 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
                 if (file.exists()) {
                     File tempFile = Utils.nioTransferCopy(file);
                     if (tempFile.exists()) {
-                        mTaskTeamPresenter.importTaskPersonGroup(task_id, tempFile,task_person_type);
+                        mTaskTeamPresenter.importTaskPersonGroup(task_id, tempFile);
                     }
                 }
             }

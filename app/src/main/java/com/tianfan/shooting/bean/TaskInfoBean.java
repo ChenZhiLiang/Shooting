@@ -10,16 +10,19 @@ package com.tianfan.shooting.bean;
  */
 public class TaskInfoBean {
 
+
     /**
-     * task_id : task_20200407222557125376
-     * task_name : 啦啦啦啦
-     * task_site : 啦啦啦
-     * task_date : 2020-04-07
-     * task_row_count : 3
+     * task_id : task_20200419215215924466
+     * task_name : 任务3
+     * task_site : 离家
+     * task_date : 2020-04-19
+     * task_row_count : 100
      * task_row_persons : 10
      * task_target_type : 1
      * task_inuser : admin
-     * task_intime : 1586298357000
+     * task_intime : 1587333135000
+     * task_equips : 0
+     * task_rounds : 0
      * task_status : 0
      */
 
@@ -32,6 +35,8 @@ public class TaskInfoBean {
     private String task_target_type;
     private String task_inuser;
     private long task_intime;
+    private String task_equips;
+    private String task_rounds;
     private String task_status;
 
     public String getTask_id() {
@@ -104,6 +109,22 @@ public class TaskInfoBean {
 
     public void setTask_intime(long task_intime) {
         this.task_intime = task_intime;
+    }
+
+    public String getTask_equips() {
+        return task_equips;
+    }
+
+    public void setTask_equips(String task_equips) {
+        this.task_equips = task_equips;
+    }
+
+    public String getTask_rounds() {
+        return task_rounds;
+    }
+
+    public void setTask_rounds(String task_rounds) {
+        this.task_rounds = task_rounds;
     }
 
     public String getTask_status() {

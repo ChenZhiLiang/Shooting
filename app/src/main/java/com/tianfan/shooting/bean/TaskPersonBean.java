@@ -31,6 +31,7 @@ public class TaskPersonBean {
     private String person_head;
     private int person_row;
     private int person_col;
+    private String person_status;
 
     private boolean isSelect;
 
@@ -106,6 +107,14 @@ public class TaskPersonBean {
 
     public void setPerson_col(int person_col) {
         this.person_col = person_col;
+    }
+
+    public String getPerson_status() {
+        return person_status;
+    }
+
+    public void setPerson_status(String person_status) {
+        this.person_status = person_status;
     }
 
     public boolean isSelect() {

@@ -6,13 +6,9 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tianfan.shooting.R;
 import com.tianfan.shooting.bean.TaskRankBean;
-import com.tianfan.shooting.bean.TaskRankItemBean;
 import com.tianfan.shooting.view.hrecycler.CommonAdapter;
 import com.tianfan.shooting.view.hrecycler.CommonViewHolder;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,13 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 public class TaskRankListAdapter extends CommonAdapter<TaskRankBean> {
 
     private Context mContext;
-    private int task_row_persons;
 
     private OnItemClickListener mOnItemClickListener;
-    public TaskRankListAdapter(Context context, List<TaskRankBean> dataList, int task_row_persons,OnItemClickListener mOnItemClickListener) {
+    public TaskRankListAdapter(Context context, List<TaskRankBean> dataList, OnItemClickListener mOnItemClickListener) {
         super(context, dataList, R.layout.layout_task_rank);
         this.mContext = context;
-        this.task_row_persons = task_row_persons;
         this.mOnItemClickListener = mOnItemClickListener;
     }
 

@@ -21,7 +21,6 @@ import com.tianfan.shooting.warrior.WarriorActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**

@@ -12,10 +12,21 @@ import com.tianfan.shooting.base.BaseView;
  */
 public interface TaskEquipView extends BaseView {
 
+    //查询任务信息
+    void findTaskInfoResult(Object result);
+    //查找器材模板
+    void findEquipModelTypeResult(Object result);
+    //查找任务器材
     void findTaskEquipResult(Object result);
 
+    //生成任务器材
     void createTaskEquip(Object result);
 
-    void changeTaskEquipCount(Object result);
+    //添加任务器材
+    void addTaskEquipResult(Object result);
+    // 改变任务器材数量
+    void changeTaskEquipCountResult(Object result);
 
+    //修改任务（任务器材流程）
+    void editTaskInfoResult(Object result);
 }

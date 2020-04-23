@@ -51,7 +51,7 @@
                 android:background="#FF446F92" />
 
             <EditText
-                android:id="@+id/ed_camera_number"
+                android:id="@+id/ed_name"
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="4dp"
@@ -97,7 +97,7 @@
                 android:background="#FF446F92" />
 
             <EditText
-                android:id="@+id/ed_camera_name"
+                android:id="@+id/ed_desc"
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="4dp"

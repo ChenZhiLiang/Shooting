@@ -18,7 +18,6 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.tianfan.shooting.R;
-import com.tianfan.shooting.bean.TaskRankItemBean;
 import com.tianfan.shooting.utills.GlideEngine;
 import java.io.File;
 import java.util.List;

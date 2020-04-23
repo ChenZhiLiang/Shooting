@@ -49,25 +49,34 @@
         android:orientation="horizontal"
         android:paddingTop="@dimen/album_sp_16">
 
-        <Button
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="准备器材清单" />
+            android:background="@mipmap/prepare_equip"
+            android:scaleType="centerCrop"/>
 
-        <Button
+        <ImageView
+            android:id="@+id/image_equip_prepare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="清点器材数量" />
+            android:background="@mipmap/counting_equip_false"
+            android:scaleType="centerCrop"
+            android:layout_marginRight="@dimen/album_sp_16"
+            android:layout_marginLeft="@dimen/album_sp_16"
+            />
 
-        <Button
+        <ImageView
+            android:id="@+id/image_equip_ture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="装车器材确认" />
-
-        <Button
+            android:background="@mipmap/truck_equip_false"
+            android:scaleType="centerCrop"
+            />
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="出发器材运送" />
+            android:background="@mipmap/transport_equip"
+            android:layout_marginLeft="@dimen/album_sp_16"/>
     </LinearLayout>
 
     <LinearLayout

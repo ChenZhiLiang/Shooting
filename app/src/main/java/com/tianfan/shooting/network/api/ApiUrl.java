@@ -44,6 +44,8 @@ public final class ApiUrl {
 
         //队员管理-查询
         public static final String FindTaskPerson = HOST + "anb_shot/task/findTaskPerson.action";
+        //队列查询
+        public static final String FindTaskPersonRowcol = HOST+"anb_shot/task/findTaskPersonRowcol.action";
         //队员管理-添加
         public static final String AddTaskPerson = HOST + "anb_shot/task/addTaskPerson.action";
 
@@ -57,12 +59,14 @@ public final class ApiUrl {
         public static final String UploadTaskPersonHead = HOST + "anb_shot/task/uploadTaskPersonHead.action";
 
         //队员管理-导入EXCEL
-        public static final String ImportTaskPersonGroup = HOST + "anb_shot/task/importTaskPersonGroup.action";
+        public static final String ImportTaskPerson = HOST + "anb_shot/task/importTaskPerson.action";
 
         //【队列管理-生成初始化】从队员管理中取数据，添加到队列管理
         public static final String CreateTaskPersonRowcol = HOST + "anb_shot/task/createTaskPersonRowcol.action";
         //【队列管理-调整队列】更新队员的分组及靶位
         public static final String ChangeTaskPersonRowcol = HOST + "anb_shot/task/changeTaskPersonRowcol.action";
+
+
     }
 
 
@@ -74,8 +78,13 @@ public final class ApiUrl {
      */
     public static class TaskEquipApi{
 
+        //修改器材流程状态
+        public static final String EditTaskInfo = HOST +"anb_shot/task/editTaskInfo.action";
         //查询任务器材
         public static final String FindTaskEquip = HOST + "anb_shot/task/findTaskEquip.action";
+
+        //添加任务器材项
+        public static final String AddTaskEquip = HOST+"anb_shot/task/addTaskEquip.action";
 
         //生成任务器材(先删除原任务器材数据，再通过器材模板生成新数据)
         public static final String CreateTaskEquip = HOST + "anb_shot/task/createTaskEquip.action";

@@ -30,6 +30,7 @@ import com.tianfan.shooting.admin.ui.SyncHorizontalScrollView;
 import com.tianfan.shooting.net.GetResult;
 import com.tianfan.shooting.net.RequestTools;
 import com.tianfan.shooting.net.RetrofitUtils;
+import com.tianfan.shooting.view.sweetalert.SweetAlertDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +40,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**

@@ -7,8 +7,10 @@ import com.tianfan.shooting.R;
 import com.tianfan.shooting.adapter.CameraListAdapter;
 import com.tianfan.shooting.base.BaseFragment;
 import com.tianfan.shooting.bean.CameraBean;
+import com.tianfan.shooting.tools.SweetAlertDialogTools;
 import com.tianfan.shooting.utills.Utils;
 import com.tianfan.shooting.view.CameraDialog;
+import com.tianfan.shooting.view.sweetalert.SweetAlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * @Name：Shooting
@@ -83,17 +84,12 @@ public class CameraFragment extends BaseFragment {
                 editCameraDialog.show();
                 break;
             case R.id.iv_delete:
-                new SweetAlertDialog(mActivity, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("温馨提示")
-                        .setContentText("确定删除选中的摄像头吗？")
-                        .setConfirmText("确定")
-                        .setCancelText("取消")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                sDialog.dismiss();
-                            }
-                        }).show();
+                SweetAlertDialogTools.ShowDialog(mActivity, "确定删除选中的摄像头吗？", new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                });
                 break;
         }
     }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -12,13 +13,15 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.tianfan.shooting.R;
 import com.tianfan.shooting.adapter.TaskHistoryAdapter;
-import com.tianfan.shooting.admin.mvp.view.TaskView;
 import com.tianfan.shooting.admin.mvp.presenter.TaskPresenter;
+import com.tianfan.shooting.admin.mvp.view.TaskView;
 import com.tianfan.shooting.admin.taskdata.TaskDataActivity;
 import com.tianfan.shooting.base.BaseFragment;
 import com.tianfan.shooting.bean.TaskInfoBean;
 import com.tianfan.shooting.network.okhttp.request.RequestParams;
+import com.tianfan.shooting.tools.SweetAlertDialogTools;
 import com.tianfan.shooting.view.CreateTaskDialog;
+import com.tianfan.shooting.view.sweetalert.SweetAlertDialog;
 import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.NonNull;
@@ -66,8 +69,6 @@ public class FraRenwu extends BaseFragment implements TaskView {
                 TaskInfoBean bean = mTaskInfos.get(position);
                 Intent intent = new Intent(getContext(), TaskDataActivity.class);
                 intent.putExtra("task_id", bean.getTask_id());
-                intent.putExtra("task_row_count",bean.getTask_row_count());
-                intent.putExtra("task_row_persons",bean.getTask_row_persons());
                 intent.putExtra("task_name",bean.getTask_name());
                 startActivity(intent);
             }
@@ -105,7 +106,13 @@ public class FraRenwu extends BaseFragment implements TaskView {
                 if (historyAdapter.getSelectedPos() == -1) {
                     Toast.makeText(getContext(), "请选择一条数据删除", Toast.LENGTH_SHORT).show();
                 } else {
-                   mTaskPresenter.deleteTaskInfo(mTaskInfos.get(historyAdapter.getSelectedPos()).getTask_id());
+                    SweetAlertDialogTools.ShowDialog(getActivity(), "确定删除选中的任务吗？", new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                            mTaskPresenter.deleteTaskInfo(mTaskInfos.get(historyAdapter.getSelectedPos()).getTask_id());
+                        }
+                    });
                 }
                 break;
             case R.id.iv_edtor:
@@ -113,7 +120,6 @@ public class FraRenwu extends BaseFragment implements TaskView {
                     Toast.makeText(getContext(), "请选择一条数据进行操作", Toast.LENGTH_SHORT).show();
                 } else {
                     CreateTaskDialog editDialogCreateTask = new CreateTaskDialog(getActivity(),mTaskInfos.get(historyAdapter.getSelectedPos()), new CreateTaskDialog.CreateCallBack() {
-
                         @Override
                         public void result(RequestParams params) {
                             mTaskPresenter.editTaskInfo(params);

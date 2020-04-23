@@ -1,12 +1,18 @@
 package com.tianfan.shooting.admin.mvp.presenter;
 
+import android.text.TextUtils;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.tianfan.shooting.admin.mvp.view.TaskTeamView;
 import com.tianfan.shooting.base.BaseMode;
+import com.tianfan.shooting.bean.TaskPersonBean;
 import com.tianfan.shooting.network.api.ApiUrl;
 import com.tianfan.shooting.network.okhttp.callback.ResultCallback;
 import com.tianfan.shooting.network.okhttp.request.RequestParams;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @Name：Shooting
@@ -20,10 +26,27 @@ public class TaskTeamPresenter {
 
     private TaskTeamView mTaskTeamView;
     private BaseMode mBaseMode;
+    boolean isHavePerson = false;
 
     public TaskTeamPresenter(TaskTeamView mTaskTeamView) {
         this.mTaskTeamView = mTaskTeamView;
         this.mBaseMode = new BaseMode();
+    }
+
+    /**
+     * 查询靶位和分组是否有人
+     *  @author
+     *  @time
+     *  @describe
+     */
+    public void queryTaskPerson(String task_id,String person_id,String person_row,String person_col,ResultCallback mResultCallback){
+        String url = ApiUrl.TaskPersonApi.FindTaskPerson;
+        RequestParams params = new RequestParams();
+        params.put("task_id",task_id);
+        params.put("person_row",String.valueOf(person_row));
+        params.put("person_col",String.valueOf(person_col));
+        params.put("task_person_type",String.valueOf(2));
+        mBaseMode.GetRequest(url, params, mResultCallback);
     }
 
     /**
@@ -35,7 +58,7 @@ public class TaskTeamPresenter {
      * task_person_type 任务队员类型 1集合 2 队列
      */
 
-    public void findTaskPerson(String task_id,int task_person_type,boolean isShow){
+    public void findTaskPerson(String task_id,boolean isShow){
 
         if (isShow){
             mTaskTeamView.showProgress();
@@ -44,7 +67,7 @@ public class TaskTeamPresenter {
         RequestParams params = new RequestParams();
         params.put("task_id",task_id);
         //task_person_type 任务队员类型 1集合 2 队列
-        params.put("task_person_type",String.valueOf(task_person_type));
+        params.put("task_person_type",String.valueOf(2));
 
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
@@ -76,7 +99,7 @@ public class TaskTeamPresenter {
      * task_person_type 任务队员类型 1集合 2 队列
      */
     public void addTaskPerson(String task_id,String person_idno ,String person_name,String person_orga
-            ,String person_role,String person_row,String person_col,int task_person_type){
+            ,String person_role,String person_row,String person_col){
 
         mTaskTeamView.showProgress();
         String url = ApiUrl.TaskPersonApi.AddTaskPerson;
@@ -89,7 +112,7 @@ public class TaskTeamPresenter {
         params.put("person_row",person_row);
         params.put("person_col",person_col);
         //task_person_type 任务队员类型 1集合 2 队列
-        params.put("task_person_type",String.valueOf(task_person_type));
+        params.put("task_person_type",String.valueOf(2));
 
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
@@ -123,7 +146,7 @@ public class TaskTeamPresenter {
      * task_person_type 任务队员类型 1集合 2 队列
      * */
     public void editTaskPerson(String task_id,String person_id,String person_idno ,String person_name,String person_orga
-            ,String person_role,String person_row,String person_col,int task_person_type){
+            ,String person_role,String person_row,String person_col){
 
         mTaskTeamView.showProgress();
         String url = ApiUrl.TaskPersonApi.EditTaskPerson;
@@ -137,7 +160,7 @@ public class TaskTeamPresenter {
         params.put("person_row",String.valueOf(person_row));
         params.put("person_col",String.valueOf(person_col));
         //task_person_type 任务队员类型 1集合 2 队列
-        params.put("task_person_type",String.valueOf(task_person_type));
+        params.put("task_person_type",String.valueOf(2));
 
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
@@ -162,14 +185,14 @@ public class TaskTeamPresenter {
      * @param task_id 任务id
      * @param person_id 队员id 支持同时删除多个队员person_id用英文逗号,分隔
      */
-    public void removeTaskPerson(String task_id,String person_id,int task_person_type){
+    public void removeTaskPerson(String task_id,String person_id){
         mTaskTeamView.showProgress();
         String url = ApiUrl.TaskPersonApi.RemoveTaskPerson;
         RequestParams params = new RequestParams();
         params.put("task_id",task_id);
         params.put("person_id",person_id);
         //task_person_type 任务队员类型 1集合 2 队列
-        params.put("task_person_type",String.valueOf(task_person_type));
+        params.put("task_person_type",String.valueOf(2));
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
             public void onSuccess(Object result) {
@@ -193,14 +216,14 @@ public class TaskTeamPresenter {
      *  @time
      *  @describe
      */
-    public void uploadTaskPersonHead(String task_id, String person_id,File file,int task_person_type){
+    public void uploadTaskPersonHead(String task_id, String person_id,File file){
         mTaskTeamView.showProgress();
 
         String url = ApiUrl.TaskPersonApi.UploadTaskPersonHead;
         RequestParams params = new RequestParams();
         params.put("task_id",task_id);
         params.put("person_id",person_id);
-        params.put("task_person_type",String.valueOf(task_person_type));
+        params.put("task_person_type",String.valueOf(2));
         params.fileParams.put("file",file);
         mBaseMode.MultiPostRequest(url, params, new ResultCallback() {
             @Override
@@ -224,13 +247,13 @@ public class TaskTeamPresenter {
      *  @time
      *  @describe
      */
-    public void importTaskPersonGroup(String task_id,File file,int task_person_type){
+    public void importTaskPersonGroup(String task_id,File file){
         mTaskTeamView.showProgress();
 
-        String url = ApiUrl.TaskPersonApi.ImportTaskPersonGroup;
+        String url = ApiUrl.TaskPersonApi.ImportTaskPerson;
         RequestParams params = new RequestParams();
         params.put("task_id",task_id);
-        params.put("task_person_type",String.valueOf(task_person_type));
+        params.put("task_person_type",String.valueOf(2));
         params.fileParams.put("file",file);
         mBaseMode.MultiPostRequest(url, params, new ResultCallback() {
             @Override
@@ -251,13 +274,19 @@ public class TaskTeamPresenter {
         });
     }
 
-    public void recordTaskPersonScore(String task_id){
-        mTaskTeamView.showProgress();
-        String url = ApiUrl.ScoreApi.FindTaskPersonScore;
+    /**
+     * 队列查询
+     *  @author
+     *  @time
+     *  @describe
+     */
+    public void recordTaskPersonScore(String task_id,boolean isShow){
+        if (isShow){
+            mTaskTeamView.showProgress();
+        }
+        String url = ApiUrl.TaskPersonApi.FindTaskPersonRowcol;
         RequestParams params = new RequestParams();
         params.put("task_id",task_id);
-        params.put("person_id","0");
-        params.put("rounds","0");
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
             public void onSuccess(Object result) {
@@ -271,6 +300,53 @@ public class TaskTeamPresenter {
                 mTaskTeamView.showLoadFailMsg(result.toString());
             }
         });
+    }
 
+    /**
+     *  调换组员与靶位
+     *  @author
+     *  @time
+     *  @describe
+     */
+    public void changeTaskPersonRowcol(String task_id,String person_id,String person_row,String person_col,ResultCallback mResultCallback){
+        String url = ApiUrl.TaskPersonApi.ChangeTaskPersonRowcol;
+        RequestParams params = new RequestParams();
+        params.put("task_id",task_id);
+        params.put("person_id",person_id);
+        params.put("person_row",person_row);
+        params.put("person_col",person_col);
+        mBaseMode.GetRequest(url, params, mResultCallback);
+    }
+
+
+    /**
+     * 设置队员状态（缺勤、报道）
+     *  @author
+     *  @time
+     *  @describe
+     * @param person_status  0 缺勤 1报道
+     */
+    public void setTaskPersonStatus(String task_id,String person_id,String person_status,int person_row,int person_col){
+        String url = ApiUrl.TaskPersonApi.EditTaskPerson;
+        RequestParams params = new RequestParams();
+        params.put("task_id",task_id);
+        params.put("person_id",person_id);
+        params.put("person_status",person_status);
+        params.put("person_row",String.valueOf(person_row));
+        params.put("person_col",String.valueOf(person_col));
+        params.put("task_person_type",String.valueOf(2));
+
+        mBaseMode.GetRequest(url, params, new ResultCallback() {
+            @Override
+            public void onSuccess(Object result) {
+
+                mTaskTeamView.SetTaskPersonStatusResult(result);
+            }
+
+            @Override
+            public void onFailure(Object result) {
+                mTaskTeamView.showLoadFailMsg(result.toString());
+            }
+        });
     }
 }

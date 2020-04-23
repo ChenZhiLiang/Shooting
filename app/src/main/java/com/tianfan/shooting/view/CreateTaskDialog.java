@@ -161,8 +161,8 @@ public class CreateTaskDialog extends Dialog implements View.OnClickListener {
                 params.put("task_site",ed_task_addr.getText().toString());
                 params.put("task_date",ed_task_time.getText().toString());
                 if (mTaskInfos==null){
-//                    params.put("task_row_persons",tv_number.getText().toString());
-//                    params.put("task_row_count",tv_row_count.getText().toString());
+                    params.put("task_row_count",String.valueOf(100));
+                    params.put("task_row_persons",String.valueOf(10));
                     params.put("task_target_type",type);
                     params.put("task_inuser","admin");
                 }else {

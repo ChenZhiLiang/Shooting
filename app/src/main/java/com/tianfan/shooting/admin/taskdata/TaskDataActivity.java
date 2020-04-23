@@ -39,8 +39,6 @@ public class TaskDataActivity extends AppCompatActivity implements View.OnClickL
     private FragmentManager fragmentManager;
     FragmentTransaction ft;
     private String task_id;
-    private int task_row_count;//行数
-    private int task_row_persons;//列数
     private String task_name;
 
     @Override
@@ -49,8 +47,6 @@ public class TaskDataActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.ac_task_ed_main);
         ButterKnife.bind(this);
         task_id = getIntent().getStringExtra("task_id");
-        task_row_count = getIntent().getIntExtra("task_row_count", 0);
-        task_row_persons = getIntent().getIntExtra("task_row_persons", 0);
         task_name = getIntent().getStringExtra("task_name");
         list.add(DuiYuan);
         list.add(LieDui);
@@ -58,7 +54,7 @@ public class TaskDataActivity extends AppCompatActivity implements View.OnClickL
         fragmentManager = getSupportFragmentManager();
         ft = fragmentManager.beginTransaction();
         fraDuiyuan = FraDuiyuan.getInstance(task_id,task_name);
-        fragLieDui = FragLieDui.getInstance(task_id, task_name,task_row_count, task_row_persons);
+        fragLieDui = FragLieDui.getInstance(task_id, task_name);
         fragQiCai = FragQiCai.getInstance(task_id,task_name);
         ft.add(R.id.zl_frag_layout, fraDuiyuan);
         ft.commit();

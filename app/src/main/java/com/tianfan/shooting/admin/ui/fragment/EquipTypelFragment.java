@@ -2,14 +2,21 @@ package com.tianfan.shooting.admin.ui.fragment;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.tianfan.shooting.R;
 import com.tianfan.shooting.adapter.EquipTypeAdapter;
+import com.tianfan.shooting.admin.mvp.presenter.EquipTypePersenter;
+import com.tianfan.shooting.admin.mvp.view.EquipTypeView;
 import com.tianfan.shooting.base.BaseFragment;
 import com.tianfan.shooting.bean.CameraBean;
 import com.tianfan.shooting.bean.EquipTypeBean;
+import com.tianfan.shooting.tools.SweetAlertDialogTools;
 import com.tianfan.shooting.view.CameraDialog;
 import com.tianfan.shooting.view.EquipTypeDialog;
+import com.tianfan.shooting.view.sweetalert.SweetAlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +25,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * @Name：Shooting
@@ -28,13 +34,15 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * 修改人：Chen
  * 修改时间：2020/4/15 0:24
  */
-public class EquipTypelFragment extends BaseFragment {
+public class EquipTypelFragment extends BaseFragment implements EquipTypeView {
 
     @BindView(R.id.recycler_equip_mode)
     RecyclerView recycler_equip_mode;
     private String task_id;
     private EquipTypeAdapter mEquipTypeAdapter;
     private List<EquipTypeBean> mDatas = new ArrayList<>();
+
+    private EquipTypePersenter mEquipTypePersenter;
     public static EquipTypelFragment getInstance(String task_id) {
         EquipTypelFragment hf = new EquipTypelFragment();
         hf.task_id = task_id;
@@ -52,19 +60,16 @@ public class EquipTypelFragment extends BaseFragment {
 
     @Override
     public void initView(View view, Bundle savedInstanceState) {
-        mDatas.clear();
-        for (int i = 0; i < 5; i++) {
-            EquipTypeBean mEquipTypeBean = new EquipTypeBean();
-            mDatas.add(mEquipTypeBean);
-        }
         recycler_equip_mode.setLayoutManager(new LinearLayoutManager(getContext()));
         mEquipTypeAdapter = new EquipTypeAdapter(mDatas);
         recycler_equip_mode.setAdapter(mEquipTypeAdapter);
+
+        mEquipTypePersenter = new EquipTypePersenter(this);
     }
 
     @Override
     public void initData() {
-
+        mEquipTypePersenter.findEquipModelType();
     }
 
     @OnClick({R.id.iv_return_home,R.id.iv_create,R.id.iv_editor,R.id.iv_delete})
@@ -74,26 +79,113 @@ public class EquipTypelFragment extends BaseFragment {
                 getActivity().finish();
                 break;
             case R.id.iv_create:
-                EquipTypeDialog addEquipTypeDialog = new EquipTypeDialog(getContext());
+                EquipTypeDialog addEquipTypeDialog = new EquipTypeDialog(getContext(), new EquipTypeDialog.onClickInterface() {
+                    @Override
+                    public void onClick(String name, String desc) {
+                        mEquipTypePersenter.addEquipModelType(name,desc);
+                    }
+                });
                 addEquipTypeDialog.show();
                 break;
             case R.id.iv_editor:
-                EquipTypeDialog editEquipTypeDialog = new EquipTypeDialog(getContext());
-                editEquipTypeDialog.show();
+                if (mEquipTypeAdapter.getSelectedPos() == -1) {
+                    Toast.makeText(getContext(), "请选择要编辑的器材类型", Toast.LENGTH_SHORT).show();
+                }else {
+
+                    EquipTypeDialog editEquipTypeDialog = new EquipTypeDialog(getContext(), mDatas.get(mEquipTypeAdapter.getSelectedPos()),new EquipTypeDialog.onClickInterface() {
+                        @Override
+                        public void onClick(String name, String desc) {
+                            mEquipTypePersenter.editEquipModelType(mDatas.get(mEquipTypeAdapter.getSelectedPos()).getEquip_model_type_id(),name,desc);
+                        }
+                    });
+                    editEquipTypeDialog.show();
+                }
                 break;
             case R.id.iv_delete:
-                new SweetAlertDialog(mActivity, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("温馨提示")
-                        .setContentText("确定删除选中的器材吗？")
-                        .setConfirmText("确定")
-                        .setCancelText("取消")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                sDialog.dismiss();
-                            }
-                        }).show();
+                if (mEquipTypeAdapter.getSelectedPos() == -1) {
+                    Toast.makeText(getContext(), "请选择要删除的器材类型", Toast.LENGTH_SHORT).show();
+                }else {
+                    SweetAlertDialogTools.ShowDialog(mActivity, "确定删除选中的器材类型吗？", new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                            mEquipTypePersenter.removeEquipModelType(mDatas.get(mEquipTypeAdapter.getSelectedPos()).getEquip_model_type_id());
+                        }
+                    });
+                }
                 break;
         }
+    }
+
+    @Override
+    public void findEquipModelTypeResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 1) {
+            String datas = jsonObject.getString("datas");
+            List<EquipTypeBean> mEquipTypeDatas = JSONArray.parseArray(datas,EquipTypeBean.class);
+            if (mDatas.size()>0){
+                mDatas.clear();
+            }
+            mDatas.addAll(mEquipTypeDatas);
+            mEquipTypeAdapter.notifyDataSetChanged();
+
+        }else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
+    }
+
+    @Override
+    public void addEquipModelTypeResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code==1){
+            showLoadFailMsg("添加成功");
+            initData();
+        }else {
+            showLoadFailMsg(jsonObject.getString("message"));
+
+        }
+    }
+
+    @Override
+    public void editEquipModelTypeResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code==1){
+            showLoadFailMsg("修改成功");
+            initData();
+        }else {
+            showLoadFailMsg(jsonObject.getString("message"));
+
+        }
+    }
+
+    @Override
+    public void removeEquipModelTypeResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code==1){
+            showLoadFailMsg("删除成功");
+            initData();
+        }else {
+            showLoadFailMsg(jsonObject.getString("message"));
+
+        }
+    }
+
+    @Override
+    public void showProgress() {
+        mLoadingDialog.show();
+    }
+
+    @Override
+    public void hideProgress() {
+        mLoadingDialog.dismiss();
+    }
+
+    @Override
+    public void showLoadFailMsg(String err) {
+        Toast.makeText(mActivity,err,Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="LockedOrientationActivity"
-    package="com.tianfan.shooting">
+    package="com.tianfan.shooting"
+    tools:ignore="LockedOrientationActivity">
     <!-- 读取手机状态的权限 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -147,17 +147,17 @@
             android:screenOrientation="landscape"
 
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-           >
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".admin.taskdata.TaskDataActivity"
+        <activity
+            android:name=".admin.taskdata.TaskDataActivity"
 
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".admin.ui.activity.AdminActivity"
             android:screenOrientation="landscape"
@@ -186,7 +186,7 @@
 
         </activity>
 
-<!--        SelectList-->
+        <!--        SelectList-->
 
 
         <activity
@@ -199,7 +199,7 @@
         <activity
             android:name=".admin.ui.mdziliao.AddUser"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".admin.CameraListActivity"
             android:screenOrientation="landscape"
@@ -224,8 +224,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".scorer.ui.activity.ScorerSetPosition"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        </activity>
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"></activity>
         <activity
             android:name=".admin.ui.activity.SelectUserActivity"
             android:screenOrientation="landscape"
@@ -255,7 +254,13 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
-        <activity android:name=".admin.system.SystemManageActivity"
+        <activity
+            android:name=".admin.system.SystemManageActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".admin.ui.activity.EquipModeDetailActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>

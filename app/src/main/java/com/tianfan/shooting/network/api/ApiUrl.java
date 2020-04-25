@@ -64,8 +64,8 @@ public final class ApiUrl {
         //【队列管理-生成初始化】从队员管理中取数据，添加到队列管理
         public static final String CreateTaskPersonRowcol = HOST + "anb_shot/task/createTaskPersonRowcol.action";
         //【队列管理-调整队列】更新队员的分组及靶位
-        public static final String ChangeTaskPersonRowcol = HOST + "anb_shot/task/changeTaskPersonRowcol.action";
-
+//        public static final String ChangeTaskPersonRowcol = HOST + "anb_shot/task/changeTaskPersonRowcol.action";
+        public static final String ChangeTaskPersonRowcol = HOST + "anb_shot/task/exchangeTaskPersonRowcol.action";
 
     }
 

@@ -38,9 +38,6 @@ public class EquipModelAdapter extends BaseQuickAdapter<TaskEquipBean, BaseViewH
         helper.setText(R.id.tv_equip_name,item.getEquip_name());
         helper.setText(R.id.tv_equip_unit,item.getEquip_unit());
         helper.setText(R.id.tv_equip_count,String.valueOf(item.getEquip_count()));
-//        ImageView img_add = helper.getView(R.id.img_add);
-//        ImageView img_reduce = helper.getView(R.id.img_reduce);
-//        Button btn_delete = helper.getView(R.id.btn_delete);
 
     }
 }

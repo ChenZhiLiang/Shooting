@@ -1,5 +1,6 @@
 package com.tianfan.shooting.admin.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tianfan.shooting.R;
 import com.tianfan.shooting.adapter.EquipModelAdapter;
+import com.tianfan.shooting.adapter.EquipModelListAdapter;
 import com.tianfan.shooting.adapter.TaskEquipModelAdapter;
 import com.tianfan.shooting.admin.mvp.presenter.TaskEquipModelPersenter;
 import com.tianfan.shooting.admin.mvp.view.TaskEquipModelView;
+import com.tianfan.shooting.admin.ui.activity.EquipModeDetailActivity;
 import com.tianfan.shooting.base.BaseFragment;
 import com.tianfan.shooting.bean.EquipModelBean;
 import com.tianfan.shooting.bean.TaskEquipBean;
@@ -44,26 +47,13 @@ import butterknife.OnClick;
  */
 public class EquipModelFragment extends BaseFragment implements TaskEquipModelView {
 
+    @BindView(R.id.recycler_equip_mode)
+    RecyclerView recycler_equip_mode;
+
     private String task_id;
-    @BindView(R.id.tv_equip_model)
-    TextView tv_equip_model;
-    @BindView(R.id.recycler_equip)
-    RecyclerView recycler_equip;
-    @BindView(R.id.btn_add_task_equip)
-    Button btn_add_task_equip;
-
-
-    private List<TaskEquipBean> mTaskEquipDatas;
-    private EquipModelAdapter mEquipModelAdapter;
-
-
-    private View popupView_view;
-    private RecyclerView recycler_model;
-    private TaskEquipModelAdapter mTaskEquipModelAdapter;
+    private EquipModelListAdapter mEquipModelListAdapter;
     private TaskEquipModelPersenter mTaskEquipModelPersenter;
     private List<EquipModelBean> mEquipModelDatas = new ArrayList<>();
-    private MyPopWindow window_equip_model;
-    private EquipModelBean mEquipModelBean;
 
     public static EquipModelFragment getInstance(String task_id) {
         EquipModelFragment hf = new EquipModelFragment();
@@ -84,69 +74,17 @@ public class EquipModelFragment extends BaseFragment implements TaskEquipModelVi
     @Override
     public void initView(View view, Bundle savedInstanceState) {
         mTaskEquipModelPersenter = new TaskEquipModelPersenter(this);
-        initPopMenu();
-        recycler_equip.setLayoutManager(new LinearLayoutManager(mActivity));
-        mTaskEquipDatas = new ArrayList<>();
-        mEquipModelAdapter = new EquipModelAdapter(mTaskEquipDatas);
-        mEquipModelAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+
+        recycler_equip_mode.setLayoutManager(new LinearLayoutManager(mActivity));
+        mEquipModelListAdapter = new EquipModelListAdapter(mEquipModelDatas);
+        recycler_equip_mode.setAdapter(mEquipModelListAdapter);
+        mEquipModelListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                TaskEquipBean mTaskEquipBean = mTaskEquipDatas.get(position);
-                int count = mTaskEquipBean.getEquip_count();
-
-                switch (view.getId()) {
-                    case R.id.img_add:
-                        count++;
-                        mTaskEquipModelPersenter.editEquipModelItem(mTaskEquipBean.getEquip_model_type_id(), mTaskEquipBean.getEquip_model_item_id(), mTaskEquipBean.getEquip_type(),
-                                mTaskEquipBean.getEquip_name(), mTaskEquipBean.getEquip_unit(), count, "1");
-                        break;
-                    case R.id.img_reduce:
-
-                        if (count == 0) {
-                            showLoadFailMsg("数量不能小于0");
-                        } else {
-                            count--;
-                            mTaskEquipModelPersenter.editEquipModelItem(mTaskEquipBean.getEquip_model_type_id(), mTaskEquipBean.getEquip_model_item_id(), mTaskEquipBean.getEquip_type(),
-                                    mTaskEquipBean.getEquip_name(), mTaskEquipBean.getEquip_unit(), count, "1");
-                        }
-                        break;
-                    case R.id.btn_delete:
-                        mTaskEquipModelPersenter.removeEquipModelItem(mTaskEquipBean.getEquip_model_item_id());
-                        break;
-                }
+                EquipModelBean mEquipModelBean = mEquipModelDatas.get(position);
+                startActivity(new Intent(mActivity, EquipModeDetailActivity.class).putExtra("equip_model_type_id", mEquipModelBean.getEquip_model_type_id()));
             }
         });
-        recycler_equip.setAdapter(mEquipModelAdapter);
-    }
-
-    private void initPopMenu() {
-        popupView_view = getLayoutInflater().inflate(R.layout.layout_popupwindow_equip, null);
-        recycler_model = popupView_view.findViewById(R.id.recycler_model);
-        recycler_model.setLayoutManager(new LinearLayoutManager(mActivity));
-        mTaskEquipModelAdapter = new TaskEquipModelAdapter(mEquipModelDatas);
-        mTaskEquipModelAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                mEquipModelBean = mEquipModelDatas.get(position);
-                tv_equip_model.setText(mEquipModelBean.getEquip_model_type_name());
-                mTaskEquipModelPersenter.findEquipModelItem(mEquipModelBean.getEquip_model_type_id());
-                window_equip_model.dismiss();
-            }
-        });
-        recycler_model.setAdapter(mTaskEquipModelAdapter);
-        // TODO: 2016/5/17 创建PopupWindow对象，指定宽度和高度
-        window_equip_model = new MyPopWindow(popupView_view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        window_equip_model.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
-                lp.alpha = 1f;
-                getActivity().getWindow().setAttributes(lp);
-            }
-        });
-        mTaskEquipModelPersenter.findEquipModelType();
-
-
     }
 
     @Override
@@ -157,12 +95,6 @@ public class EquipModelFragment extends BaseFragment implements TaskEquipModelVi
     @OnClick({R.id.tv_equip_model, R.id.btn_add_task_equip, R.id.iv_return_home, R.id.iv_create, R.id.iv_delete})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_equip_model:
-                WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
-                lp.alpha = 0.7f;
-                getActivity().getWindow().setAttributes(lp);
-                window_equip_model.showAsDropDown(tv_equip_model, 0, 20);
-                break;
             case R.id.iv_return_home:
                 getActivity().finish();
                 break;
@@ -170,34 +102,25 @@ public class EquipModelFragment extends BaseFragment implements TaskEquipModelVi
                 EquipModelDialog mEquipModelDialog = new EquipModelDialog(getContext(), new EquipModelDialog.onClickComfirInterface() {
                     @Override
                     public void onResult(String name, String desc) {
-                        mTaskEquipModelPersenter.addEquipModelType(name,desc);
+                        mTaskEquipModelPersenter.addEquipModelType(name, desc);
 
                     }
                 });
                 mEquipModelDialog.show();
                 break;
             case R.id.iv_delete:
-                if (mEquipModelBean == null) {
-                    showLoadFailMsg("请选择器材模板");
+
+                if (mEquipModelListAdapter.getSelectedPos() == -1) {
+                    Toast.makeText(getContext(), "请选择要删除的器材模板", Toast.LENGTH_SHORT).show();
                 } else {
-                    SweetAlertDialogTools.ShowDialog(mActivity, "确定删除该模板？", new SweetAlertDialog.OnSweetClickListener() {
+                    SweetAlertDialogTools.ShowDialog(mActivity, "确定删除选中的器材模板吗？", new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             sweetAlertDialog.dismiss();
-                            mTaskEquipModelPersenter.removeEquipModelType(mEquipModelBean.getEquip_model_type_id());
+                            mTaskEquipModelPersenter.removeEquipModelType(mEquipModelDatas.get(mEquipModelListAdapter.getSelectedPos()).getEquip_model_type_id());
                         }
                     });
                 }
-
-                break;
-            case R.id.btn_add_task_equip:
-                AddTaskEquipDialog dialog = new AddTaskEquipDialog(getContext(), new AddTaskEquipDialog.onClickComfirInterface() {
-                    @Override
-                    public void onResult(String type, String name, String unit, String count) {
-                        mTaskEquipModelPersenter.addEquipModelItem(mEquipModelBean.getEquip_model_type_id(), type, name, unit, count);
-                    }
-                });
-                dialog.show();
                 break;
         }
     }
@@ -218,16 +141,16 @@ public class EquipModelFragment extends BaseFragment implements TaskEquipModelVi
                 mEquipModelDatas.clear();
             }
             mEquipModelDatas.addAll(mDatas);
-            mTaskEquipModelAdapter.notifyDataSetChanged();
+            mEquipModelListAdapter.notifyDataSetChanged();
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
     }
 
     /**
-     *  @author
-     *  @time
-     *  @describe  添加器材模板
+     * @author
+     * @time
+     * @describe 添加器材模板
      */
     @Override
     public void addEquipModelTypeResult(Object result) {
@@ -237,15 +160,15 @@ public class EquipModelFragment extends BaseFragment implements TaskEquipModelVi
             showLoadFailMsg("添加成功");
             mTaskEquipModelPersenter.findEquipModelType();
 
-        }else {
+        } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
     }
 
     /**
-     *  @author
-     *  @time
-     *  @describe 删除器材模板
+     * @author
+     * @time
+     * @describe 删除器材模板
      */
     @Override
     public void removeEquipModelTypeResult(Object result) {
@@ -254,89 +177,6 @@ public class EquipModelFragment extends BaseFragment implements TaskEquipModelVi
         if (code == 1) {
             showLoadFailMsg("删除成功");
             mTaskEquipModelPersenter.findEquipModelType();
-            tv_equip_model.setText("请选择模板类型");
-            btn_add_task_equip.setVisibility(View.GONE);
-            if (mTaskEquipDatas.size() > 0) {
-                mTaskEquipDatas.clear();
-            }
-            mEquipModelAdapter.notifyDataSetChanged();
-        } else {
-            showLoadFailMsg(jsonObject.getString("message"));
-        }
-    }
-
-    /**
-     * @author
-     * @time
-     * @describe 添加器材模板项目
-     */
-    @Override
-    public void addEquipModelItemResult(Object result) {
-        JSONObject jsonObject = JSONObject.parseObject(result.toString());
-        int code = jsonObject.getIntValue("code");
-        if (code == 1) {
-            showLoadFailMsg("添加成功");
-            mTaskEquipModelPersenter.findEquipModelItem(mEquipModelBean.getEquip_model_type_id());
-        } else {
-            showLoadFailMsg(jsonObject.getString("message"));
-        }
-    }
-
-    /**
-     * @author
-     * @time
-     * @describe 删除器材模板项目
-     */
-    @Override
-    public void removeEquipModelItemResult(Object result) {
-        JSONObject jsonObject = JSONObject.parseObject(result.toString());
-        int code = jsonObject.getIntValue("code");
-        if (code == 1) {
-            showLoadFailMsg("删除成功");
-            mTaskEquipModelPersenter.findEquipModelItem(mEquipModelBean.getEquip_model_type_id());
-        } else {
-            showLoadFailMsg(jsonObject.getString("message"));
-        }
-    }
-
-    /**
-     * @author
-     * @time
-     * @describe 查找器材模板项目
-     */
-    @Override
-    public void findEquipModelItemResult(Object result) {
-        JSONObject jsonObject = JSONObject.parseObject(result.toString());
-        int code = jsonObject.getIntValue("code");
-        if (code == 1) {
-            String datas = jsonObject.getString("datas");
-            List<TaskEquipBean> mDatas = JSONArray.parseArray(datas, TaskEquipBean.class);
-            if (mTaskEquipDatas.size() > 0) {
-                mTaskEquipDatas.clear();
-            }
-            btn_add_task_equip.setVisibility(View.VISIBLE);
-            mTaskEquipDatas.addAll(mDatas);
-            mEquipModelAdapter.notifyDataSetChanged();
-        } else if (code == 2) {//无数据
-            btn_add_task_equip.setVisibility(View.VISIBLE);
-            mTaskEquipDatas.clear();
-            mEquipModelAdapter.notifyDataSetChanged();
-        } else {
-            showLoadFailMsg(jsonObject.getString("message"));
-        }
-    }
-
-    /**
-     * @author
-     * @time
-     * @describe 修改器材模板项目
-     */
-    @Override
-    public void EditEquipModelItemResult(Object result) {
-        JSONObject jsonObject = JSONObject.parseObject(result.toString());
-        int code = jsonObject.getIntValue("code");
-        if (code == 1) {
-            mTaskEquipModelPersenter.findEquipModelItem(mEquipModelBean.getEquip_model_type_id());
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }

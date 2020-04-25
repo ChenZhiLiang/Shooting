@@ -20,15 +20,15 @@ public interface TaskEquipModelView extends BaseView {
     //删除器材模板
     void removeEquipModelTypeResult(Object result);
 
-    //添加器材模板项目
-    void addEquipModelItemResult(Object result);
-
-    //删除器材模板项目
-    void removeEquipModelItemResult(Object result);
-
-    //查询器材模板项目
-    void findEquipModelItemResult(Object result);
-
-    //修改器材模板项目
-    void EditEquipModelItemResult(Object result);
+//    //添加器材模板项目
+//    void addEquipModelItemResult(Object result);
+//
+//    //删除器材模板项目
+//    void removeEquipModelItemResult(Object result);
+//
+//    //查询器材模板项目
+//    void findEquipModelItemResult(Object result);
+//
+//    //修改器材模板项目
+//    void EditEquipModelItemResult(Object result);
 }

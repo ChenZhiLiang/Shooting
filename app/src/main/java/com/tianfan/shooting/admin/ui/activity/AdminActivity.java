@@ -2,37 +2,25 @@ package com.tianfan.shooting.admin.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.tianfan.shooting.R;
-import com.tianfan.shooting.admin.system.SystemManageActivity;
 import com.tianfan.shooting.admin.ui.fragment.CheckFragment;
 import com.tianfan.shooting.admin.ui.fragment.HistoryFragment;
 import com.tianfan.shooting.admin.ui.fragment.HomeFragment;
 import com.tianfan.shooting.admin.ui.fragment.SetUpFragment;
 import com.tianfan.shooting.admin.ui.mdziliao.ZiLiaoMD;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.concurrent.TimeUnit;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import me.majiajie.pagerbottomtabstrip.PageNavigationView;
 
 
@@ -102,8 +90,10 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
 
                 break;
             case R.id.iv_zhihui:
-                intent.putExtra("type","zhihui");
-                intent.setClass(getApplicationContext(), ZiliaoActivity.class);
+//                intent.putExtra("type","zhihui");
+//                intent.setClass(getApplicationContext(), ZiliaoActivity.class);
+                intent.setClass(getApplicationContext(), CommandManageActivity.class);
+
 
                 break;
             case R.id.iv_fenxi:

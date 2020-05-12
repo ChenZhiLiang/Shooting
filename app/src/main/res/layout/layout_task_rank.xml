@@ -52,10 +52,6 @@
                 android:layout_height="wrap_content" />
         </androidx.core.widget.NestedScrollView>
 
-        <ImageView
-            android:id="@+id/img"
-            android:layout_width="match_parent"
-            android:layout_height="95dp"
-            android:background="#30FFFFFF"/>
+
     </RelativeLayout>
 </LinearLayout>

@@ -12,6 +12,7 @@ import com.tianfan.shooting.base.BaseView;
  */
 public interface TaskEquipView extends BaseView {
 
+    void findEquipTypeResult(Object result);
     //查询任务信息
     void findTaskInfoResult(Object result);
     //查找器材模板

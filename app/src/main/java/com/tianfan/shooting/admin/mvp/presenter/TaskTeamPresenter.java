@@ -45,6 +45,7 @@ public class TaskTeamPresenter {
         params.put("task_id",task_id);
         params.put("person_row",String.valueOf(person_row));
         params.put("person_col",String.valueOf(person_col));
+//        params.put("person_id",person_id);
         params.put("task_person_type",String.valueOf(2));
         mBaseMode.GetRequest(url, params, mResultCallback);
     }
@@ -58,7 +59,7 @@ public class TaskTeamPresenter {
      * task_person_type 任务队员类型 1集合 2 队列
      */
 
-    public void findTaskPerson(String task_id,boolean isShow){
+    public void findTaskPerson(String task_id,String task_rounds,boolean isShow){
 
         if (isShow){
             mTaskTeamView.showProgress();
@@ -68,6 +69,7 @@ public class TaskTeamPresenter {
         params.put("task_id",task_id);
         //task_person_type 任务队员类型 1集合 2 队列
         params.put("task_person_type",String.valueOf(2));
+        params.put("task_rounds",task_rounds);
 
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
@@ -280,13 +282,14 @@ public class TaskTeamPresenter {
      *  @time
      *  @describe
      */
-    public void recordTaskPersonScore(String task_id,boolean isShow){
+    public void recordTaskPersonScore(String task_id,String task_rounds,boolean isShow){
         if (isShow){
             mTaskTeamView.showProgress();
         }
         String url = ApiUrl.TaskPersonApi.FindTaskPersonRowcol;
         RequestParams params = new RequestParams();
         params.put("task_id",task_id);
+        params.put("task_rounds",task_rounds);
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
             public void onSuccess(Object result) {
@@ -308,13 +311,14 @@ public class TaskTeamPresenter {
      *  @time
      *  @describe
      */
-    public void changeTaskPersonRowcol(String task_id,String person_id,String person_row,String person_col,ResultCallback mResultCallback){
-        String url = ApiUrl.TaskPersonApi.ChangeTaskPersonRowcol;
+    public void exChangeTaskPersonRowcol(String task_id,String person_id,String person_row,String person_col,String task_rounds,ResultCallback mResultCallback){
+        String url = ApiUrl.TaskPersonApi.ExChangeTaskPersonRowcol;
         RequestParams params = new RequestParams();
         params.put("task_id",task_id);
         params.put("person_id",person_id);
         params.put("person_row",person_row);
         params.put("person_col",person_col);
+        params.put("task_rounds",task_rounds);
         mBaseMode.GetRequest(url, params, mResultCallback);
     }
 

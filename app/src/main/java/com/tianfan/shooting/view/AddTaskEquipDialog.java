@@ -6,14 +6,29 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tianfan.shooting.R;
+import com.tianfan.shooting.adapter.AddEquipTypeAdapter;
+import com.tianfan.shooting.adapter.TaskRoundsAdapter;
+import com.tianfan.shooting.admin.ui.activity.CommandManageActivity;
+import com.tianfan.shooting.bean.EquipTypeBean;
+import com.tianfan.shooting.tools.SweetAlertDialogTools;
+import com.tianfan.shooting.view.sweetalert.SweetAlertDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @Name：Shooting
@@ -25,9 +40,9 @@ import androidx.annotation.NonNull;
  */
 public class AddTaskEquipDialog extends Dialog implements View.OnClickListener {
 
-    private EditText ed_equip_type;
-    private EditText ed_equip_name;
-    private EditText ed_equip_unit;
+    private TextView tv_equip_type;
+    private TextView tv_equip_name;
+    private TextView tv_equip_unit;
     private TextView tv_row_count;
     private TextView tv_cancle;
     private TextView tv_comfir;
@@ -36,10 +51,15 @@ public class AddTaskEquipDialog extends Dialog implements View.OnClickListener {
     private ImageView image_reduce;
 
     private onClickComfirInterface mOnClickComfirInterface;
-
-    public AddTaskEquipDialog(@NonNull Context context,onClickComfirInterface mOnClickComfirInterface) {
+    private List<EquipTypeBean> mEquipTypeDatas;
+    private View popupView_view;
+    private RecyclerView recycler_model;
+    private AddEquipTypeAdapter mAddEquipTypeAdapter;
+    private MyPopWindow window_equip_model;
+    public AddTaskEquipDialog(@NonNull Context context, List<EquipTypeBean> mEquipTypeDatas, onClickComfirInterface mOnClickComfirInterface) {
         super(context, R.style.alert_dialog);
         this.mOnClickComfirInterface = mOnClickComfirInterface;
+        this.mEquipTypeDatas = mEquipTypeDatas;
     }
 
     @Override
@@ -51,58 +71,89 @@ public class AddTaskEquipDialog extends Dialog implements View.OnClickListener {
         initView();
     }
 
-    private void initView(){
-        ed_equip_type = findViewById(R.id.ed_equip_type);
-        ed_equip_name = findViewById(R.id.ed_equip_name);
-        ed_equip_unit = findViewById(R.id.ed_equip_unit);
+    private void initView() {
+        tv_equip_type = findViewById(R.id.tv_equip_type);
+        tv_equip_name = findViewById(R.id.tv_equip_name);
+        tv_equip_unit = findViewById(R.id.tv_equip_unit);
 
         tv_row_count = findViewById(R.id.tv_row_count);
         image_add = findViewById(R.id.image_add);
         image_reduce = findViewById(R.id.image_reduce);
         tv_cancle = findViewById(R.id.tv_cancle);
         tv_comfir = findViewById(R.id.tv_comfir);
+        tv_equip_type.setOnClickListener(this);
         image_add.setOnClickListener(this);
         image_reduce.setOnClickListener(this);
         tv_cancle.setOnClickListener(this);
         tv_comfir.setOnClickListener(this);
 
     }
+    private void initPopMenu() {
+        popupView_view = getLayoutInflater().inflate(R.layout.layout_popupwindow_equip, null);
+        recycler_model = popupView_view.findViewById(R.id.recycler_model);
+        recycler_model.setLayoutManager(new LinearLayoutManager(getContext()));
+        //默认第一轮
+        mAddEquipTypeAdapter = new AddEquipTypeAdapter(mEquipTypeDatas);
+        mAddEquipTypeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                EquipTypeBean mEquipTypeBean = mEquipTypeDatas.get(position);
+                tv_equip_type.setText(mEquipTypeBean.getEquip_type_name());
+                tv_equip_name.setText(mEquipTypeBean.getEquip_name());
+                tv_equip_unit.setText(mEquipTypeBean.getEquip_unit());
+                window_equip_model.dismiss();
+            }
+        });
+        recycler_model.setAdapter(mAddEquipTypeAdapter);
+        // TODO: 2016/5/17 创建PopupWindow对象，指定宽度和高度
+        window_equip_model = new MyPopWindow(popupView_view, tv_equip_type.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
+        window_equip_model.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = getWindow().getAttributes();
+                lp.alpha = 1f;
+                getWindow().setAttributes(lp);
+            }
+        });
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 0.7f;
+        getWindow().setAttributes(lp);
+        window_equip_model.showAsDropDown(tv_equip_type, 0, 0);
+    }
 
     @Override
     public void onClick(View v) {
 
-        if (v==image_add){
+        if (v==tv_equip_type){
+            initPopMenu();
+        }else if (v == image_add) {
             int count = Integer.parseInt(tv_row_count.getText().toString());
             count++;
             tv_row_count.setText(String.valueOf(count));
-        }else if (v==image_reduce){
+        } else if (v == image_reduce) {
             int count = Integer.parseInt(tv_row_count.getText().toString());
-            if (count==1){
-                Toast.makeText(getContext(),"器材数量不能小于1",Toast.LENGTH_SHORT).show();
-            }else {
+            if (count == 1) {
+                Toast.makeText(getContext(), "器材数量不能小于1", Toast.LENGTH_SHORT).show();
+            } else {
                 count--;
                 tv_row_count.setText(String.valueOf(count));
             }
 
-        }else if (v==tv_comfir){
-            if (TextUtils.isEmpty(ed_equip_type.getText().toString())){
-                Toast.makeText(getContext(),"请输入器材类型",Toast.LENGTH_SHORT).show();
-            }else  if (TextUtils.isEmpty(ed_equip_name.getText().toString())){
-                Toast.makeText(getContext(),"请输入器材名称",Toast.LENGTH_SHORT).show();
-            }else if (TextUtils.isEmpty(ed_equip_unit.getText().toString())){
-                Toast.makeText(getContext(),"请输入器材单位",Toast.LENGTH_SHORT).show();
+        } else if (v == tv_comfir) {
+            if (TextUtils.isEmpty(tv_equip_type.getText().toString())) {
+                Toast.makeText(getContext(), "请选择类型", Toast.LENGTH_SHORT).show();
             }else {
-                mOnClickComfirInterface.onResult(ed_equip_type.getText().toString(),ed_equip_name.getText().toString(),ed_equip_unit.getText().toString(),tv_row_count.getText().toString());
+                mOnClickComfirInterface.onResult(tv_equip_type.getText().toString(), tv_equip_name.getText().toString(), tv_equip_unit.getText().toString(), tv_row_count.getText().toString());
                 dismiss();
             }
 
-        }else if (v==tv_cancle){
+        } else if (v == tv_cancle) {
             dismiss();
         }
     }
 
-    public interface  onClickComfirInterface{
+    public interface onClickComfirInterface {
 
-        void onResult(String type,String name,String unit,String count);
+        void onResult(String type, String name, String unit, String count);
     }
 }

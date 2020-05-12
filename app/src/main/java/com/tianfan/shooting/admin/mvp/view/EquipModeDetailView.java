@@ -11,6 +11,7 @@ import com.tianfan.shooting.base.BaseView;
  * 修改时间：2020/4/25 17:40
  */
 public interface EquipModeDetailView extends BaseView {
+    void findEquipTypeResult(Object result);
 
     //    //添加器材模板项目
     void addEquipModelItemResult(Object result);

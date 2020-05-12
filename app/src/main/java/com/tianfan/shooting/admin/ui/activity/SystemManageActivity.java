@@ -1,20 +1,14 @@
-package com.tianfan.shooting.admin.system;
+package com.tianfan.shooting.admin.ui.activity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import com.tianfan.shooting.R;
-import com.tianfan.shooting.admin.taskdata.FraDuiyuan;
-import com.tianfan.shooting.admin.taskdata.FragLieDui;
-import com.tianfan.shooting.admin.taskdata.FragQiCai;
 import com.tianfan.shooting.admin.ui.fragment.CameraFragment;
 import com.tianfan.shooting.admin.ui.fragment.EquipModelFragment;
 import com.tianfan.shooting.admin.ui.fragment.EquipTypelFragment;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -45,7 +39,6 @@ public class SystemManageActivity extends AppCompatActivity {
     EquipModelFragment mEquipModelFragment;
     private FragmentManager fragmentManager;
     FragmentTransaction ft;
-    private String task_id;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +52,9 @@ public class SystemManageActivity extends AppCompatActivity {
         ft = fragmentManager.beginTransaction();
 
 
-        mCameraFragment = CameraFragment.getInstance(task_id);
-        mEquipTypelFragment = EquipTypelFragment.getInstance(task_id);
-        mEquipModelFragment = EquipModelFragment.getInstance(task_id);
+        mCameraFragment = CameraFragment.getInstance();
+        mEquipTypelFragment = EquipTypelFragment.getInstance();
+        mEquipModelFragment = EquipModelFragment.getInstance();
         ft.add(R.id.system_frag_layout, mCameraFragment);
         ft.commit();
         tv_sxt.setTextColor(getResources().getColor(R.color.corlorSlectStr));

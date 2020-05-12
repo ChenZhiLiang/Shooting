@@ -11,11 +11,11 @@ import com.tianfan.shooting.base.BaseView;
  * 修改时间：2020/4/22 0:27
  */
 public interface EquipTypeView extends BaseView {
-    void findEquipModelTypeResult(Object result);
+    void findEquipTypeResult(Object result);
 
-    void addEquipModelTypeResult(Object result);
+    void addEquipTypeResult(Object result);
 
-    void editEquipModelTypeResult(Object result);
+    void editEquipTypeResult(Object result);
 
-    void removeEquipModelTypeResult(Object result);
+    void removeEquipTypeResult(Object result);
 }

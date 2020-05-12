@@ -25,6 +25,30 @@ public class TaskEquipPresenter {
     }
 
     /**
+     * 查询器材类型
+     *  @author
+     *  @time
+     *  @describe
+     */
+    public void findEquipType(){
+        mTaskEquipView.showProgress();
+        String url = ApiUrl.EquipTypeApi.FindEquipType;
+        mBaseMode.GetRequest(url, new RequestParams(), new ResultCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                mTaskEquipView.findEquipTypeResult(result);
+                mTaskEquipView.hideProgress();
+            }
+
+            @Override
+            public void onFailure(Object result) {
+                mTaskEquipView.hideProgress();
+                mTaskEquipView.showLoadFailMsg(result.toString());
+            }
+        });
+    }
+
+    /**
      *  @author
      *  @time
      *  @describe 查询任务信息

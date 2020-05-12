@@ -30,6 +30,8 @@ public final class ApiUrl {
         public static final String EditTaskInfo = HOST + "anb_shot/task/editTaskInfo.action";
         //任务删除
         public static final String RemoveTaskInfo = HOST + "anb_shot/task/removeTaskInfo.action";
+        //调整任务射击轮次
+        public static final String changeTaskRounds = HOST + "anb_shot/task/changeTaskRounds.action";
 
     }
 
@@ -64,8 +66,9 @@ public final class ApiUrl {
         //【队列管理-生成初始化】从队员管理中取数据，添加到队列管理
         public static final String CreateTaskPersonRowcol = HOST + "anb_shot/task/createTaskPersonRowcol.action";
         //【队列管理-调整队列】更新队员的分组及靶位
-//        public static final String ChangeTaskPersonRowcol = HOST + "anb_shot/task/changeTaskPersonRowcol.action";
-        public static final String ChangeTaskPersonRowcol = HOST + "anb_shot/task/exchangeTaskPersonRowcol.action";
+        public static final String ChangeTaskPersonRowcol = HOST + "anb_shot/task/changeTaskPersonRowcol.action";
+
+        public static final String ExChangeTaskPersonRowcol = HOST + "anb_shot/task/exchangeTaskPersonRowcol.action";
 
     }
 
@@ -92,6 +95,43 @@ public final class ApiUrl {
         //【查询任务器材】设置调整后的数量（加减数量）
         public static final String ChangeTaskEquipCount = HOST + "anb_shot/task/changeTaskEquipCount.action";
 
+    }
+
+
+    public static  class CameraApi{
+        //查询摄像头靶位
+        public static final String FindCameraCol = HOST + "anb_shot/camera/findCameraCol.action";
+        //添加像头靶位
+        public static final String AddCameraCol = HOST + "anb_shot/camera/addCameraCol.action";
+
+        //修改像头靶位
+        public static final String EditCameraCol = HOST + "anb_shot/camera/editCameraCol.action";
+
+        //删除像头靶位
+        public static final String RemoveCameraCol = HOST + "anb_shot/camera/removeCameraCol.action";
+
+//        【查询摄像头靶位】
+//        http://120.79.192.60:8181/anb_shot/camera/findCameraCol.action
+//
+//                【添加像头靶位】
+//        http://120.79.192.60:8181/anb_shot/camera/addCameraCol.action?camera_id=2&camera_name=摄像头名称2&camera_col=2&camera_status=1
+//
+//                【修改像头靶位】
+//        http://120.79.192.60:8181/anb_shot/camera/editCameraCol.action?camera_id=3&camera_name=摄像头名称3&camera_col=3&camera_status=1
+//
+//                【删除像头靶位】
+//        http://120.79.192.60:8181/anb_shot/camera/editCameraCol.action?camera_id=3
+    }
+    public static class  EquipTypeApi{
+
+        //查询器材类型
+        public static final String FindEquipType = HOST + "anb_shot/equip/findEquipType.action";
+        //查询器材类型
+        public static final String AddEquipType = HOST + "anb_shot/equip/addEquipType.action";
+        //修改器材类型
+        public static final String EditEquipType = HOST + "anb_shot/equip/editEquipType.action";
+        //删除器材类型
+        public static final String RemoveEquipType = HOST + "anb_shot/equip/removeEquipType.action";
     }
 
     /**

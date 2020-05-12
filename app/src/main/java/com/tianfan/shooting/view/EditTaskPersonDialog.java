@@ -73,12 +73,14 @@ public class EditTaskPersonDialog extends Dialog implements View.OnClickListener
     private String picUri; //头像
     private TaskTeamPresenter mTaskTeamPresenter;
     private TaskPersonBean mTaskPersonBean;
+    private String task_rounds;
 
-    public EditTaskPersonDialog(@NonNull Activity activity, TaskPersonBean mTaskPersonBean, TaskTeamPresenter mTaskTeamPresenter) {
+    public EditTaskPersonDialog(@NonNull Activity activity, TaskPersonBean mTaskPersonBean, String task_rounds,TaskTeamPresenter mTaskTeamPresenter) {
         super(activity, R.style.alert_dialog);
         this.mActivity = activity;
         this.mTaskPersonBean = mTaskPersonBean;
         this.mTaskTeamPresenter = mTaskTeamPresenter;
+        this.task_rounds = task_rounds;
     }
 
 
@@ -279,7 +281,7 @@ public class EditTaskPersonDialog extends Dialog implements View.OnClickListener
                                     @Override
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                                         sweetAlertDialog.dismiss();
-                                        mTaskTeamPresenter.changeTaskPersonRowcol(mTaskPersonBean.getTask_id(), mTaskPersonBean.getPerson_id(), tv_number_row.getText().toString(), tv_number_position.getText().toString(), new ResultCallback() {
+                                            mTaskTeamPresenter.exChangeTaskPersonRowcol(mTaskPersonBean.getTask_id(), mTaskPersonBean.getPerson_id(), tv_number_row.getText().toString(), tv_number_position.getText().toString(), task_rounds,new ResultCallback() {
                                             @Override
                                             public void onSuccess(Object result) {
                                                 JSONObject jsonObject = JSONObject.parseObject(result.toString());

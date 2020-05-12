@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:layout_width="@dimen/album_dp_80"
     android:layout_height="95dp">
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"

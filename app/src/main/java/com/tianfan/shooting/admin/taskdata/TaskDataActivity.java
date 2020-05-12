@@ -40,6 +40,7 @@ public class TaskDataActivity extends AppCompatActivity implements View.OnClickL
     FragmentTransaction ft;
     private String task_id;
     private String task_name;
+    private String task_rounds;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,14 +49,15 @@ public class TaskDataActivity extends AppCompatActivity implements View.OnClickL
         ButterKnife.bind(this);
         task_id = getIntent().getStringExtra("task_id");
         task_name = getIntent().getStringExtra("task_name");
+        task_rounds = getIntent().getStringExtra("task_rounds");
         list.add(DuiYuan);
         list.add(LieDui);
         list.add(QiCai);
         fragmentManager = getSupportFragmentManager();
         ft = fragmentManager.beginTransaction();
-        fraDuiyuan = FraDuiyuan.getInstance(task_id,task_name);
-        fragLieDui = FragLieDui.getInstance(task_id, task_name);
-        fragQiCai = FragQiCai.getInstance(task_id,task_name);
+        fraDuiyuan = FraDuiyuan.getInstance(task_id,task_name,task_rounds);
+        fragLieDui = FragLieDui.getInstance(task_id, task_name,task_rounds);
+        fragQiCai = FragQiCai.getInstance(task_id,task_name,task_rounds);
         ft.add(R.id.zl_frag_layout, fraDuiyuan);
         ft.commit();
         DuiYuan.setTextColor(getResources().getColor(R.color.corlorSlectStr));

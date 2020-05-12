@@ -35,12 +35,12 @@ public class TaskRankListAdapter extends CommonAdapter<TaskRankBean> {
     public void bindData(CommonViewHolder holder, TaskRankBean data) {
         int position = holder.getAdapterPosition() + 1;
         holder.setText(R.id.gr_id, position + "");
-        if (holder.getAdapterPosition()==0){
-            holder.getView(R.id.img).setVisibility(View.GONE);
-        }else {
-            holder.getView(R.id.img).setVisibility(View.GONE);
-
-        }
+//        if (holder.getAdapterPosition()==0){
+//            holder.getView(R.id.img).setVisibility(View.GONE);
+//        }else {
+//            holder.getView(R.id.img).setVisibility(View.GONE);
+//
+//        }
         holder.setText(R.id.tv_user_name, "第" + position + "组");
         RecyclerView mRecycleRank = holder.getView(R.id.recycler_rank_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);

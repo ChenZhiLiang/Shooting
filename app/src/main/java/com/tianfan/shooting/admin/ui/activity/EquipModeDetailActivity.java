@@ -1,5 +1,6 @@
 package com.tianfan.shooting.admin.ui.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import com.tianfan.shooting.R;
 import com.tianfan.shooting.adapter.EquipModelAdapter;
 import com.tianfan.shooting.admin.mvp.presenter.EquipModeDetailPersenter;
 import com.tianfan.shooting.admin.mvp.view.EquipModeDetailView;
+import com.tianfan.shooting.bean.EquipTypeBean;
 import com.tianfan.shooting.bean.TaskEquipBean;
 import com.tianfan.shooting.view.AddTaskEquipDialog;
 import com.tianfan.shooting.view.LoadingDialog;
@@ -51,7 +53,7 @@ public class EquipModeDetailActivity extends AppCompatActivity implements EquipM
     private EquipModeDetailPersenter mEquipModeDetailPersenter;
 
     public LoadingDialog mLoadingDialog;
-
+    private List<EquipTypeBean> mEquipTypeDatas = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +102,8 @@ public class EquipModeDetailActivity extends AppCompatActivity implements EquipM
     }
 
     private void initData() {
+        mEquipModeDetailPersenter.findEquipType();
+
         mEquipModeDetailPersenter.findEquipModelItem(equip_model_type_id);
     }
 
@@ -108,12 +112,19 @@ public class EquipModeDetailActivity extends AppCompatActivity implements EquipM
         if (v==iv_return_home){
             finish();
         }if (v == btn_add_equip_item) {
-            AddTaskEquipDialog dialog = new AddTaskEquipDialog(this, new AddTaskEquipDialog.onClickComfirInterface() {
+            AddTaskEquipDialog dialog = new AddTaskEquipDialog(this,mEquipTypeDatas, new AddTaskEquipDialog.onClickComfirInterface() {
                 @Override
                 public void onResult(String type, String name, String unit, String count) {
                     mEquipModeDetailPersenter.addEquipModelItem(equip_model_type_id, type, name, unit, count);
                 }
             });
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    btn_add_equip_item.setVisibility(View.VISIBLE);
+                }
+            });
+            btn_add_equip_item.setVisibility(View.GONE);
             dialog.show();
         }
     }
@@ -134,6 +145,18 @@ public class EquipModeDetailActivity extends AppCompatActivity implements EquipM
             mTaskEquipDatas.clear();
             mEquipModelAdapter.notifyDataSetChanged();
         } else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
+    }
+
+    @Override
+    public void findEquipTypeResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 1) {
+            String datas = jsonObject.getString("datas");
+            mEquipTypeDatas = JSONArray.parseArray(datas,EquipTypeBean.class);
+        }else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
     }

@@ -25,18 +25,18 @@ public class EquipTypePersenter {
     }
 
     /**
-     * 查询器材模板类型
+     * 查询器材类型
      *  @author
      *  @time
      *  @describe
      */
-    public void findEquipModelType(){
+    public void findEquipType(){
         mEquipTypeView.showProgress();
-        String url = ApiUrl.EquipApi.FindEquipModelType;
+        String url = ApiUrl.EquipTypeApi.FindEquipType;
         mBaseMode.GetRequest(url, new RequestParams(), new ResultCallback() {
             @Override
             public void onSuccess(Object result) {
-                mEquipTypeView.findEquipModelTypeResult(result);
+                mEquipTypeView.findEquipTypeResult(result);
                 mEquipTypeView.hideProgress();
             }
 
@@ -49,23 +49,24 @@ public class EquipTypePersenter {
     }
 
     /**
-     * 添加器材模板类型
+     * 添加器材类型
      *  @author
      *  @time
      *  @describe
      */
-    public void addEquipModelType(String equip_model_type_name,String equip_model_type_desc){
+    public void addEquipType(String equip_type_name,String equip_type_desc,String equip_name,String equip_unit){
         mEquipTypeView.showProgress();
-
-        String url = ApiUrl.EquipApi.AddEquipModelType;
+        String url = ApiUrl.EquipTypeApi.AddEquipType;
         RequestParams params = new RequestParams();
-        params.put("equip_model_type_name",equip_model_type_name);
-        params.put("equip_model_type_desc",equip_model_type_desc);
-        params.put("equip_model_type_status","1");
+        params.put("equip_type_name",equip_type_name);
+        params.put("equip_type_desc",equip_type_desc);
+        params.put("equip_name",equip_name);
+        params.put("equip_unit",equip_unit);
+        params.put("equip_type_status","1");
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
             public void onSuccess(Object result) {
-                mEquipTypeView.addEquipModelTypeResult(result);
+                mEquipTypeView.addEquipTypeResult(result);
                 mEquipTypeView.hideProgress();
             }
 
@@ -80,21 +81,22 @@ public class EquipTypePersenter {
     /**
      *  @author
      *  @time
-     *  @describe  修改器材模板类型
+     *  @describe  修改器材类型
      */
-    public void editEquipModelType(String equip_model_type_id,String equip_model_type_name,String equip_model_type_desc){
+    public void editEquipType(String equip_type_id,String equip_type_name,String equip_type_desc,String equip_name,String equip_unit){
         mEquipTypeView.showProgress();
-
-        String url = ApiUrl.EquipApi.EditEquipModelType;
+        String url = ApiUrl.EquipTypeApi.EditEquipType;
         RequestParams params = new RequestParams();
-        params.put("equip_model_type_id",equip_model_type_id);
-        params.put("equip_model_type_name",equip_model_type_name);
-        params.put("equip_model_type_desc",equip_model_type_desc);
-        params.put("equip_model_type_status","1");
+        params.put("equip_type_id",equip_type_id);
+        params.put("equip_type_name",equip_type_name);
+        params.put("equip_type_desc",equip_type_desc);
+        params.put("equip_name",equip_name);
+        params.put("equip_unit",equip_unit);
+        params.put("equip_type_status","1");
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
             public void onSuccess(Object result) {
-                mEquipTypeView.editEquipModelTypeResult(result);
+                mEquipTypeView.editEquipTypeResult(result);
                 mEquipTypeView.hideProgress();
             }
 
@@ -110,17 +112,17 @@ public class EquipTypePersenter {
     /**
      *  @author
      *  @time
-     *  @describe  删除器材模板类型
+     *  @describe  删除器材类型
      */
-    public void removeEquipModelType(String equip_model_type_id){
+    public void removeEquipType(String equip_type_id){
         mEquipTypeView.showProgress();
-        String url = ApiUrl.EquipApi.RemoveEquipModelType;
+        String url = ApiUrl.EquipTypeApi.RemoveEquipType;
         RequestParams params = new RequestParams();
-        params.put("equip_model_type_id",equip_model_type_id);
+        params.put("equip_type_id",equip_type_id);
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
             public void onSuccess(Object result) {
-                mEquipTypeView.removeEquipModelTypeResult(result);
+                mEquipTypeView.removeEquipTypeResult(result);
                 mEquipTypeView.hideProgress();
             }
 

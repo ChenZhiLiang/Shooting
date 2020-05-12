@@ -27,6 +27,8 @@ public class EquipTypeDialog extends Dialog implements View.OnClickListener {
     private TextView tv_title;
     private EditText ed_name;
     private EditText ed_desc;
+    private EditText ed_equip_name;
+    private EditText ed_equip_unit;
     private TextView tv_cancle;
     private TextView tv_comfir;
     private Context context;
@@ -59,6 +61,8 @@ public class EquipTypeDialog extends Dialog implements View.OnClickListener {
         tv_title = findViewById(R.id.tv_title);
         ed_name = findViewById(R.id.ed_name);
         ed_desc = findViewById(R.id.ed_desc);
+        ed_equip_name = findViewById(R.id.ed_equip_name);
+        ed_equip_unit = findViewById(R.id.ed_equip_unit);
         tv_cancle = findViewById(R.id.tv_cancle);
         tv_comfir = findViewById(R.id.tv_comfir);
         tv_cancle.setOnClickListener(this);
@@ -66,8 +70,8 @@ public class EquipTypeDialog extends Dialog implements View.OnClickListener {
 
         if (mEquipTypeBean!=null){
             tv_title.setText("修改器材类型");
-            ed_name.setText(mEquipTypeBean.getEquip_model_type_name());
-            ed_desc.setText(mEquipTypeBean.getEquip_model_type_desc());
+            ed_name.setText(mEquipTypeBean.getEquip_type_name());
+            ed_desc.setText(mEquipTypeBean.getEquip_type_desc());
         }
     }
 
@@ -76,16 +80,24 @@ public class EquipTypeDialog extends Dialog implements View.OnClickListener {
         if (v==tv_comfir){
             if (TextUtils.isEmpty(ed_name.getText().toString())){
                 Toast.makeText(context,"请输入器材类型名称",Toast.LENGTH_SHORT).show();
+                return;
             }else if (TextUtils.isEmpty(ed_desc.getText().toString())){
                 Toast.makeText(context,"请输入器材类型描述",Toast.LENGTH_SHORT).show();
+                return;
+            }else if (TextUtils.isEmpty(ed_equip_name.getText().toString())){
+                Toast.makeText(context,"请输入器材名称",Toast.LENGTH_SHORT).show();
+                return;
+            }else if (TextUtils.isEmpty(ed_equip_unit.getText().toString())){
+                Toast.makeText(context,"请输入器材单位",Toast.LENGTH_SHORT).show();
+                return;
             }else {
-                mOnClickInterface.onClick(ed_name.getText().toString(),ed_desc.getText().toString());
+                mOnClickInterface.onClick(ed_name.getText().toString(),ed_desc.getText().toString(),ed_equip_name.getText().toString(),ed_equip_unit.getText().toString());
             }
         }
         dismiss();
     }
 
     public interface onClickInterface{
-        void onClick(String name,String desc);
+        void onClick(String name,String desc,String equip_name,String equip_unit);
     }
 }

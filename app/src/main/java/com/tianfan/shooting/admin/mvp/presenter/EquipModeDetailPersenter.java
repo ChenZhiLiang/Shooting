@@ -23,6 +23,26 @@ public class EquipModeDetailPersenter {
         this.mEquipModeDetailView = mEquipModeDetailView;
         mBaseMode = new BaseMode();
     }
+    /**
+     * 查询器材类型
+     *  @author
+     *  @time
+     *  @describe
+     */
+    public void findEquipType(){
+        String url = ApiUrl.EquipTypeApi.FindEquipType;
+        mBaseMode.GetRequest(url, new RequestParams(), new ResultCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                mEquipModeDetailView.findEquipTypeResult(result);
+            }
+
+            @Override
+            public void onFailure(Object result) {
+                mEquipModeDetailView.showLoadFailMsg(result.toString());
+            }
+        });
+    }
 
      /**
      *【查询器材模板项目】

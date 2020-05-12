@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="84dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:id="@+id/layout_number_item"
+        android:layout_width="60dp"
+        android:layout_height="85dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/backgroup_command_manage"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_number_position"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="1"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_number_name"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_number_position"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="组编号" />
+
+        <ImageView
+            android:id="@+id/image_number_translucence"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/translucence_bg"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lv"
+        android:layout_width="60dp"
+        android:layout_height="85dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/backgroup_command_manage"
+        android:visibility="visible"
+        android:layout_marginTop="@dimen/dp_10">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
+
+            <RelativeLayout
+                android:id="@+id/relative_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/iv"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/user_icon"
+                    android:visibility="visible"
+                    app:riv_corner_radius="@dimen/dp_10"
+                    app:riv_oval="false" />
+
+                <LinearLayout
+                    android:id="@+id/linear_status_show"
+                    android:layout_width="@dimen/album_dp_50"
+                    android:layout_height="@dimen/album_dp_50"
+                    android:background="@drawable/bg_round_white"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="缺勤"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/sp_14"
+                        android:visibility="visible" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/img_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/add_icon_wihte_mini"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relative_status"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="11" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/image_translucence"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/translucence_bg"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5/30"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        android:visibility="visible"/>
+</LinearLayout>

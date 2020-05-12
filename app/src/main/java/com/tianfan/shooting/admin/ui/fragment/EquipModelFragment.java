@@ -50,14 +50,12 @@ public class EquipModelFragment extends BaseFragment implements TaskEquipModelVi
     @BindView(R.id.recycler_equip_mode)
     RecyclerView recycler_equip_mode;
 
-    private String task_id;
     private EquipModelListAdapter mEquipModelListAdapter;
     private TaskEquipModelPersenter mTaskEquipModelPersenter;
     private List<EquipModelBean> mEquipModelDatas = new ArrayList<>();
 
-    public static EquipModelFragment getInstance(String task_id) {
+    public static EquipModelFragment getInstance() {
         EquipModelFragment hf = new EquipModelFragment();
-        hf.task_id = task_id;
         return hf;
     }
 

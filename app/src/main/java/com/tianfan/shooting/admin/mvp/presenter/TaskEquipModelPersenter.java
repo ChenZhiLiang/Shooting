@@ -24,7 +24,6 @@ public class TaskEquipModelPersenter {
         mBaseMode = new BaseMode();
     }
 
-
     /**
      * 查询器材模板类型
      *  @author

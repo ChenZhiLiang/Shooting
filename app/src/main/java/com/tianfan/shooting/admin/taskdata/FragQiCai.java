@@ -22,6 +22,7 @@ import com.tianfan.shooting.admin.mvp.presenter.TaskEquipPresenter;
 import com.tianfan.shooting.admin.mvp.view.TaskEquipView;
 import com.tianfan.shooting.base.BaseFragment;
 import com.tianfan.shooting.bean.EquipModelBean;
+import com.tianfan.shooting.bean.EquipTypeBean;
 import com.tianfan.shooting.bean.TaskEquipBean;
 import com.tianfan.shooting.bean.TaskInfoBean;
 import com.tianfan.shooting.tools.SweetAlertDialogTools;
@@ -62,6 +63,7 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
     Button btn_add_task_equip;
     private String task_id;
     private String task_name;
+    private String task_rounds;
     private TaskEquipPresenter mTaskEquipPresenter;
     private TaskEquipListAdapter mTaskEquipListAdapter;
     private List<TaskEquipBean> mTaskEquipDatas;
@@ -75,10 +77,11 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
     private EquipModelBean mEquipModelBean;
     private TaskInfoBean mTaskInfoBean;
 
-    public static FragQiCai getInstance(String task_id,String task_name) {
+    public static FragQiCai getInstance(String task_id,String task_name,String task_rounds) {
         FragQiCai hf = new FragQiCai();
         hf.task_id = task_id;
         hf.task_name = task_name;
+        hf.task_rounds = task_rounds;
         return hf;
     }
 
@@ -177,7 +180,6 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
         } else if (v == iv_back) {
             getActivity().finish();
         } else if (v == iv_clear) {
-
             SweetAlertDialogTools.ShowDialog(getActivity(), "是否要清空器材？", new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -192,22 +194,10 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
                 }
             });
         }else if (v==btn_add_task_equip){
-
             if (mEquipModelBean==null&&mTaskEquipDatas.size()==0){
                 showLoadFailMsg("请选择器材模板");
-
             }else {
-                AddTaskEquipDialog dialog = new AddTaskEquipDialog(getContext(), new AddTaskEquipDialog.onClickComfirInterface() {
-                    @Override
-                    public void onResult(String type, String name, String unit, String count) {
-                        if (mEquipModelBean!=null){
-                            mTaskEquipPresenter.addTaskEquip(task_id,mEquipModelBean.getEquip_model_type_id(),type,name,unit,count);
-                        }else {
-                            mTaskEquipPresenter.addTaskEquip(task_id,mTaskEquipDatas.get(0).getEquip_model_type_id(),type,name,unit,count);
-                        }
-                    }
-                });
-                dialog.show();
+                mTaskEquipPresenter.findEquipType();
             }
 
         }else if (v==image_equip_prepare){
@@ -236,6 +226,28 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
     }
 
 
+    @Override
+    public void findEquipTypeResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 1) {
+            String datas = jsonObject.getString("datas");
+            List<EquipTypeBean>mEquipTypeDatas = JSONArray.parseArray(datas, EquipTypeBean.class);
+            AddTaskEquipDialog dialog = new AddTaskEquipDialog(getContext(),mEquipTypeDatas, new AddTaskEquipDialog.onClickComfirInterface() {
+                @Override
+                public void onResult(String type, String name, String unit, String count) {
+                    if (mEquipModelBean!=null){
+                        mTaskEquipPresenter.addTaskEquip(task_id,mEquipModelBean.getEquip_model_type_id(),type,name,unit,count);
+                    }else {
+                        mTaskEquipPresenter.addTaskEquip(task_id,mTaskEquipDatas.get(0).getEquip_model_type_id(),type,name,unit,count);
+                    }
+                }
+            });
+            dialog.show();
+        }else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
+    }
 
     /**
      *  @author

@@ -132,6 +132,7 @@
                 android:layout_height="wrap_content"/>
             <TextView
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:paddingRight="10dp"
                 android:paddingLeft="10dp"
@@ -143,9 +144,37 @@
                 android:paddingBottom="5dp"
                 android:layout_marginLeft="1dp"
                 android:text="器材类型描述"
+                android:gravity="center"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1.5"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:layout_marginLeft="1dp"
+                android:paddingTop="5dp"
+                android:background="@color/rank_bg1"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:paddingBottom="5dp"
+                android:text="器材名称"
                 android:gravity="center"
                 android:layout_height="wrap_content"/>
-
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:layout_marginLeft="1dp"
+                android:paddingTop="5dp"
+                android:background="@color/rank_bg1"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:paddingBottom="5dp"
+                android:text="器材单位"
+                android:gravity="center"
+                android:layout_height="wrap_content"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="0.8"

@@ -33,8 +33,11 @@ public class EquipTypeAdapter extends BaseQuickAdapter<EquipTypeBean, BaseViewHo
         int position = helper.getAdapterPosition();
 
         helper.setText(R.id.tv_number,String.valueOf(helper.getAdapterPosition()+1));
-        helper.setText(R.id.tv_name,item.getEquip_model_type_name());
-        helper.setText(R.id.tv_dec,item.getEquip_model_type_desc());
+        helper.setText(R.id.tv_name,item.getEquip_type_name());
+        helper.setText(R.id.tv_dec,item.getEquip_type_desc());
+        helper.setText(R.id.tv_equip_name,item.getEquip_name());
+        helper.setText(R.id.tv_equip_unit,item.getEquip_unit());
+
         CheckBox cb_select = helper.getView(R.id.cb_select);
         if (mSelectedPos == position){
             cb_select.setChecked(true);
@@ -55,5 +58,9 @@ public class EquipTypeAdapter extends BaseQuickAdapter<EquipTypeBean, BaseViewHo
     }
     public int getSelectedPos() {
         return mSelectedPos;
+    }
+
+    public void setSelectedPos(int mSelectedPos) {
+        this.mSelectedPos = mSelectedPos;
     }
 }

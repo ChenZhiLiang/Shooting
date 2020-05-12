@@ -38,14 +38,12 @@ public class EquipTypelFragment extends BaseFragment implements EquipTypeView {
 
     @BindView(R.id.recycler_equip_mode)
     RecyclerView recycler_equip_mode;
-    private String task_id;
     private EquipTypeAdapter mEquipTypeAdapter;
     private List<EquipTypeBean> mDatas = new ArrayList<>();
 
     private EquipTypePersenter mEquipTypePersenter;
-    public static EquipTypelFragment getInstance(String task_id) {
+    public static EquipTypelFragment getInstance() {
         EquipTypelFragment hf = new EquipTypelFragment();
-        hf.task_id = task_id;
         return hf;
     }
     @Override
@@ -69,7 +67,7 @@ public class EquipTypelFragment extends BaseFragment implements EquipTypeView {
 
     @Override
     public void initData() {
-        mEquipTypePersenter.findEquipModelType();
+        mEquipTypePersenter.findEquipType();
     }
 
     @OnClick({R.id.iv_return_home,R.id.iv_create,R.id.iv_editor,R.id.iv_delete})
@@ -81,8 +79,9 @@ public class EquipTypelFragment extends BaseFragment implements EquipTypeView {
             case R.id.iv_create:
                 EquipTypeDialog addEquipTypeDialog = new EquipTypeDialog(getContext(), new EquipTypeDialog.onClickInterface() {
                     @Override
-                    public void onClick(String name, String desc) {
-                        mEquipTypePersenter.addEquipModelType(name,desc);
+                    public void onClick(String name, String desc, String equip_name, String equip_unit) {
+                        mEquipTypePersenter.addEquipType(name,desc,equip_name,equip_unit);
+
                     }
                 });
                 addEquipTypeDialog.show();
@@ -94,8 +93,9 @@ public class EquipTypelFragment extends BaseFragment implements EquipTypeView {
 
                     EquipTypeDialog editEquipTypeDialog = new EquipTypeDialog(getContext(), mDatas.get(mEquipTypeAdapter.getSelectedPos()),new EquipTypeDialog.onClickInterface() {
                         @Override
-                        public void onClick(String name, String desc) {
-                            mEquipTypePersenter.editEquipModelType(mDatas.get(mEquipTypeAdapter.getSelectedPos()).getEquip_model_type_id(),name,desc);
+                        public void onClick(String name, String desc, String equip_name, String equip_unit) {
+                            mEquipTypePersenter.editEquipType(mDatas.get(mEquipTypeAdapter.getSelectedPos()).getEquip_type_id(),name,desc,equip_name,equip_unit);
+
                         }
                     });
                     editEquipTypeDialog.show();
@@ -109,7 +109,7 @@ public class EquipTypelFragment extends BaseFragment implements EquipTypeView {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             sweetAlertDialog.dismiss();
-                            mEquipTypePersenter.removeEquipModelType(mDatas.get(mEquipTypeAdapter.getSelectedPos()).getEquip_model_type_id());
+                            mEquipTypePersenter.removeEquipType(mDatas.get(mEquipTypeAdapter.getSelectedPos()).getEquip_type_id());
                         }
                     });
                 }
@@ -118,7 +118,7 @@ public class EquipTypelFragment extends BaseFragment implements EquipTypeView {
     }
 
     @Override
-    public void findEquipModelTypeResult(Object result) {
+    public void findEquipTypeResult(Object result) {
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code == 1) {
@@ -136,7 +136,7 @@ public class EquipTypelFragment extends BaseFragment implements EquipTypeView {
     }
 
     @Override
-    public void addEquipModelTypeResult(Object result) {
+    public void addEquipTypeResult(Object result) {
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code==1){
@@ -149,7 +149,7 @@ public class EquipTypelFragment extends BaseFragment implements EquipTypeView {
     }
 
     @Override
-    public void editEquipModelTypeResult(Object result) {
+    public void editEquipTypeResult(Object result) {
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code==1){
@@ -162,11 +162,12 @@ public class EquipTypelFragment extends BaseFragment implements EquipTypeView {
     }
 
     @Override
-    public void removeEquipModelTypeResult(Object result) {
+    public void removeEquipTypeResult(Object result) {
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code==1){
             showLoadFailMsg("删除成功");
+            mEquipTypeAdapter.setSelectedPos(-1);
             initData();
         }else {
             showLoadFailMsg(jsonObject.getString("message"));

@@ -12,18 +12,19 @@ public class TaskInfoBean {
 
 
     /**
-     * task_id : task_20200419215215924466
-     * task_name : 任务3
-     * task_site : 离家
-     * task_date : 2020-04-19
-     * task_row_count : 100
-     * task_row_persons : 10
+     * task_id : task_20200511002034889100
+     * task_name : 任务名称1
+     * task_site : 任务地点1
+     * task_date : 2020-05-11
+     * task_row_count : 20
+     * task_row_persons : 4
      * task_target_type : 1
-     * task_inuser : admin
-     * task_intime : 1587333135000
+     * task_inuser : user_0001
+     * task_intime : 1589156337000
      * task_equips : 0
-     * task_rounds : 0
-     * task_status : 0
+     * task_rounds : 3
+     * task_rounds_status : 1
+     * task_status : 1
      */
 
     private String task_id;
@@ -37,6 +38,7 @@ public class TaskInfoBean {
     private long task_intime;
     private String task_equips;
     private String task_rounds;
+    private String task_rounds_status;
     private String task_status;
 
     public String getTask_id() {
@@ -125,6 +127,14 @@ public class TaskInfoBean {
 
     public void setTask_rounds(String task_rounds) {
         this.task_rounds = task_rounds;
+    }
+
+    public String getTask_rounds_status() {
+        return task_rounds_status;
+    }
+
+    public void setTask_rounds_status(String task_rounds_status) {
+        this.task_rounds_status = task_rounds_status;
     }
 
     public String getTask_status() {

@@ -70,6 +70,7 @@ public class FraRenwu extends BaseFragment implements TaskView {
                 Intent intent = new Intent(getContext(), TaskDataActivity.class);
                 intent.putExtra("task_id", bean.getTask_id());
                 intent.putExtra("task_name",bean.getTask_name());
+                intent.putExtra("task_rounds",bean.getTask_rounds());
                 startActivity(intent);
             }
         });

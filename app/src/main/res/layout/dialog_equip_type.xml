@@ -114,6 +114,97 @@
 
                 />
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/album_dp_35"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_view_gb_create_task"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/lable_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/album_dp_15"
+                android:layout_marginRight="@dimen/album_dp_15"
+                android:text="    器材名称    "
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/view_line3"
+                android:layout_width="@dimen/album_dp_2"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toRightOf="@+id/lable_3"
+                android:background="#FF446F92" />
+
+            <EditText
+                android:id="@+id/ed_equip_name"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="4dp"
+                android:layout_toRightOf="@id/view_line3"
+                android:background="#133652"
+                android:hint="请输入器材名称"
+                android:textColorHint="@color/color_info"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/album_dp_35"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_view_gb_create_task"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/lable_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/album_dp_15"
+                android:layout_marginRight="@dimen/album_dp_15"
+                android:text="器材类型描述"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/view_line4"
+                android:layout_width="@dimen/album_dp_2"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_toRightOf="@+id/lable_4"
+                android:background="#FF446F92" />
+
+            <EditText
+                android:id="@+id/ed_equip_unit"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="4dp"
+                android:layout_toRightOf="@id/view_line4"
+                android:background="#133652"
+                android:hint="请输入器材单位"
+                android:textColorHint="@color/color_info"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+
+                />
+        </RelativeLayout>
+
     </LinearLayout>
 
 

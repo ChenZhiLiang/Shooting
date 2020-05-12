@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_task_item"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_40"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:padding="0.5dp">
+
+    <TextView
+        android:id="@+id/tv_task_name"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
+        android:background="@color/click_def"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/album_dp_20"
+        android:text="任务名称"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/sp_16"/>
+
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_task_round"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/click_def"
+        android:gravity="center"
+        android:text="射击状态"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/sp_16"/>
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_task_state"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/click_def"
+        android:gravity="center"
+        android:text="任务状态"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/sp_16"/>
+</LinearLayout>

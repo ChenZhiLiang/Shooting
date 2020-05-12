@@ -65,6 +65,7 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
     private TaskPersonListAdapter mTaskPersonListAdapter;
     private String task_id;
     private String task_name;
+    private String task_rounds;
     private List<TaskPersonBean> mTaskPersonDatas = new ArrayList<>();
     private AddTaskPersonDialog mAddTaskPersonDialog;
     private String headUri;//头像url
@@ -73,10 +74,12 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
     public static final int IMPORT_TASK_PERSON = 1123;
     private int task_person_type = 2;
 
-    public static FraDuiyuan getInstance(String task_id,String task_name) {
+    public static FraDuiyuan getInstance(String task_id,String task_name,String task_rounds) {
         FraDuiyuan hf = new FraDuiyuan();
         hf.task_id = task_id;
         hf.task_name = task_name;
+        hf.task_rounds = task_rounds;
+
         return hf;
     }
 
@@ -100,7 +103,7 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 smrefresh.finishRefresh();
-                mTaskTeamPresenter.findTaskPerson(task_id,false);
+                mTaskTeamPresenter.findTaskPerson(task_id,task_rounds,false);
             }
         });
 
@@ -124,11 +127,11 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
 
     @Override
     public void initData() {
-        mTaskTeamPresenter.findTaskPerson(task_id,true);
+        mTaskTeamPresenter.findTaskPerson(task_id,task_rounds,true);
     }
 
     private void onRefresh() {
-        mTaskTeamPresenter.findTaskPerson(task_id,false);
+        mTaskTeamPresenter.findTaskPerson(task_id,task_rounds,false);
     }
 
     @OnClick({R.id.iv_return_home, R.id.iv_create, R.id.iv_ed_user, R.id.input_by_excel, R.id.iv_delete})
@@ -157,7 +160,9 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
                                         mTaskTeamPresenter.addTaskPerson(task_id, person_idno, person_name, person_orga, person_role, person_row, person_col);
 
                                     }
-                                } else {
+                                } else if (code==2){//表示该靶位无人 直接新增队员
+                                    mTaskTeamPresenter.addTaskPerson(task_id, person_idno, person_name, person_orga, person_role, person_row, person_col);
+                                }else {
                                     Toast.makeText(mActivity, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
 
                                 }
@@ -185,7 +190,7 @@ public class FraDuiyuan extends BaseFragment implements TaskTeamView {
                 } else if (seletCount > 1) {
                     showLoadFailMsg("一次只能修改一个队员信息");
                 } else {
-                    mEditTaskPersonDialog = new EditTaskPersonDialog(mActivity, mTaskPersonDatas.get(seletPosition), mTaskTeamPresenter);
+                    mEditTaskPersonDialog = new EditTaskPersonDialog(mActivity, mTaskPersonDatas.get(seletPosition),task_rounds, mTaskTeamPresenter);
                     mEditTaskPersonDialog.show();
                 }
                 break;

@@ -173,7 +173,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/album_dp_15"
                 android:layout_marginRight="@dimen/album_dp_15"
-                android:text="器材类型描述"
+                android:text="    器材单位    "
                 android:textColor="#ffffff"
                 android:textSize="@dimen/sp_12"
                 android:textStyle="bold" />

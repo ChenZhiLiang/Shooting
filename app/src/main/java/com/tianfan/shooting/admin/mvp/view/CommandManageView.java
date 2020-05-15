@@ -15,6 +15,8 @@ public interface CommandManageView extends BaseView {
     void FindTaskInfoResult(Object result);
     void EditTaskInfoResult(Object result);
 
+    void ChangeTaskRoundsResult(Object result,int task_rounds_status);
+
     void FindTaskPersonScoreResult(Object result);
 
 

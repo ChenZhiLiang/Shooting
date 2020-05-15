@@ -32,6 +32,7 @@ public class CommandManageItemAdapter extends BaseQuickAdapter<CommandManageBean
 
     private int number;
     private boolean selectPostion;
+    private int currentRounds = -1;//当前轮次
 
     public CommandManageItemAdapter(boolean selectPostion,int number, @Nullable List<CommandManageBean.CommandManageItem> data) {
         super(R.layout.layout_command_manage_item, data);
@@ -54,7 +55,9 @@ public class CommandManageItemAdapter extends BaseQuickAdapter<CommandManageBean
             helper.getView(R.id.image_number_translucence).setVisibility(View.GONE);
             tv_score.setVisibility(View.VISIBLE);
             if (item.getPerson_score()!=null&&item.getPerson_score().size()>0){
-                tv_score.setText(item.getPerson_score().get(0).getHit_count()+"/"+item.getPerson_score().get(0).getHit_score());
+                if (currentRounds!=-1){
+                    tv_score.setText(item.getPerson_score().get(currentRounds-1).getHit_count()+"/"+item.getPerson_score().get(currentRounds-1).getHit_score());
+                }
             }else {
                 tv_score.setText("0/0");
             }
@@ -106,5 +109,9 @@ public class CommandManageItemAdapter extends BaseQuickAdapter<CommandManageBean
 
             }
         }
+    }
+
+    public void setCurrentRounds(int currentRounds) {
+        this.currentRounds = currentRounds;
     }
 }

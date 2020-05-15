@@ -93,6 +93,35 @@ public class CommandManagePersenter {
             }
         });
     }
+
+    /**
+     *  @author
+     *  @time
+     *  @describe 开始任务轮次射击
+     */
+    public void changeTaskRounds(String task_id,int task_rounds,int task_rounds_status){
+        mCommandManageView.showProgress();
+        String url = ApiUrl.TaskApi.changeTaskRounds;
+        RequestParams params = new RequestParams();
+        params.put("task_id",task_id);
+        params.put("task_rounds",String.valueOf(task_rounds));
+        params.put("task_rounds_status",String.valueOf(task_rounds_status));//射击状态 0:未射击,1:射击中
+        mBaseMode.GetRequest(url, params, new ResultCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                mCommandManageView.ChangeTaskRoundsResult(result,task_rounds_status);
+                mCommandManageView.hideProgress();
+            }
+
+            @Override
+            public void onFailure(Object result) {
+                mCommandManageView.showLoadFailMsg(result.toString());
+                mCommandManageView.hideProgress();
+            }
+        });
+
+    }
+
     /**
      *  @author
      *  @time

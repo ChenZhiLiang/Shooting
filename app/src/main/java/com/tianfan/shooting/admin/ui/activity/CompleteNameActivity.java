@@ -18,6 +18,7 @@ import com.tianfan.shooting.bean.TaskPersonBean;
 import com.tianfan.shooting.bean.TaskRankBean;
 import com.tianfan.shooting.network.okhttp.callback.ResultCallback;
 import com.tianfan.shooting.view.AddTaskPersonDialog;
+import com.tianfan.shooting.view.CompleteNameDilalog;
 import com.tianfan.shooting.view.EditTaskPersonDialog;
 import com.tianfan.shooting.view.LoadingDialog;
 import com.tianfan.shooting.view.hrecycler.HRecyclerView;
@@ -48,14 +49,19 @@ public class CompleteNameActivity extends AppCompatActivity implements TaskTeamV
     @BindView(R.id.hrecyclerview)
     HRecyclerView mHrecyclerview;
 
+    public static final int COMPLETE_NAME_TYPE = 0;//点名
+    public static final int CHANGE_LOCATION_TYPE = 1;//调整位置
+
     private List<TaskRankBean> mTaskRankDatas = new ArrayList<>();
 
     private String task_id;
     private String task_name;
+    private String task_rounds;
+    private int type;
     private TaskTeamPresenter mTaskTeamPresenter;
     private TaskRankListAdapter mTaskRankListAdapter;
     String[] headerListData;
-    private EditTaskPersonDialog mEditTaskPersonDialog;
+    private CompleteNameDilalog mCompleteNameDilalog;
     public LoadingDialog mLoadingDialog;
 
     @Override
@@ -79,11 +85,17 @@ public class CompleteNameActivity extends AppCompatActivity implements TaskTeamV
         mHrecyclerview.setHeaderListData(headerListData);
         task_id = getIntent().getStringExtra("task_id");
         task_name = getIntent().getStringExtra("task_name");
-        tv_title.setText(task_name+"-点名");
+        task_rounds = getIntent().getStringExtra("task_rounds");
+        type = getIntent().getIntExtra("type",0);
+        if (type==COMPLETE_NAME_TYPE){
+            tv_title.setText(task_name+"-点名");
+        }else {
+            tv_title.setText(task_name+"-调整位置");
+        }
     }
 
     private void initData(){
-        mTaskTeamPresenter.recordTaskPersonScore(task_id,"1",true);
+        mTaskTeamPresenter.recordTaskPersonScore(task_id,task_rounds,true);
     }
 
     @OnClick({R.id.iv_back})
@@ -124,8 +136,11 @@ public class CompleteNameActivity extends AppCompatActivity implements TaskTeamV
                 @Override
                 public void onItemChildClick(int parentPostion, int childPosition) {
                     TaskPersonBean data =  mTaskRankDatas.get(parentPostion).getDatas().get(childPosition);
-                    mEditTaskPersonDialog = new EditTaskPersonDialog(CompleteNameActivity.this, data, "1",mTaskTeamPresenter);
-                    mEditTaskPersonDialog.show();
+                    if (!TextUtils.isEmpty(data.getPerson_id())){
+                        mCompleteNameDilalog = new CompleteNameDilalog(CompleteNameActivity.this, mTaskRankDatas, parentPostion,
+                                childPosition,task_rounds,type,mTaskTeamPresenter);
+                        mCompleteNameDilalog.show();
+                    }
                 }
             });
             mHrecyclerview.setAdapter(mTaskRankListAdapter);
@@ -147,11 +162,11 @@ public class CompleteNameActivity extends AppCompatActivity implements TaskTeamV
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code == 1) {
-            if (mEditTaskPersonDialog.isShowing()) {
-                mEditTaskPersonDialog.dismiss();
+            if (mCompleteNameDilalog.isShowing()) {
+                mCompleteNameDilalog.dismiss();
             }
             showLoadFailMsg("修改队员成功");
-            mTaskTeamPresenter.recordTaskPersonScore(task_id,"1",false);
+            mTaskTeamPresenter.recordTaskPersonScore(task_id,task_rounds,false);
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
@@ -162,11 +177,11 @@ public class CompleteNameActivity extends AppCompatActivity implements TaskTeamV
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code == 1) {
-            if (mEditTaskPersonDialog!=null&&mEditTaskPersonDialog.isShowing()) {
-                mEditTaskPersonDialog.dismiss();
+            if (mCompleteNameDilalog!=null&&mCompleteNameDilalog.isShowing()) {
+                mCompleteNameDilalog.dismiss();
             }
             showLoadFailMsg("删除队员成功");
-            mTaskTeamPresenter.recordTaskPersonScore(task_id,"1",false);
+            mTaskTeamPresenter.recordTaskPersonScore(task_id,task_rounds,false);
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
@@ -178,7 +193,7 @@ public class CompleteNameActivity extends AppCompatActivity implements TaskTeamV
         int code = jsonObject.getIntValue("code");
         if (code == 1) {
             showLoadFailMsg("队员更换头像成功");
-            mTaskTeamPresenter.recordTaskPersonScore(task_id,"1",false);
+            mTaskTeamPresenter.recordTaskPersonScore(task_id,task_rounds,false);
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
@@ -191,7 +206,16 @@ public class CompleteNameActivity extends AppCompatActivity implements TaskTeamV
 
     @Override
     public void SetTaskPersonStatusResult(Object result) {
-
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 1) {
+            if (mCompleteNameDilalog!=null&&mCompleteNameDilalog.isShowing()) {
+                mCompleteNameDilalog.dismiss();
+            }
+            mTaskTeamPresenter.recordTaskPersonScore(task_id,task_rounds,false);
+        } else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
     }
 
     @Override

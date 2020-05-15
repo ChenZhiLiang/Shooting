@@ -34,7 +34,7 @@ public class TaskRankListAdapter extends CommonAdapter<TaskRankBean> {
     @Override
     public void bindData(CommonViewHolder holder, TaskRankBean data) {
         int position = holder.getAdapterPosition() + 1;
-        holder.setText(R.id.gr_id, position + "");
+        holder.setText(R.id.gr_id, String.valueOf(position));
 //        if (holder.getAdapterPosition()==0){
 //            holder.getView(R.id.img).setVisibility(View.GONE);
 //        }else {

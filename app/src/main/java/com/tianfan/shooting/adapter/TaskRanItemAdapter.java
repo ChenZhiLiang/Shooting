@@ -36,6 +36,7 @@ public class TaskRanItemAdapter extends BaseQuickAdapter<TaskPersonBean, BaseVie
         RelativeLayout lv = helper.getView(R.id.lv);
         RoundedImageView iv_user_icon = helper.getView(R.id.iv);
         LinearLayout linear_status_show = helper.getView(R.id.linear_status_show);
+        TextView tv_status = helper.getView(R.id.tv_status);
         ImageView img_add = helper.getView(R.id.img_add);
         TextView tv_user_name = helper.getView(R.id.tv_user_name);
 
@@ -48,6 +49,11 @@ public class TaskRanItemAdapter extends BaseQuickAdapter<TaskPersonBean, BaseVie
             if (item.getPerson_status().equals("0")){
                 linear_status_show.setVisibility(View.VISIBLE);
                 iv_user_icon.setVisibility(View.GONE);
+                tv_status.setText("缺勤");
+            }else if (item.getPerson_status().equals("-1")){
+                linear_status_show.setVisibility(View.VISIBLE);
+                iv_user_icon.setVisibility(View.GONE);
+                tv_status.setText("已退出");
             }else {
                 linear_status_show.setVisibility(View.GONE);
                 iv_user_icon.setVisibility(View.VISIBLE);

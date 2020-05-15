@@ -45,6 +45,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.tianfan.shooting.admin.ui.activity.CompleteNameActivity.CHANGE_LOCATION_TYPE;
+import static com.tianfan.shooting.admin.ui.activity.CompleteNameActivity.COMPLETE_NAME_TYPE;
+
 /**
  * @Name：Shooting
  * @Description：指挥管理
@@ -152,6 +155,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                             }
                         }
                         currentGroup = postion;
+                        mCommandManageAdapter.setCurrentRounds(currentRounds);
                         mCommandManageAdapter.notifyDataSetChanged();
                     }
                 });
@@ -209,22 +213,24 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                 initPopMenu();
                 break;
             case R.id.tv_task_state:
-                if (TextUtils.equals("0", mTaskInfoBean.getTask_rounds())) {
+                if (TextUtils.equals("1", mTaskInfoBean.getTask_rounds())) {
                     startActivity(new Intent(this, CompleteNameActivity.class)
                             .putExtra("task_id", mTaskInfoBean.getTask_id())
-                            .putExtra("task_name", mTaskInfoBean.getTask_name()));
+                            .putExtra("task_name", mTaskInfoBean.getTask_name())
+                            .putExtra("task_rounds",mTaskInfoBean.getTask_rounds())
+                            .putExtra("type",COMPLETE_NAME_TYPE));
                 }
                 break;
             case R.id.tv_complete_name:
-                if (TextUtils.equals("0", mTaskInfoBean.getTask_rounds())) {
+                if (TextUtils.equals("1", mTaskInfoBean.getTask_rounds())) {
                     SweetAlertDialogTools.ShowDialog(this, "确定完成点名？", new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             sweetAlertDialog.dismiss();
-                            mCommandManagePersenter.editTaskInfo(mTaskInfoBean.getTask_id(), currentRounds, 1);
                             tv_task_state.setVisibility(View.GONE);
                             tv_complete_name.setVisibility(View.GONE);
-                            tv_task_nest.setVisibility(View.VISIBLE);
+                            tv_start_shooting.setVisibility(View.VISIBLE);
+                            tv_task_nest.setVisibility(View.GONE);
                             tv_task_finish.setVisibility(View.VISIBLE);
                         }
                     });
@@ -236,31 +242,27 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                         sweetAlertDialog.dismiss();
                         currentRounds++;
-                        isFinshRun = true;
-                        tv_round.setText("第" + currentRounds + "轮");
-                        if (mTaskRoundDatas != null && mTaskRoundDatas.size() < currentRounds) {
-                            mTaskRoundDatas.add("第" + currentRounds + "轮");
-                        }
-                        payStatus = 1;
-                        tv_change_location.setVisibility(View.VISIBLE);
-                        tv_start_shooting.setVisibility(View.VISIBLE);
-                        tv_task_nest.setVisibility(View.GONE);
-                        mTaskInfoBean.setTask_rounds(String.valueOf(currentRounds));
-                        mCommandManagePersenter.editTaskInfo(mTaskInfoBean.getTask_id(),currentRounds,1);
-                        resetPayerImg();
+                        mCommandManagePersenter.changeTaskRounds(mTaskInfoBean.getTask_id(),currentRounds,0);
                     }
                 });
                 break;
             case R.id.tv_change_location:
                 startActivity(new Intent(this, CompleteNameActivity.class)
                         .putExtra("task_id", mTaskInfoBean.getTask_id())
-                        .putExtra("task_name", mTaskInfoBean.getTask_name()));
+                        .putExtra("task_name", mTaskInfoBean.getTask_name())
+                        .putExtra("task_rounds",mTaskInfoBean.getTask_rounds())
+                .putExtra("type",CHANGE_LOCATION_TYPE));
+
                 break;
             case R.id.tv_start_shooting_practice:
-                tv_change_location.setVisibility(View.GONE);
-                tv_start_shooting.setVisibility(View.GONE);
-                tv_task_nest.setVisibility(View.VISIBLE);
-                mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(),currentRounds,true);
+                SweetAlertDialogTools.ShowDialog(this, "确定开始打靶？", new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        mCommandManagePersenter.changeTaskRounds(mTaskInfoBean.getTask_id(),currentRounds,1);
+                    }
+                });
+
                 break;
             case R.id.tv_task_finish:
                 if (!TextUtils.equals("0", mTaskInfoBean.getTask_rounds())) {
@@ -337,11 +339,6 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                     imgStatusPosition = 5;
                     img_shooting.setBackgroundResource(R.mipmap.shooting_select);
                     palyerMedia(R.raw.sheji, imgStatusPosition);
-                    //点击射击  开始轮询查询分数
-                    isFinshRun = false;
-                    if (mHandler != null) {
-                        mHandler.postDelayed(runnable, 3000);
-                    }
                 }
                 break;
             case R.id.img_close_insurance:
@@ -477,11 +474,20 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                         window_equip_model.dismiss();
                         currentRounds = position + 1;
                         tv_round.setText(mTaskRoundDatas.get(position));
+                        mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(),currentRounds,false);
                         if (currentRounds==Integer.parseInt(mTaskInfoBean.getTask_rounds())){
                             tv_task_nest.setVisibility(View.VISIBLE);
+                            //开始轮询查询分数
+                            isFinshRun = false;
+                            if (mHandler != null) {
+                                mHandler.postDelayed(runnable, 3000);
+                            }
                         }else {
+                            isFinshRun = true;//结束轮询
                             tv_task_nest.setVisibility(View.GONE);
                         }
+//                        mTaskInfoBean.setTask_rounds(String.valueOf(currentRounds));
+
                     }
                 });
             }
@@ -525,51 +531,28 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                     tv_task_name.setText(underwayTask.get(0).getTask_name());
                     tv_task_state.setVisibility(View.GONE);
                     tv_complete_name.setVisibility(View.GONE);
-                    tv_task_nest.setVisibility(View.VISIBLE);
+                    //该轮次还未开始打靶
+                    if (underwayTask.get(0).getTask_rounds_status().equals("0")){
+                        tv_start_shooting.setVisibility(View.VISIBLE);
+                        tv_task_nest.setVisibility(View.GONE);
+                    }else {
+                        tv_start_shooting.setVisibility(View.GONE);
+                        tv_task_nest.setVisibility(View.VISIBLE);
+                    }
                     tv_task_finish.setVisibility(View.VISIBLE);
                     currentRounds = Integer.parseInt(mTaskInfoBean.getTask_rounds());
                     for (int i = 0; i < currentRounds; i++) {
                         mTaskRoundDatas.add("第" + (i + 1) + "轮");
                     }
                     tv_round.setText(mTaskRoundDatas.get(currentRounds - 1));
-                    mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(), currentRounds, true);
-                }
-//                else {
-//                    tv_task_state.setVisibility(View.VISIBLE);
-//                    tv_complete_name.setVisibility(View.VISIBLE);
-//                    tv_task_nest.setVisibility(View.GONE);
-//                    tv_task_finish.setVisibility(View.GONE);
-//                }
 
-//                SelectTaskDialog mSelectTaskDialog = new SelectTaskDialog(this, mDatas, new SelectTaskDialog.onSeleteTaskInterface() {
-//                    @Override
-//                    public void result(TaskInfoBean taskInfo) {
-//                        mTaskInfoBean = taskInfo;
-//                        tv_task_name.setText(mTaskInfoBean.getTask_name());
-//                        //任务已结束
-//                        if (!TextUtils.equals("0", mTaskInfoBean.getTask_rounds())) {
-//                            // Task_rounds 不等于0 表示该任务已经完成点名  正在执行打靶
-//                            tv_task_state.setVisibility(View.GONE);
-//                            tv_complete_name.setVisibility(View.GONE);
-//                            tv_task_nest.setVisibility(View.VISIBLE);
-//                            tv_task_finish.setVisibility(View.VISIBLE);
-////                           currentRounds = Integer.parseInt(mTaskInfoBean.getTask_rounds());
-//                            currentRounds = 1;
-//                            mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(),currentRounds,true);
-//                        } else {
-//                            tv_task_state.setVisibility(View.VISIBLE);
-//                            tv_complete_name.setVisibility(View.VISIBLE);
-//                            tv_task_nest.setVisibility(View.GONE);
-//                            tv_task_finish.setVisibility(View.GONE);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void selectDate(String date) {
-//                        mCommandManagePersenter.findTaskInfo(date);
-//                    }
-//                });
-//                mSelectTaskDialog.show();
+                    mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(), currentRounds, true);
+                    //开始轮询查询分数
+                    isFinshRun = false;
+                    if (mHandler != null) {
+                        mHandler.postDelayed(runnable, 3000);
+                    }
+                }
             }
 
         } else {
@@ -584,6 +567,44 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
         if (code == 1) {
             mTaskInfoBean.setTask_rounds(String.valueOf(currentRounds));
             mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(), currentRounds, true);
+        } else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
+    }
+
+    @Override
+    public void ChangeTaskRoundsResult(Object result,int task_rounds_status) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 1) {
+            if (task_rounds_status==1){//开始打靶
+                mCommandManagePersenter.editTaskInfo(mTaskInfoBean.getTask_id(), currentRounds, 1);
+                tv_change_location.setVisibility(View.GONE);
+                tv_start_shooting.setVisibility(View.GONE);
+                tv_task_nest.setVisibility(View.VISIBLE);
+                mTaskInfoBean.setTask_rounds(String.valueOf(currentRounds));
+                mTaskInfoBean.setTask_rounds_status(String.valueOf(task_rounds_status));
+                //开始打靶  开始轮询查询分数
+                isFinshRun = false;
+                if (mHandler != null) {
+                    mHandler.postDelayed(runnable, 3000);
+                }
+            }else {//切换下一轮次
+                isFinshRun = true;
+                tv_round.setText("第" + currentRounds + "轮");
+                if (mTaskRoundDatas != null && mTaskRoundDatas.size() < currentRounds) {
+                    mTaskRoundDatas.add("第" + currentRounds + "轮");
+                }
+                payStatus = 1;
+                tv_change_location.setVisibility(View.VISIBLE);
+                tv_start_shooting.setVisibility(View.VISIBLE);
+                tv_task_nest.setVisibility(View.GONE);
+                mTaskInfoBean.setTask_rounds(String.valueOf(currentRounds));
+                mTaskInfoBean.setTask_rounds_status(String.valueOf(task_rounds_status));
+                resetPayerImg();
+
+            }
+
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
@@ -610,6 +631,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                 }
                 mCommandManageDatas.add(mCommandManageBean);
             }
+            mCommandManageAdapter.setCurrentRounds(currentRounds);
             mCommandManageAdapter.notifyDataSetChanged();
         } else {
             showLoadFailMsg(jsonObject.getString("message"));

@@ -17,6 +17,7 @@ import com.tianfan.shooting.base.IPSetUpActivity;
 import com.tianfan.shooting.scorer.ui.activity.ScorerActivity;
 import com.tianfan.shooting.tools.RXPermissionTools;
 import com.tianfan.shooting.utills.NewSPTools;
+import com.tianfan.shooting.view.CheckTargetPositionDialog;
 import com.tianfan.shooting.warrior.WarriorActivity;
 
 import butterknife.BindView;
@@ -80,7 +81,9 @@ public class Login extends AppCompatActivity {
         findViewById(R.id.tv_jifen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ScorerActivity.class));
+                CheckTargetPositionDialog dialog = new CheckTargetPositionDialog(Login.this);
+                dialog.show();
+//                startActivity(new Intent(getApplicationContext(), ScorerActivity.class));
                 return;
             }
         });

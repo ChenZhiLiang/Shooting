@@ -44,7 +44,6 @@ public class SystemManageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_system_manage);
         ButterKnife.bind(this);
-//        task_id = getIntent().getStringExtra("task_id");
         list.add(tv_sxt);
         list.add(tv_qclx);
         list.add(tv_qcmb);

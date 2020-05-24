@@ -28,12 +28,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.tianfan.shooting.BuildConfig;
 import com.tianfan.shooting.R;
 import com.tianfan.shooting.admin.CameraListActivity;
+import com.tianfan.shooting.admin.mvp.presenter.ScorerPersenter;
+import com.tianfan.shooting.admin.mvp.view.ScorerView;
 import com.tianfan.shooting.admin.ui.evendata.CameraSelectEvent;
+import com.tianfan.shooting.bean.TaskInfoBean;
 import com.tianfan.shooting.net.FileUpLoadTools;
 import com.tianfan.shooting.net.GetResult;
 import com.tianfan.shooting.net.RequestTools;
 import com.tianfan.shooting.net.RetrofitUtils;
 import com.tianfan.shooting.tools.PicSaveTools;
+import com.tianfan.shooting.view.LoadingDialog;
 
 
 import org.easydarwin.video.Client;
@@ -68,11 +72,14 @@ import me.leefeng.promptlibrary.PromptDialog;
  * @CreateTime 2019-07-25 08:45
  * @Description 记分员角色
  */
-public class ScorerActivity extends AppCompatActivity implements View.OnClickListener {
+public class ScorerActivity extends AppCompatActivity implements View.OnClickListener , ScorerView {
     TextureView textureView;
     public JSONObject userJson = new JSONObject();
     //名字
     private PromptDialog promptDialog;
+
+    @BindView(R.id.iv_back)
+    ImageView iv_back;
     @BindView(R.id.tv_positon)
     TextView tvPosition;
 
@@ -139,7 +146,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     TextView tv_allring_data;
     @BindView(R.id.tv_all_fa_data)
     TextView tv_all_fa_data;
-    private String nowPosision = "";
+//    private String nowPosision = "";
     @BindView(R.id.title_cm)
     TextView title_cm;
     String name = "";
@@ -148,10 +155,18 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     String tasKey = "";
     private EasyPlayerClient client;
 
+    private List<String> scoreList = new ArrayList<>();
+
+    private int checkTarget;
+
+    private ScorerPersenter mScorerPersenter;
+    public LoadingDialog mLoadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scorer);
+        checkTarget = getIntent().getIntExtra("checkTarget",0);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         promptDialog = new PromptDialog(this);
@@ -165,9 +180,14 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void doInit() {
-        getFuckData();
+        checkTarget = getIntent().getIntExtra("checkTarget",0);
+        mLoadingDialog = new LoadingDialog(this, R.style.TransparentDialog);
+        mLoadingDialog.setTitle("加载中");
+        mLoadingDialog.setCancelable(false);
+        mScorerPersenter = new ScorerPersenter(this);
+//        getFuckData();
         initListen();
-        initCameraList();
+//        initCameraList();
     }
 
     private Bitmap revertBitMap;
@@ -192,7 +212,6 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         Log.e("icon_show", "View>>>YYYY>>>>>>>>" + showHight);
         Bitmap bitMapShow = zoomImg(ShoInput, 909, 909);
         readBitMap = zoomImg(((BitmapDrawable) imageView.getDrawable()).getBitmap(), 909, 909);
-        ;
         imageView.setImageBitmap(readBitMap);
         revertBitMap = bitMapShow;
         icon_show.setImageBitmap(bitMapShow);
@@ -254,22 +273,22 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                     canvas.drawCircle(909 * (event.getX() / v.getWidth()), 909 * (event.getY() / v.getHeight()), 10, paint);
                     icon_show.setImageBitmap(cvMap2);
 //                    开始将图片保存到本地
-                    JSONObject map = new JSONObject();
-                    map.put("position",""+nowPosision);
-                    FileUpLoadTools.doUpLoadPic(new FileUpLoadTools.FileUpCallBack() {
-                        @Override
-                        public void result(boolean result, String msg) {
-                            Log.e("照片上传回调",msg);
-                        }
-                    },PicSaveTools.savePhotoToSDCard(icon_show),map);
+//                    JSONObject map = new JSONObject();
+//                    map.put("position", "" + checkTarget);
+//                    FileUpLoadTools.doUpLoadPic(new FileUpLoadTools.FileUpCallBack() {
+//                        @Override
+//                        public void result(boolean result, String msg) {
+//                            Log.e("照片上传回调", msg);
+//                        }
+//                    }, PicSaveTools.savePhotoToSDCard(icon_show), map);
 //                    Pic
 //                    开始计算落点位置、得出比例，传到服务端，射击角色按比例画出
-                    float xUp = event.getX() / v.getWidth();
-                    float yUp = event.getY() / v.getHeight();
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("x", "" + xUp);
-                    jsonObject.put("y", "" + yUp);
-                    upXY(jsonObject);
+//                    float xUp = event.getX() / v.getWidth();
+//                    float yUp = event.getY() / v.getHeight();
+//                    JSONObject jsonObject = new JSONObject();
+//                    jsonObject.put("x", "" + xUp);
+//                    jsonObject.put("y", "" + yUp);
+//                    upXY(jsonObject);
 //                    Log.e("坐标比例计算结果", "----------------X" + xUp + ",yyy---" + yUp);
                 }
                 return false;
@@ -282,6 +301,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
      * @param type 判断类型，对应的数据自增1
      */
     private void startCalculation(String type) {
+        scoreList.add(type);
         if (type.equals("10")) {
             if (!tv_10h_data.getText().toString().equals("")) {
                 tv_10h_data.setText((Integer.parseInt(tv_10h_data.getText().toString()) + 1) + "");
@@ -456,8 +476,6 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -491,16 +509,17 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                     positonList.add(jsonArray.getJSONObject(i).getString("position"));
                 }
 
-                client.start(CameraURLList.get(0), Client.TRANSTYPE_UDP, Client.TRANSTYPE_UDP,
+                client.start("rtsp://192.168.1.6/vod/mp4://BigBuckBunny_175k.mov", Client.TRANSTYPE_UDP, Client.TRANSTYPE_UDP,
                         Client.EASY_SDK_VIDEO_FRAME_FLAG
                                 | Client.EASY_SDK_AUDIO_FRAME_FLAG, "", "", null);
 
             }
         });
-        nowPosision = "1";
-        title_cm.setText(nowPosision + "号靶位实时影像");
+//        nowPosision = "1";
+        title_cm.setText(checkTarget + "号靶位实时影像");
 
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void SelectCallback(CameraSelectEvent selectCalBack) {
         try {
@@ -509,8 +528,8 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
             client.start(selectCalBack.getResult(), Client.TRANSTYPE_UDP, Client.TRANSTYPE_UDP,
                     Client.EASY_SDK_VIDEO_FRAME_FLAG
                             | Client.EASY_SDK_AUDIO_FRAME_FLAG, "", "", null);
-            nowPosision = selectCalBack.getPositon();
-            title_cm.setText(nowPosision + "号靶位实时影像");
+//            nowPosision = selectCalBack.getPositon();
+//            title_cm.setText(nowPosision + "号靶位实时影像");
             resetData();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -519,16 +538,18 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
 
 
     //点击事件监听
-    @OnClick({R.id.tv_switch, R.id.iv_ai_pic, R.id.tv_reset, R.id.tv_save})
+    @OnClick({R.id.iv_back, R.id.tv_switch, R.id.iv_ai_pic, R.id.tv_reset, R.id.tv_save})
     @Override
     public void onClick(View v) {
 
-
-        if (v.getId() == R.id.tv_switch) {
-            startActivity(new Intent(getApplicationContext(), CameraListActivity.class));
-        }
-
-        if (v.getId() == R.id.tv_reset) {
+        if (v.getId() == R.id.iv_back) {
+            finish();
+        } else if (v.getId() == R.id.tv_switch) {
+            if (scoreList != null && scoreList.size() > 0) {
+                revocationData(scoreList.get(scoreList.size() - 1));
+            }
+//            startActivity(new Intent(getApplicationContext(), CameraListActivity.class));
+        } else if (v.getId() == R.id.tv_reset) {
             promptDialog.showAlertSheet("是否重置？", true, new PromptButton("取消", new PromptButtonListener() {
                 @Override
                 public void onClick(PromptButton button) {
@@ -540,18 +561,16 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }));
 
-        }
-
-
-        if (v.getId() == R.id.tv_save) {
-            promptDialog.showAlertSheet("是否退出？", true, new PromptButton("取消", new PromptButtonListener() {
+        } else if (v.getId() == R.id.tv_save) {
+            promptDialog.showAlertSheet("是否保存提交？", true, new PromptButton("取消", new PromptButtonListener() {
                 @Override
                 public void onClick(PromptButton button) {
                 }
             }), new PromptButton("确定", new PromptButtonListener() {
                 @Override
                 public void onClick(PromptButton button) {
-                    finish();
+//                    finish();
+                    mScorerPersenter.findTaskInfo();
                 }
             }));
 
@@ -570,6 +589,59 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         jsonObject.put("dataAllRing", tv_allring_data.getText().toString());
         jsonObject.put("dataAllFa", tv_all_fa_data.getText().toString());
         uploadataForYHXB(jsonObject);
+    }
+
+    /**
+     * @author
+     * @time
+     * @describe 撤销
+     */
+    private void revocationData(String score) {
+        scoreList.remove(scoreList.size() - 1);
+        if (score.equals("10")) {
+            if (tv_10h_data.getText().toString().equals("1")) {
+                tv_10h_data.setText("");
+            } else {
+                tv_10h_data.setText((Integer.parseInt(tv_10h_data.getText().toString()) - 1) + "");
+            }
+        }
+        if (score.equals("9")) {
+            if (tv_9h_data.getText().toString().equals("1")) {
+                tv_9h_data.setText("");
+            } else {
+                tv_9h_data.setText((Integer.parseInt(tv_9h_data.getText().toString()) - 1) + "");
+            }
+
+        }
+        if (score.equals("8")) {
+            if (tv_8h_data.getText().toString().equals("1")) {
+                tv_8h_data.setText("");
+            } else {
+                tv_8h_data.setText((Integer.parseInt(tv_8h_data.getText().toString()) - 1) + "");
+            }
+        }
+        if (score.equals("7")) {
+            if (tv_7h_data.getText().toString().equals("1")) {
+                tv_7h_data.setText("");
+            } else {
+                tv_7h_data.setText((Integer.parseInt(tv_7h_data.getText().toString()) - 1) + "");
+            }
+        }
+        if (score.equals("6")) {
+            if (tv_6h_data.getText().toString().equals("1")) {
+                tv_6h_data.setText("");
+            } else {
+                tv_6h_data.setText((Integer.parseInt(tv_6h_data.getText().toString()) - 1) + "");
+            }
+        }
+        if (score.equals("5")) {
+            if (tv_5h_data.getText().toString().equals("1")) {
+                tv_5h_data.setText("");
+            } else {
+                tv_5h_data.setText((Integer.parseInt(tv_5h_data.getText().toString()) - 1) + "");
+            }
+        }
+        calculationRingAndFa();
     }
 
     private void resetData() {
@@ -638,7 +710,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         JSONArray jsonArrayForUser = JSONArray.parseArray((JSONObject.parseObject(jsonObjectResPon.getString("task_data"))).getString("userData"));
         for (int i = 0; i < jsonArrayForUser.size(); i++) {
             JSONObject user = jsonArrayForUser.getJSONObject(i);
-            if (user.getString("gruop").equals(nowGruop) & user.getString("position").equals(nowPosision)) {
+            if (user.getString("gruop").equals(nowGruop) & user.getString("position").equals(checkTarget+"")) {
                 userJson = user;
                 name = user.getString("user_name");
                 if (!name.equals(nameFlag)) {
@@ -648,6 +720,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
     }
+
     //上传数据
     private void uploadataForYHXB(JSONObject jsonObject) {
         Log.e("取得的数据", "---》" + jsonObject);
@@ -714,7 +787,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         data.put("userName", "" + name);
 
         Map map = new HashMap();
-        map.put("postion", "" + nowPosision);
+        map.put("postion", "" + checkTarget);
         map.put("xyData", "" + data);
         map.put("shootData", "" + jsonObject);
 
@@ -758,5 +831,77 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 });
 
+    }
+
+    @Override
+    public void FindTaskInfoResult(Object result) {
+            JSONObject jsonObject = JSONObject.parseObject(result.toString());
+            int code = jsonObject.getIntValue("code");
+            if (code == 1) {
+                String datas = jsonObject.getString("datas");
+                List<TaskInfoBean> mDatas = JSONArray.parseArray(datas, TaskInfoBean.class);
+                List<TaskInfoBean> underwayTask = new ArrayList<>();
+
+                if (mDatas.size() > 0) {
+                    for (int i = 0; i < mDatas.size(); i++) {
+                        if (mDatas.get(i).getTask_status().equals("1")) {
+                            underwayTask.add(mDatas.get(i));
+                        }
+                    }
+
+                    //判断是否已经有正在进行中的任务
+                    if (underwayTask.size() > 0) {
+                        TaskInfoBean  mTaskInfoBean = underwayTask.get(0);
+
+//                        tv_task_name.setText(underwayTask.get(0).getTask_name());
+//                        tv_task_state.setVisibility(View.GONE);
+//                        tv_complete_name.setVisibility(View.GONE);
+//                        //该轮次还未开始打靶
+//                        if (underwayTask.get(0).getTask_rounds_status().equals("0")){
+//                            tv_start_shooting.setVisibility(View.VISIBLE);
+//                            tv_task_nest.setVisibility(View.GONE);
+//                        }else {
+//                            tv_start_shooting.setVisibility(View.GONE);
+//                            tv_task_nest.setVisibility(View.VISIBLE);
+//                        }
+//                        tv_task_finish.setVisibility(View.VISIBLE);
+//                        currentRounds = Integer.parseInt(mTaskInfoBean.getTask_rounds());
+//                        for (int i = 0; i < currentRounds; i++) {
+//                            mTaskRoundDatas.add("第" + (i + 1) + "轮");
+//                        }
+//                        tv_round.setText(mTaskRoundDatas.get(currentRounds - 1));
+//
+//                        mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(), currentRounds, true);
+//                        //开始轮询查询分数
+//                        isFinshRun = false;
+//                        if (mHandler != null) {
+//                            mHandler.postDelayed(runnable, 3000);
+//                        }
+                    }else {
+                        showLoadFailMsg("暂无任务正在打靶");
+                    }
+
+                }
+
+            } else {
+                showLoadFailMsg(jsonObject.getString("message"));
+            }
+    }
+
+    @Override
+    public void showProgress() {
+
+        mLoadingDialog.show();
+    }
+
+    @Override
+    public void hideProgress() {
+        mLoadingDialog.dismiss();
+    }
+
+    @Override
+    public void showLoadFailMsg(String err) {
+
+        Toast.makeText(this,err,Toast.LENGTH_SHORT).show();
     }
 }

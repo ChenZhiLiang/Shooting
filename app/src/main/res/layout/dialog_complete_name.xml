@@ -453,11 +453,22 @@
                 app:riv_corner_radius="@dimen/album_dp_20"
                 app:riv_oval="false" />
 
+            <TextView
+                android:id="@+id/tv_takepic_user_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_view_gb_create_task"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="点击更换头像"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
             <Button
                 android:id="@+id/btn_status"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/album_dp_30"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_toRightOf="@+id/comfir"
                 android:background="@drawable/bg_view_gb_create_task"
                 android:gravity="center"

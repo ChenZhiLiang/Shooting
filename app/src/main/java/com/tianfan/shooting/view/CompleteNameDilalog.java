@@ -3,6 +3,7 @@ package com.tianfan.shooting.view;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -16,6 +17,11 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.tianfan.shooting.R;
 import com.tianfan.shooting.admin.mvp.presenter.TaskTeamPresenter;
@@ -24,8 +30,10 @@ import com.tianfan.shooting.bean.TaskRankBean;
 import com.tianfan.shooting.network.api.ApiUrl;
 import com.tianfan.shooting.network.okhttp.callback.ResultCallback;
 import com.tianfan.shooting.tools.SweetAlertDialogTools;
+import com.tianfan.shooting.utills.GlideEngine;
 import com.tianfan.shooting.view.sweetalert.SweetAlertDialog;
 
+import java.io.File;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -55,6 +63,8 @@ public class CompleteNameDilalog extends Dialog implements View.OnClickListener 
     private TextView tv_number_position;
     private ImageView image_reduce_position;
     private RoundedImageView iv_user_icon;
+    private TextView tv_takepic_user_icon;
+
     private TextView id_cancle;
     private TextView comfir;
     private TextView tv_last;
@@ -70,6 +80,8 @@ public class CompleteNameDilalog extends Dialog implements View.OnClickListener 
     private int parentPostion;
     private int childPosition;
     private int type;
+    private String picUri; //头像
+
     public CompleteNameDilalog(@NonNull Activity activity, List<TaskRankBean> mTaskRankDatas, int parentPostion, int childPosition,String task_rounds,int type, TaskTeamPresenter mTaskTeamPresenter) {
         super(activity, R.style.alert_dialog);
         this.mActivity = activity;
@@ -113,6 +125,8 @@ public class CompleteNameDilalog extends Dialog implements View.OnClickListener 
 
 
         iv_user_icon = findViewById(R.id.iv_user_icon);
+        tv_takepic_user_icon = findViewById(R.id.tv_takepic_user_icon);
+
         id_cancle = findViewById(R.id.id_cancle);
         comfir = findViewById(R.id.comfir);
         tv_last = findViewById(R.id.tv_last);
@@ -123,6 +137,7 @@ public class CompleteNameDilalog extends Dialog implements View.OnClickListener 
         tv_title.setText("队员信息");
         img_delete.setVisibility(View.VISIBLE);
 
+        tv_takepic_user_icon.setOnClickListener(this);
 
         id_cancle.setOnClickListener(this);
         comfir.setOnClickListener(this);
@@ -167,6 +182,9 @@ public class CompleteNameDilalog extends Dialog implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tv_takepic_user_icon:
+                openPhoto();
+                break;
             case R.id.image_add_row://添加分组
                 row = Integer.parseInt(tv_number_row.getText().toString());
                 row++;
@@ -267,7 +285,32 @@ public class CompleteNameDilalog extends Dialog implements View.OnClickListener 
                 break;
         }
     }
+    private void openPhoto() {
+        PictureSelector.create(mActivity)
+                .openGallery(PictureMimeType.ofImage())
+                .maxSelectNum(1)
+                .loadImageEngine(GlideEngine.createGlideEngine())
+                .forResult(new OnResultCallbackListener() {
+                    @Override
+                    public void onResult(List<LocalMedia> result) {
+                        if (result.size() > 0) {
+                            LocalMedia media = result.get(0);
+                            picUri = media.getPath();
+                            File file = new File(picUri);
+                            if (file.exists()) {
+                                mTaskTeamPresenter.uploadTaskPersonHead(mTaskPersonBean.getTask_id(), mTaskPersonBean.getPerson_id(), file);
 
+                            }
+                            RequestOptions options = new RequestOptions().error(R.drawable.user_icon);//图片圆角为30
+                            Glide.with(mActivity).load(Uri.fromFile(file)).apply(options).into(iv_user_icon);
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+    }
     private void onComfir() {
         if (TextUtils.isEmpty(ed_name.getText().toString())) {
             Toast.makeText(mActivity, "请输入名字", Toast.LENGTH_SHORT).show();

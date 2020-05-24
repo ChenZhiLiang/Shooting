@@ -39,6 +39,7 @@ public class TaskInfoBean {
     private String task_equips;
     private String task_rounds;
     private String task_rounds_status;
+    private String task_rows;
     private String task_status;
 
     public String getTask_id() {
@@ -143,5 +144,13 @@ public class TaskInfoBean {
 
     public void setTask_status(String task_status) {
         this.task_status = task_status;
+    }
+
+    public String getTask_rows() {
+        return task_rows;
+    }
+
+    public void setTask_rows(String task_rows) {
+        this.task_rows = task_rows;
     }
 }

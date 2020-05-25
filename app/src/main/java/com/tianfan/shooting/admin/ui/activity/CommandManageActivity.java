@@ -155,6 +155,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                             }
                         }
                         currentGroup = postion;
+                        mCommandManagePersenter.changeGroup(mTaskInfoBean.getTask_id(),String.valueOf(currentRounds));
                         mCommandManageAdapter.setCurrentRounds(currentRounds);
                         mCommandManageAdapter.notifyDataSetChanged();
                     }
@@ -634,6 +635,17 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
             mCommandManageAdapter.setCurrentRounds(currentRounds);
             mCommandManageAdapter.notifyDataSetChanged();
         } else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
+    }
+
+    @Override
+    public void ChangeGroupResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code==1){
+
+        }else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
     }

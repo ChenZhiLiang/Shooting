@@ -20,4 +20,5 @@ public interface CommandManageView extends BaseView {
     void FindTaskPersonScoreResult(Object result);
 
 
+    void ChangeGroupResult(Object result);
 }

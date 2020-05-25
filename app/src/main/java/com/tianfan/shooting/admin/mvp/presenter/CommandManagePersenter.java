@@ -132,7 +132,6 @@ public class CommandManagePersenter {
     public void findTaskPersonScore(String task_id,int rounds,boolean isShow){
         if (isShow){
             mCommandManageView.showProgress();
-
         }
         String url = ApiUrl.ScoreApi.FindTaskPersonScore;
         RequestParams params = new RequestParams();
@@ -154,5 +153,29 @@ public class CommandManagePersenter {
             }
         });
 
+    }
+
+    /**
+     *  @author
+     *  @time
+     *  @describe 切换分组
+     */
+    public void changeGroup(String task_id,String task_rows){
+        String url = ApiUrl.TaskEquipApi.EditTaskInfo;
+        RequestParams params = new RequestParams();
+        params.put("task_id",task_id);
+        params.put("task_rows",task_rows);
+        mBaseMode.GetRequest(url, params, new ResultCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                mCommandManageView.ChangeGroupResult(result);
+            }
+
+            @Override
+            public void onFailure(Object result) {
+                mCommandManageView.showLoadFailMsg(result.toString());
+
+            }
+        });
     }
 }

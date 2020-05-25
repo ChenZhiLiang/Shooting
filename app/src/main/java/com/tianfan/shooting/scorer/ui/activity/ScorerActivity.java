@@ -165,6 +165,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     private EasyPlayerClient client;
 
     private List<String> scoreList = new ArrayList<>();
+    private List<Bitmap> scoreBitmaps = new ArrayList<>();
 
     //    private int checkTarget;
     private CameraBean mCameraBean;
@@ -285,6 +286,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                     paint.setStrokeWidth(5);
                     canvas.drawCircle(909 * (event.getX() / v.getWidth()), 909 * (event.getY() / v.getHeight()), 10, paint);
                     icon_show.setImageBitmap(cvMap2);
+                    scoreBitmaps.add(cvMap2);
 //                    开始将图片保存到本地
 ////                    JSONObject map = new JSONObject();
 ////                    map.put("position", "" + checkTarget);
@@ -681,6 +683,11 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
      */
     private void revocationData(String score) {
         scoreList.remove(scoreList.size() - 1);
+        scoreBitmaps.remove(scoreBitmaps.size()-1);
+        icon_show.setImageBitmap(revertBitMap);
+        for (int i = 0;i<scoreBitmaps.size();i++){
+            icon_show.setImageBitmap(scoreBitmaps.get(i));
+        }
         if (score.equals("10")) {
             if (tv_10h_data.getText().toString().equals("1")) {
                 tv_10h_data.setText("");

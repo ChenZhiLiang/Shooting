@@ -7,19 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.tianfan.shooting.admin.ui.activity.AdminActivity;
+import com.tianfan.shooting.base.IPSetUpActivity;
+import com.tianfan.shooting.scorer.ui.activity.CheckTargetPositionActivity;
+import com.tianfan.shooting.tools.RXPermissionTools;
+import com.tianfan.shooting.utills.NewSPTools;
+import com.tianfan.shooting.warrior.WarriorActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.tianfan.shooting.admin.ui.activity.AdminActivity;
-import com.tianfan.shooting.base.IPSetUpActivity;
-import com.tianfan.shooting.scorer.ui.activity.ScorerActivity;
-import com.tianfan.shooting.tools.RXPermissionTools;
-import com.tianfan.shooting.utills.NewSPTools;
-import com.tianfan.shooting.view.CheckTargetPositionDialog;
-import com.tianfan.shooting.warrior.WarriorActivity;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -81,9 +77,7 @@ public class Login extends AppCompatActivity {
         findViewById(R.id.tv_jifen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CheckTargetPositionDialog dialog = new CheckTargetPositionDialog(Login.this);
-                dialog.show();
-//                startActivity(new Intent(getApplicationContext(), ScorerActivity.class));
+                startActivity(new Intent(getApplicationContext(), CheckTargetPositionActivity.class));
                 return;
             }
         });

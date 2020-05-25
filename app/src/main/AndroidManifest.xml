@@ -175,9 +175,11 @@
         <activity
             android:name=".scorer.ui.activity.ScorerActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
-        </activity>
+        <activity android:name=".scorer.ui.activity.CheckTargetPositionActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <activity
             android:name=".warrior.WarriorActivity"

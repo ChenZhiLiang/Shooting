@@ -14,6 +14,7 @@ import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.TextureView;
@@ -31,6 +32,7 @@ import com.tianfan.shooting.admin.CameraListActivity;
 import com.tianfan.shooting.admin.mvp.presenter.ScorerPersenter;
 import com.tianfan.shooting.admin.mvp.view.ScorerView;
 import com.tianfan.shooting.admin.ui.evendata.CameraSelectEvent;
+import com.tianfan.shooting.bean.CameraBean;
 import com.tianfan.shooting.bean.TaskInfoBean;
 import com.tianfan.shooting.net.FileUpLoadTools;
 import com.tianfan.shooting.net.GetResult;
@@ -64,6 +66,7 @@ import io.reactivex.schedulers.Schedulers;
 import me.leefeng.promptlibrary.PromptButton;
 import me.leefeng.promptlibrary.PromptButtonListener;
 import me.leefeng.promptlibrary.PromptDialog;
+import ua.polohalo.zoomabletextureview.ZoomableTextureView;
 
 /**
  * @CreateBy liangxingfu
@@ -72,8 +75,9 @@ import me.leefeng.promptlibrary.PromptDialog;
  * @CreateTime 2019-07-25 08:45
  * @Description 记分员角色
  */
-public class ScorerActivity extends AppCompatActivity implements View.OnClickListener , ScorerView {
-    TextureView textureView;
+public class ScorerActivity extends AppCompatActivity implements View.OnClickListener, ScorerView {
+    @BindView(R.id.cm_view)
+    ZoomableTextureView textureView;
     public JSONObject userJson = new JSONObject();
     //名字
     private PromptDialog promptDialog;
@@ -142,11 +146,16 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
 
     @BindView(R.id.tv_5h_data)
     TextView tv_5h_data;
+    @BindView(R.id.tv_0h_data)
+    TextView tv_0h_data;
+
     @BindView(R.id.tv_allring_data)
     TextView tv_allring_data;
     @BindView(R.id.tv_all_fa_data)
     TextView tv_all_fa_data;
-//    private String nowPosision = "";
+    @BindView(R.id.tv_all_data)
+    TextView tv_all_data;
+    //    private String nowPosision = "";
     @BindView(R.id.title_cm)
     TextView title_cm;
     String name = "";
@@ -157,7 +166,8 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
 
     private List<String> scoreList = new ArrayList<>();
 
-    private int checkTarget;
+    //    private int checkTarget;
+    private CameraBean mCameraBean;
 
     private ScorerPersenter mScorerPersenter;
     public LoadingDialog mLoadingDialog;
@@ -166,11 +176,10 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scorer);
-        checkTarget = getIntent().getIntExtra("checkTarget",0);
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         promptDialog = new PromptDialog(this);
-        textureView = findViewById(R.id.cm_view);
+//        textureView = findViewById(R.id.cm_view);
         client = new EasyPlayerClient(this, BuildConfig.RTSP_KEY, textureView, null, null);
         try {
             doInit();
@@ -179,14 +188,21 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+
     private void doInit() {
-        checkTarget = getIntent().getIntExtra("checkTarget",0);
+//        checkTarget = getIntent().getIntExtra("checkTarget",0);
+        mCameraBean = getIntent().getParcelableExtra("CameraBean");
+
+        title_cm.setText(mCameraBean.getCamera_col() + "号靶位实时影像");
         mLoadingDialog = new LoadingDialog(this, R.style.TransparentDialog);
         mLoadingDialog.setTitle("加载中");
         mLoadingDialog.setCancelable(false);
         mScorerPersenter = new ScorerPersenter(this);
 //        getFuckData();
         initListen();
+        client.start("rtsp://192.168.1.6/vod/mp4://BigBuckBunny_175k.mov", Client.TRANSTYPE_UDP, Client.TRANSTYPE_UDP,
+                Client.EASY_SDK_VIDEO_FRAME_FLAG
+                        | Client.EASY_SDK_AUDIO_FRAME_FLAG, "", "", null);
 //        initCameraList();
     }
 
@@ -236,31 +252,28 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                         Log.e("点击", "----------------十环");
 
                         startCalculation("10");
-                    }
-                    if (convertRGBToHex(r, g, b).equals("#990099")) {
+                    } else if (convertRGBToHex(r, g, b).equals("#990099")) {
                         Log.e("点击", "----------------九环");
                         startCalculation("9");
-                    }
-                    if (convertRGBToHex(r, g, b).equals("#8AB975")) {
+                    } else if (convertRGBToHex(r, g, b).equals("#8AB975")) {
                         Log.e("点击", "----------------八环");
                         startCalculation("8");
-                    }
-                    if (convertRGBToHex(r, g, b).equals("#FFFF00")) {
+                    } else if (convertRGBToHex(r, g, b).equals("#FFFF00")) {
                         Log.e("点击", "----------------七环");
                         startCalculation("7");
-                    }
-                    if (convertRGBToHex(r, g, b).equals("#003300")) {
+                    } else if (convertRGBToHex(r, g, b).equals("#003300")) {
                         Log.e("点击", "----------------六环");
                         startCalculation("6");
-                    }
-                    if (convertRGBToHex(r, g, b).equals("#0000CC")) {
+                    } else if (convertRGBToHex(r, g, b).equals("#0000CC")) {
                         Log.e("点击", "----------------五环");
                         startCalculation("5");
-                    }
-                    if (convertRGBToHex(r, g, b).equals("#CECECE")) {
-                        Log.e("点击", "----------------四环");
+                    } else {
                         startCalculation("4");
                     }
+//                   else  (convertRGBToHex(r, g, b).equals("#CECECE")) {
+//                        Log.e("点击", "----------------四环");
+//                        startCalculation("4");
+//                    }
                     Bitmap imageInput2 = ((BitmapDrawable) icon_show.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
                     Bitmap cvMap2 = zoomImg(imageInput2, 909, 909);
                     Canvas canvas = new Canvas(cvMap2);
@@ -273,23 +286,23 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                     canvas.drawCircle(909 * (event.getX() / v.getWidth()), 909 * (event.getY() / v.getHeight()), 10, paint);
                     icon_show.setImageBitmap(cvMap2);
 //                    开始将图片保存到本地
-//                    JSONObject map = new JSONObject();
-//                    map.put("position", "" + checkTarget);
-//                    FileUpLoadTools.doUpLoadPic(new FileUpLoadTools.FileUpCallBack() {
-//                        @Override
-//                        public void result(boolean result, String msg) {
-//                            Log.e("照片上传回调", msg);
-//                        }
-//                    }, PicSaveTools.savePhotoToSDCard(icon_show), map);
-//                    Pic
-//                    开始计算落点位置、得出比例，传到服务端，射击角色按比例画出
-//                    float xUp = event.getX() / v.getWidth();
-//                    float yUp = event.getY() / v.getHeight();
-//                    JSONObject jsonObject = new JSONObject();
-//                    jsonObject.put("x", "" + xUp);
-//                    jsonObject.put("y", "" + yUp);
-//                    upXY(jsonObject);
-//                    Log.e("坐标比例计算结果", "----------------X" + xUp + ",yyy---" + yUp);
+////                    JSONObject map = new JSONObject();
+////                    map.put("position", "" + checkTarget);
+////                    FileUpLoadTools.doUpLoadPic(new FileUpLoadTools.FileUpCallBack() {
+////                        @Override
+////                        public void result(boolean result, String msg) {
+////                            Log.e("照片上传回调", msg);
+////                        }
+////                    }, PicSaveTools.savePhotoToSDCard(icon_show), map);
+////                    Pic
+////                    开始计算落点位置、得出比例，传到服务端，射击角色按比例画出
+////                    float xUp = event.getX() / v.getWidth();
+////                    float yUp = event.getY() / v.getHeight();
+////                    JSONObject jsonObject = new JSONObject();
+////                    jsonObject.put("x", "" + xUp);
+////                    jsonObject.put("y", "" + yUp);
+////                    upXY(jsonObject);
+////                    Log.e("坐标比例计算结果", "----------------X" + xUp + ",yyy---" + yUp);
                 }
                 return false;
             }
@@ -308,8 +321,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
             } else {
                 tv_10h_data.setText("1");
             }
-        }
-        if (type.equals("9")) {
+        } else if (type.equals("9")) {
 
             if (!tv_9h_data.getText().toString().equals("")) {
                 tv_9h_data.setText((Integer.parseInt(tv_9h_data.getText().toString()) + 1) + "");
@@ -317,43 +329,43 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                 tv_9h_data.setText("1");
             }
 
-        }
-        if (type.equals("8")) {
+        } else if (type.equals("8")) {
             if (!tv_8h_data.getText().toString().equals("")) {
                 tv_8h_data.setText((Integer.parseInt(tv_8h_data.getText().toString()) + 1) + "");
             } else {
                 tv_8h_data.setText("1");
             }
-        }
-        if (type.equals("7")) {
+        } else if (type.equals("7")) {
 
             if (!tv_7h_data.getText().toString().equals("")) {
                 tv_7h_data.setText((Integer.parseInt(tv_7h_data.getText().toString()) + 1) + "");
             } else {
                 tv_7h_data.setText("1");
             }
-        }
-        if (type.equals("6")) {
-
+        } else if (type.equals("6")) {
             if (!tv_6h_data.getText().toString().equals("")) {
                 tv_6h_data.setText((Integer.parseInt(tv_6h_data.getText().toString()) + 1) + "");
             } else {
                 tv_6h_data.setText("1");
             }
-        }
-        if (type.equals("5")) {
-
+        } else if (type.equals("5")) {
             if (!tv_5h_data.getText().toString().equals("")) {
                 tv_5h_data.setText((Integer.parseInt(tv_5h_data.getText().toString()) + 1) + "");
             } else {
                 tv_5h_data.setText("1");
             }
+        } else {
+            if (!tv_0h_data.getText().toString().equals("")) {
+                tv_0h_data.setText((Integer.parseInt(tv_0h_data.getText().toString()) + 1) + "");
+            } else {
+                tv_0h_data.setText("1");
+            }
         }
 
-        calculationRingAndFa();
+        calculationRingAndFa(false);
     }
 
-    private void calculationRingAndFa() {
+    private void calculationRingAndFa(boolean isRevocation) {
         int allRingCa = 0;
         int allFaCa = 0;
         if (!tv_10h_data.getText().toString().equals("")) {
@@ -380,10 +392,23 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
             allRingCa = allRingCa + (5 * Integer.parseInt(tv_5h_data.getText().toString()));
             allFaCa = allFaCa + Integer.parseInt(tv_5h_data.getText().toString());
         }
+        //判断是否是撤销
+        if (isRevocation){
+            if (Integer.parseInt(tv_all_data.getText().toString())>0) {
+                tv_all_data.setText(String.valueOf(Integer.parseInt(tv_all_data.getText().toString()) - 1));
+            } else {
+                tv_all_data.setText("");
+            }
+        }else {
+            if (!TextUtils.isEmpty(tv_all_data.getText().toString())) {
+                tv_all_data.setText(String.valueOf(Integer.parseInt(tv_all_data.getText().toString()) + 1));
+            } else {
+                tv_all_data.setText(String.valueOf(1));
+            }
+        }
 
-        tv_allring_data.setText(allRingCa + "");
-        tv_all_fa_data.setText(allFaCa + "");
-
+        tv_allring_data.setText(allRingCa == 0 ? "" : String.valueOf(allRingCa));
+        tv_all_fa_data.setText(allFaCa == 0 ? "" : String.valueOf(allFaCa));
 
     }
 
@@ -412,63 +437,111 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         int rred, rgreen, rblue;
         red = r / 16;
         rred = r % 16;
-        if (red == 10) rFString = "A";
-        else if (red == 11) rFString = "B";
-        else if (red == 12) rFString = "C";
-        else if (red == 13) rFString = "D";
-        else if (red == 14) rFString = "E";
-        else if (red == 15) rFString = "F";
-        else rFString = String.valueOf(red);
+        if (red == 10) {
+            rFString = "A";
+        } else if (red == 11) {
+            rFString = "B";
+        } else if (red == 12) {
+            rFString = "C";
+        } else if (red == 13) {
+            rFString = "D";
+        } else if (red == 14) {
+            rFString = "E";
+        } else if (red == 15) {
+            rFString = "F";
+        } else {
+            rFString = String.valueOf(red);
+        }
 
-        if (rred == 10) rSString = "A";
-        else if (rred == 11) rSString = "B";
-        else if (rred == 12) rSString = "C";
-        else if (rred == 13) rSString = "D";
-        else if (rred == 14) rSString = "E";
-        else if (rred == 15) rSString = "F";
-        else rSString = String.valueOf(rred);
+        if (rred == 10) {
+            rSString = "A";
+        } else if (rred == 11) {
+            rSString = "B";
+        } else if (rred == 12) {
+            rSString = "C";
+        } else if (rred == 13) {
+            rSString = "D";
+        } else if (rred == 14) {
+            rSString = "E";
+        } else if (rred == 15) {
+            rSString = "F";
+        } else {
+            rSString = String.valueOf(rred);
+        }
 
         rFString = rFString + rSString;
 
         green = g / 16;
         rgreen = g % 16;
 
-        if (green == 10) gFString = "A";
-        else if (green == 11) gFString = "B";
-        else if (green == 12) gFString = "C";
-        else if (green == 13) gFString = "D";
-        else if (green == 14) gFString = "E";
-        else if (green == 15) gFString = "F";
-        else gFString = String.valueOf(green);
+        if (green == 10) {
+            gFString = "A";
+        } else if (green == 11) {
+            gFString = "B";
+        } else if (green == 12) {
+            gFString = "C";
+        } else if (green == 13) {
+            gFString = "D";
+        } else if (green == 14) {
+            gFString = "E";
+        } else if (green == 15) {
+            gFString = "F";
+        } else {
+            gFString = String.valueOf(green);
+        }
 
-        if (rgreen == 10) gSString = "A";
-        else if (rgreen == 11) gSString = "B";
-        else if (rgreen == 12) gSString = "C";
-        else if (rgreen == 13) gSString = "D";
-        else if (rgreen == 14) gSString = "E";
-        else if (rgreen == 15) gSString = "F";
-        else gSString = String.valueOf(rgreen);
+        if (rgreen == 10) {
+            gSString = "A";
+        } else if (rgreen == 11) {
+            gSString = "B";
+        } else if (rgreen == 12) {
+            gSString = "C";
+        } else if (rgreen == 13) {
+            gSString = "D";
+        } else if (rgreen == 14) {
+            gSString = "E";
+        } else if (rgreen == 15) {
+            gSString = "F";
+        } else {
+            gSString = String.valueOf(rgreen);
+        }
 
         gFString = gFString + gSString;
 
         blue = b / 16;
         rblue = b % 16;
 
-        if (blue == 10) bFString = "A";
-        else if (blue == 11) bFString = "B";
-        else if (blue == 12) bFString = "C";
-        else if (blue == 13) bFString = "D";
-        else if (blue == 14) bFString = "E";
-        else if (blue == 15) bFString = "F";
-        else bFString = String.valueOf(blue);
+        if (blue == 10) {
+            bFString = "A";
+        } else if (blue == 11) {
+            bFString = "B";
+        } else if (blue == 12) {
+            bFString = "C";
+        } else if (blue == 13) {
+            bFString = "D";
+        } else if (blue == 14) {
+            bFString = "E";
+        } else if (blue == 15) {
+            bFString = "F";
+        } else {
+            bFString = String.valueOf(blue);
+        }
 
-        if (rblue == 10) bSString = "A";
-        else if (rblue == 11) bSString = "B";
-        else if (rblue == 12) bSString = "C";
-        else if (rblue == 13) bSString = "D";
-        else if (rblue == 14) bSString = "E";
-        else if (rblue == 15) bSString = "F";
-        else bSString = String.valueOf(rblue);
+        if (rblue == 10) {
+            bSString = "A";
+        } else if (rblue == 11) {
+            bSString = "B";
+        } else if (rblue == 12) {
+            bSString = "C";
+        } else if (rblue == 13) {
+            bSString = "D";
+        } else if (rblue == 14) {
+            bSString = "E";
+        } else if (rblue == 15) {
+            bSString = "F";
+        } else {
+            bSString = String.valueOf(rblue);
+        }
         bFString = bFString + bSString;
         result = "#" + rFString + gFString + bFString;
         return result;
@@ -479,18 +552,21 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
-        disposable.dispose();
+//        if (EventBus.getDefault().isRegistered(this)) {
+//            EventBus.getDefault().unregister(this);
+//        }
+//        if (disposable!=null){
+//            disposable.dispose();
+//        }
+
     }
 
 
-    List<String> CameraURLList = new ArrayList<>();
-    List<String> spStrLIst = new ArrayList<>();
-    List<String> positonList = new ArrayList<>();
+//    List<String> CameraURLList = new ArrayList<>();
+//    List<String> spStrLIst = new ArrayList<>();
+//    List<String> positonList = new ArrayList<>();
 
-    void initCameraList() {
+ /*   void initCameraList() {
         RequestTools.doAction().getData(RetrofitUtils.getService().getCameraList(new HashMap<>()), new GetResult<String>() {
             @Override
             public void fail(String msg) {
@@ -516,11 +592,11 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 //        nowPosision = "1";
-        title_cm.setText(checkTarget + "号靶位实时影像");
+//        title_cm.setText(checkTarget + "号靶位实时影像");
 
-    }
+    }*/
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+  /*  @Subscribe(threadMode = ThreadMode.MAIN)
     public void SelectCallback(CameraSelectEvent selectCalBack) {
         try {
             Toast.makeText(getApplicationContext(), selectCalBack.getResult(), Toast.LENGTH_SHORT).show();
@@ -534,7 +610,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
 
     //点击事件监听
@@ -562,22 +638,28 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
             }));
 
         } else if (v.getId() == R.id.tv_save) {
-            promptDialog.showAlertSheet("是否保存提交？", true, new PromptButton("取消", new PromptButtonListener() {
-                @Override
-                public void onClick(PromptButton button) {
-                }
-            }), new PromptButton("确定", new PromptButtonListener() {
-                @Override
-                public void onClick(PromptButton button) {
-//                    finish();
-                    mScorerPersenter.findTaskInfo();
-                }
-            }));
 
+            if (!TextUtils.isEmpty(tv_all_data.getText().toString())&&Integer.parseInt(tv_all_data.getText().toString())>0){
+                promptDialog.showAlertSheet("是否保存提交？", true, new PromptButton("取消", new PromptButtonListener() {
+                    @Override
+
+
+                    public void onClick(PromptButton button) {
+                    }
+                }), new PromptButton("确定", new PromptButtonListener() {
+                    @Override
+                    public void onClick(PromptButton button) {
+                        mScorerPersenter.findTaskInfo();
+                    }
+                }));
+            }else {
+                showLoadFailMsg("打靶未计分，请点击计分图计分");
+            }
         }
 
     }
 
+/*
     private void doUp() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("data5", tv_10h_data.getText().toString());
@@ -590,6 +672,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         jsonObject.put("dataAllFa", tv_all_fa_data.getText().toString());
         uploadataForYHXB(jsonObject);
     }
+*/
 
     /**
      * @author
@@ -641,7 +724,15 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                 tv_5h_data.setText((Integer.parseInt(tv_5h_data.getText().toString()) - 1) + "");
             }
         }
-        calculationRingAndFa();
+        if (score.equals("4")){
+            if (tv_0h_data.getText().toString().equals("1")) {
+                tv_0h_data.setText("");
+            } else {
+                tv_0h_data.setText((Integer.parseInt(tv_0h_data.getText().toString()) - 1) + "");
+            }
+        }
+
+        calculationRingAndFa(true);
     }
 
     private void resetData() {
@@ -653,13 +744,15 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         tv_5h_data.setText("");
         tv_allring_data.setText("");
         tv_all_fa_data.setText("");
+        tv_0h_data.setText("");
+        tv_all_data.setText("0");
         icon_show.setImageBitmap(revertBitMap);
     }
 
-    int count = 0;
-    Disposable disposable;
+//    int count = 0;
+//    Disposable disposable;
 
-    private void getFuckData() {
+  /*  private void getFuckData() {
         disposable = Observable.interval(0, 1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -684,13 +777,13 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 });
     }
+*/
+//    String timeFlag = "";
+//    String nameFlag = "";
+//    String nowGroupFlag = "";
 
-    String timeFlag = "";
-    String nameFlag = "";
-    String nowGroupFlag = "";
 
-
-    private void dealFuckData(String s) {
+    /*private void dealFuckData(String s) {
         Log.e("deal", "-----start--->");
         JSONObject jsonObjectResPon = JSONObject.parseObject(s);
         String nowGruop = jsonObjectResPon.getString("now_group");
@@ -719,10 +812,10 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
         }
-    }
+    }*/
 
     //上传数据
-    private void uploadataForYHXB(JSONObject jsonObject) {
+  /*  private void uploadataForYHXB(JSONObject jsonObject) {
         Log.e("取得的数据", "---》" + jsonObject);
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < 6; i++) {
@@ -771,8 +864,8 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 });
     }
-
-    private void upXY(JSONObject data) {
+*/
+  /*  private void upXY(JSONObject data) {
         JSONObject jsonObject = new JSONObject();
         data.put("data5", tv_10h_data.getText().toString());
         data.put("data6", tv_9h_data.getText().toString());
@@ -805,12 +898,11 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                 });
         doUp();
 
-    }
+    }*/
 
-    ;
 
     //上传数据
-    private void uploadataForWHXB(String result) {
+  /*  private void uploadataForWHXB(String result) {
         Map map = new HashMap();
         map.put("data", "" + result);
         map.put("userInfo", "" + userJson);
@@ -832,60 +924,45 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                 });
 
     }
-
+*/
     @Override
     public void FindTaskInfoResult(Object result) {
-            JSONObject jsonObject = JSONObject.parseObject(result.toString());
-            int code = jsonObject.getIntValue("code");
-            if (code == 1) {
-                String datas = jsonObject.getString("datas");
-                List<TaskInfoBean> mDatas = JSONArray.parseArray(datas, TaskInfoBean.class);
-                List<TaskInfoBean> underwayTask = new ArrayList<>();
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 1) {
+            String datas = jsonObject.getString("datas");
+            List<TaskInfoBean> mDatas = JSONArray.parseArray(datas, TaskInfoBean.class);
+            List<TaskInfoBean> underwayTask = new ArrayList<>();
 
-                if (mDatas.size() > 0) {
-                    for (int i = 0; i < mDatas.size(); i++) {
-                        if (mDatas.get(i).getTask_status().equals("1")) {
-                            underwayTask.add(mDatas.get(i));
-                        }
+            if (mDatas.size() > 0) {
+                for (int i = 0; i < mDatas.size(); i++) {
+                    if (mDatas.get(i).getTask_status().equals("1")) {
+                        underwayTask.add(mDatas.get(i));
                     }
-
-                    //判断是否已经有正在进行中的任务
-                    if (underwayTask.size() > 0) {
-                        TaskInfoBean  mTaskInfoBean = underwayTask.get(0);
-
-//                        tv_task_name.setText(underwayTask.get(0).getTask_name());
-//                        tv_task_state.setVisibility(View.GONE);
-//                        tv_complete_name.setVisibility(View.GONE);
-//                        //该轮次还未开始打靶
-//                        if (underwayTask.get(0).getTask_rounds_status().equals("0")){
-//                            tv_start_shooting.setVisibility(View.VISIBLE);
-//                            tv_task_nest.setVisibility(View.GONE);
-//                        }else {
-//                            tv_start_shooting.setVisibility(View.GONE);
-//                            tv_task_nest.setVisibility(View.VISIBLE);
-//                        }
-//                        tv_task_finish.setVisibility(View.VISIBLE);
-//                        currentRounds = Integer.parseInt(mTaskInfoBean.getTask_rounds());
-//                        for (int i = 0; i < currentRounds; i++) {
-//                            mTaskRoundDatas.add("第" + (i + 1) + "轮");
-//                        }
-//                        tv_round.setText(mTaskRoundDatas.get(currentRounds - 1));
-//
-//                        mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(), currentRounds, true);
-//                        //开始轮询查询分数
-//                        isFinshRun = false;
-//                        if (mHandler != null) {
-//                            mHandler.postDelayed(runnable, 3000);
-//                        }
-                    }else {
-                        showLoadFailMsg("暂无任务正在打靶");
-                    }
-
                 }
-
-            } else {
-                showLoadFailMsg(jsonObject.getString("message"));
+                //判断是否已经有正在进行中的任务
+                if (underwayTask.size() > 0) {
+                    TaskInfoBean mTaskInfoBean = underwayTask.get(0);
+                    mScorerPersenter.recordTaskPersonScore(mTaskInfoBean.getTask_id(),mTaskInfoBean.getTask_rows(),String.valueOf(mCameraBean.getCamera_col()),mTaskInfoBean.getTask_rounds(),
+                            tv_0h_data.getText().toString(),tv_5h_data.getText().toString(),tv_6h_data.getText().toString(),tv_7h_data.getText().toString(),tv_8h_data.getText().toString(),
+                            tv_9h_data.getText().toString(),tv_10h_data.getText().toString());
+                } else {
+                    showLoadFailMsg("暂无任务正在打靶");
+                }
             }
+        } else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
+    }
+
+    @Override
+    public void RecordTaskPersonScoreResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 1) {
+            resetData();
+        }
+        showLoadFailMsg(jsonObject.getString("message"));
     }
 
     @Override
@@ -902,6 +979,6 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void showLoadFailMsg(String err) {
 
-        Toast.makeText(this,err,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, err, Toast.LENGTH_SHORT).show();
     }
 }

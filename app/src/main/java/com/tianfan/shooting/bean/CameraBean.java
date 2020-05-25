@@ -1,5 +1,10 @@
 package com.tianfan.shooting.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * @Name：Shooting
  * @Description：描述信息
@@ -8,7 +13,7 @@ package com.tianfan.shooting.bean;
  * 修改人：Chen
  * 修改时间：2020/4/15 22:29
  */
-public class CameraBean {
+public class CameraBean implements Parcelable {
 
     /**
      * camera_id : 1
@@ -21,6 +26,27 @@ public class CameraBean {
     private String camera_name;
     private int camera_col;
     private String camera_status;
+    public CameraBean(){
+
+    }
+    protected CameraBean(Parcel in) {
+        camera_id = in.readString();
+        camera_name = in.readString();
+        camera_col = in.readInt();
+        camera_status = in.readString();
+    }
+
+    public static final Creator<CameraBean> CREATOR = new Creator<CameraBean>() {
+        @Override
+        public CameraBean createFromParcel(Parcel in) {
+            return new CameraBean(in);
+        }
+
+        @Override
+        public CameraBean[] newArray(int size) {
+            return new CameraBean[size];
+        }
+    };
 
     public String getCamera_id() {
         return camera_id;
@@ -52,5 +78,18 @@ public class CameraBean {
 
     public void setCamera_status(String camera_status) {
         this.camera_status = camera_status;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(camera_id);
+        dest.writeString(camera_name);
+        dest.writeInt(camera_col);
+        dest.writeString(camera_status);
     }
 }

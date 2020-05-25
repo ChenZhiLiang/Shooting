@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="horizontal"
+    android:padding="0.5dp">
+
+    <TextView
+        android:id="@+id/tv_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:text="1"
+        android:textColor="#ffffff"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_camera_id"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_weight="2"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:text="1346"
+        android:textColor="#ffffff"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_camera_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_weight="3"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:text="摄像头名称"
+        android:textColor="#ffffff"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_camera_col"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_weight="1"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:text="1"
+        android:textColor="#ffffff"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+</LinearLayout>

@@ -201,9 +201,9 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         mScorerPersenter = new ScorerPersenter(this);
 //        getFuckData();
         initListen();
-        client.start("rtsp://192.168.1.6/vod/mp4://BigBuckBunny_175k.mov", Client.TRANSTYPE_UDP, Client.TRANSTYPE_UDP,
-                Client.EASY_SDK_VIDEO_FRAME_FLAG
-                        | Client.EASY_SDK_AUDIO_FRAME_FLAG, "", "", null);
+//        client.start("rtsp://192.168.1.6/vod/mp4://BigBuckBunny_175k.mov", Client.TRANSTYPE_UDP, Client.TRANSTYPE_UDP,
+//                Client.EASY_SDK_VIDEO_FRAME_FLAG
+//                        | Client.EASY_SDK_AUDIO_FRAME_FLAG, "", "", null);
 //        initCameraList();
     }
 

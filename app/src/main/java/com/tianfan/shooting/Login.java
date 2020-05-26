@@ -70,14 +70,15 @@ public class Login extends AppCompatActivity {
         findViewById(R.id.tv_sheji).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), WarriorActivity.class));
+                startActivity(new Intent(getApplicationContext(), CheckTargetPositionActivity.class).putExtra("TargetPositionType",0));
+
                 return;
             }
         });
         findViewById(R.id.tv_jifen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), CheckTargetPositionActivity.class));
+                startActivity(new Intent(getApplicationContext(), CheckTargetPositionActivity.class).putExtra("TargetPositionType",1));
                 return;
             }
         });

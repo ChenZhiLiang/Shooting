@@ -11,6 +11,8 @@ import com.tianfan.shooting.admin.ui.fragment.HistoryFragment;
 import com.tianfan.shooting.admin.ui.fragment.HomeFragment;
 import com.tianfan.shooting.admin.ui.fragment.SetUpFragment;
 import com.tianfan.shooting.admin.ui.mdziliao.ZiLiaoMD;
+import com.tianfan.shooting.scorer.ui.activity.CheckTargetPositionActivity;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import androidx.appcompat.app.AppCompatActivity;
@@ -80,8 +82,11 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
 
         switch (v.getId()){
             case R.id.iv_shoot:
-                intent.putExtra("type","shoot");
-                intent.setClass(getApplicationContext(), ZiliaoActivity.class);
+//                intent.putExtra("type","shoot");
+//                intent.setClass(getApplicationContext(), ZiliaoActivity.class);
+                intent.setClass(getApplicationContext(), CheckTargetPositionActivity.class);
+                intent.putExtra("TargetPositionType",0);
+//                startActivity(new Intent(getApplicationContext(), CheckTargetPositionActivity.class).putExtra("TargetPositionType",0));
 
                 break;
             case R.id.iv_ziliao:

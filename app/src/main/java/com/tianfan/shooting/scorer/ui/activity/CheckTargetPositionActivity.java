@@ -14,6 +14,9 @@ import com.tianfan.shooting.bean.CameraBean;
 import com.tianfan.shooting.scorer.mvp.presenter.CheckTargetPositionPresenter;
 import com.tianfan.shooting.scorer.mvp.view.CheckTargetPositionView;
 import com.tianfan.shooting.view.LoadingDialog;
+import com.tianfan.shooting.warrior.ShootingMemberActivity;
+import com.tianfan.shooting.warrior.WarriorActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.Nullable;
@@ -34,7 +37,6 @@ public class CheckTargetPositionActivity extends AppCompatActivity implements Ch
 
     @BindView(R.id.iv_return_home)
     ImageView iv_return_home;
-
     @BindView(R.id.recycler_camera)
     RecyclerView recycler_camera;
     private CheckTargetPositionAdapter mCheckTargetPositionAdapter;
@@ -42,6 +44,7 @@ public class CheckTargetPositionActivity extends AppCompatActivity implements Ch
     private List<CameraBean> mCameraListDatas = new ArrayList<>();
     public LoadingDialog mLoadingDialog;
 
+    private int TargetPositionType;//0射击员 1记分员 2实弹射击
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,13 +57,26 @@ public class CheckTargetPositionActivity extends AppCompatActivity implements Ch
     }
 
     private void initView(){
+        TargetPositionType = getIntent().getIntExtra("TargetPositionType",0);
         recycler_camera.setLayoutManager(new LinearLayoutManager(this));
         mCheckTargetPositionAdapter = new CheckTargetPositionAdapter(mCameraListDatas);
         mCheckTargetPositionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 CameraBean cameraBean = mCameraListDatas.get(position);
-                startActivity(new Intent(CheckTargetPositionActivity.this, ScorerActivity.class).putExtra("CameraBean",cameraBean));
+                if (TargetPositionType==0){
+                    //射击员
+//                    startActivity(new Intent(getApplicationContext(), WarriorActivity.class));
+
+                    startActivity(new Intent(CheckTargetPositionActivity.this, ShootingMemberActivity.class).putExtra("CameraBean",cameraBean));
+
+                }else if (TargetPositionType==1){
+                    //记分员
+                    startActivity(new Intent(CheckTargetPositionActivity.this, ScorerActivity.class).putExtra("CameraBean",cameraBean));
+                }else if (TargetPositionType==2){
+
+                    //实弹射击
+                }
 
             }
         });

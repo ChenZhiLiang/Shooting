@@ -45,6 +45,8 @@ public class CommandManageAdapter extends BaseQuickAdapter<CommandManageBean, Ba
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (view.getId()==R.id.layout_number_item){
                     mOnCheckPositionInterface.check(helper.getAdapterPosition());
+                }else if (view.getId()==R.id.lv){
+                    mOnCheckPositionInterface.onClickItem(item.getDatas().get(position));
                 }
             }
         });
@@ -52,6 +54,7 @@ public class CommandManageAdapter extends BaseQuickAdapter<CommandManageBean, Ba
 
     public interface onCheckPositionInterface{
         void check(int postion);
+        void onClickItem(CommandManageBean.CommandManageItem item);
     }
 
     public void setCurrentRounds(int currentRounds) {

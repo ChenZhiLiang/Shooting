@@ -91,6 +91,7 @@ public class CompleteNameDilalog extends Dialog implements View.OnClickListener 
         this.mTaskTeamPresenter = mTaskTeamPresenter;
         this.task_rounds = task_rounds;
         this.type = type;
+
     }
 
     @Override

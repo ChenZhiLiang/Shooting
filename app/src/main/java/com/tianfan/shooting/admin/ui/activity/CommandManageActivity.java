@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -105,6 +106,8 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
     RecyclerView mHrecyclerview;
     private CommandManageAdapter mCommandManageAdapter;
     private List<CommandManageBean> mCommandManageDatas = new ArrayList<>();
+    List<CommandManageBean.CommandManageItem> personDatas = new ArrayList<>();
+
     private MediaPlayer player;
     public LoadingDialog mLoadingDialog;
     private CommandManagePersenter mCommandManagePersenter;
@@ -160,6 +163,13 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                         mCommandManageAdapter.notifyDataSetChanged();
                     }
                 });
+            }
+
+            @Override
+            public void onClickItem(CommandManageBean.CommandManageItem item) {
+                if (item != null && TextUtils.isEmpty(item.getTask_id())){
+                    showLoadFailMsg("添加");
+                }
             }
         });
         mHrecyclerview.setAdapter(mCommandManageAdapter);
@@ -623,6 +633,11 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                 JSONObject itemsObject = JSONObject.parseObject(jsonArray.get(i).toString());
                 String items = itemsObject.getString(String.valueOf(i + 1));
                 List<CommandManageBean.CommandManageItem> mDatas = JSONArray.parseArray(items, CommandManageBean.CommandManageItem.class);
+               for(int j = 0;j<mDatas.size();j++){
+                   if (!TextUtils.isEmpty(mDatas.get(j).getTask_id())){
+                       personDatas.add(mDatas.get(j));
+                   }
+               }
                 //添加个空的 显示组数
                 mDatas.add(0, new CommandManageBean.CommandManageItem());
                 CommandManageBean mCommandManageBean = new CommandManageBean();
@@ -634,6 +649,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
             }
             mCommandManageAdapter.setCurrentRounds(currentRounds);
             mCommandManageAdapter.notifyDataSetChanged();
+            Log.i("personDatas:",personDatas.size()+"");
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }

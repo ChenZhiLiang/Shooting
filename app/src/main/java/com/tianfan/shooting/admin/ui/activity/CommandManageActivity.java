@@ -29,6 +29,7 @@ import com.tianfan.shooting.bean.CommandManageBean;
 import com.tianfan.shooting.bean.EquipModelBean;
 import com.tianfan.shooting.bean.TaskInfoBean;
 import com.tianfan.shooting.tools.SweetAlertDialogTools;
+import com.tianfan.shooting.view.ChangeTaskPersonRowcolDialog;
 import com.tianfan.shooting.view.LoadingDialog;
 import com.tianfan.shooting.view.MyPopWindow;
 import com.tianfan.shooting.view.SelectTaskDialog;
@@ -130,6 +131,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
     List<TaskInfoBean> underwayTask = new ArrayList<>();
     //未开始的任务
     List<TaskInfoBean> waitForTask = new ArrayList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +160,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                             }
                         }
                         currentGroup = postion;
-                        mCommandManagePersenter.changeGroup(mTaskInfoBean.getTask_id(),String.valueOf(currentRounds));
+                        mCommandManagePersenter.changeGroup(mTaskInfoBean.getTask_id(), String.valueOf(currentRounds));
                         mCommandManageAdapter.setCurrentRounds(currentRounds);
                         mCommandManageAdapter.notifyDataSetChanged();
                     }
@@ -166,9 +168,29 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
             }
 
             @Override
-            public void onClickItem(CommandManageBean.CommandManageItem item) {
-                if (item != null && TextUtils.isEmpty(item.getTask_id())){
-                    showLoadFailMsg("添加");
+            public void onClickItem(CommandManageBean.CommandManageItem item, int postion) {
+                if (item != null && TextUtils.isEmpty(item.getTask_id()) && (currentGroup + 1) == item.getPerson_row()) {
+                    ChangeTaskPersonRowcolDialog dialog = new ChangeTaskPersonRowcolDialog(CommandManageActivity.this, personDatas,
+                            currentGroup + 1, postion, new ChangeTaskPersonRowcolDialog.onResultInterface() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            JSONObject jsonObject = JSONObject.parseObject(result.toString());
+                            int code = jsonObject.getIntValue("code");
+                            if (code == 1) {
+                                mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(), currentRounds, false);
+                                showLoadFailMsg("调整成功");
+                            } else {
+                                showLoadFailMsg(jsonObject.getString("message"));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Object result) {
+                            showLoadFailMsg(result.toString());
+
+                        }
+                    });
+                    dialog.show();
                 }
             }
         });
@@ -191,7 +213,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
 
 
     @OnClick({R.id.iv_return_home, R.id.tv_task_state, R.id.tv_complete_name, R.id.tv_task_nest,
-            R.id.tv_task_finish, R.id.tv_task_name, R.id.layout_round,R.id.tv_change_location,R.id.tv_start_shooting_practice})
+            R.id.tv_task_finish, R.id.tv_task_name, R.id.layout_round, R.id.tv_change_location, R.id.tv_start_shooting_practice})
     public void onClick(View view) {
         if (view == iv_return_home) {
             finish();
@@ -228,8 +250,8 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                     startActivity(new Intent(this, CompleteNameActivity.class)
                             .putExtra("task_id", mTaskInfoBean.getTask_id())
                             .putExtra("task_name", mTaskInfoBean.getTask_name())
-                            .putExtra("task_rounds",mTaskInfoBean.getTask_rounds())
-                            .putExtra("type",COMPLETE_NAME_TYPE));
+                            .putExtra("task_rounds", mTaskInfoBean.getTask_rounds())
+                            .putExtra("type", COMPLETE_NAME_TYPE));
                 }
                 break;
             case R.id.tv_complete_name:
@@ -253,7 +275,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                         sweetAlertDialog.dismiss();
                         currentRounds++;
-                        mCommandManagePersenter.changeTaskRounds(mTaskInfoBean.getTask_id(),currentRounds,0);
+                        mCommandManagePersenter.changeTaskRounds(mTaskInfoBean.getTask_id(), currentRounds, 0);
                     }
                 });
                 break;
@@ -261,8 +283,8 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                 startActivity(new Intent(this, CompleteNameActivity.class)
                         .putExtra("task_id", mTaskInfoBean.getTask_id())
                         .putExtra("task_name", mTaskInfoBean.getTask_name())
-                        .putExtra("task_rounds",mTaskInfoBean.getTask_rounds())
-                .putExtra("type",CHANGE_LOCATION_TYPE));
+                        .putExtra("task_rounds", mTaskInfoBean.getTask_rounds())
+                        .putExtra("type", CHANGE_LOCATION_TYPE));
 
                 break;
             case R.id.tv_start_shooting_practice:
@@ -270,7 +292,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                         sweetAlertDialog.dismiss();
-                        mCommandManagePersenter.changeTaskRounds(mTaskInfoBean.getTask_id(),currentRounds,1);
+                        mCommandManagePersenter.changeTaskRounds(mTaskInfoBean.getTask_id(), currentRounds, 1);
                     }
                 });
 
@@ -485,15 +507,15 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                         window_equip_model.dismiss();
                         currentRounds = position + 1;
                         tv_round.setText(mTaskRoundDatas.get(position));
-                        mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(),currentRounds,false);
-                        if (currentRounds==Integer.parseInt(mTaskInfoBean.getTask_rounds())){
+                        mCommandManagePersenter.findTaskPersonScore(mTaskInfoBean.getTask_id(), currentRounds, false);
+                        if (currentRounds == Integer.parseInt(mTaskInfoBean.getTask_rounds())) {
                             tv_task_nest.setVisibility(View.VISIBLE);
                             //开始轮询查询分数
                             isFinshRun = false;
                             if (mHandler != null) {
                                 mHandler.postDelayed(runnable, 3000);
                             }
-                        }else {
+                        } else {
                             isFinshRun = true;//结束轮询
                             tv_task_nest.setVisibility(View.GONE);
                         }
@@ -543,10 +565,10 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                     tv_task_state.setVisibility(View.GONE);
                     tv_complete_name.setVisibility(View.GONE);
                     //该轮次还未开始打靶
-                    if (underwayTask.get(0).getTask_rounds_status().equals("0")){
+                    if (underwayTask.get(0).getTask_rounds_status().equals("0")) {
                         tv_start_shooting.setVisibility(View.VISIBLE);
                         tv_task_nest.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         tv_start_shooting.setVisibility(View.GONE);
                         tv_task_nest.setVisibility(View.VISIBLE);
                     }
@@ -584,11 +606,11 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
     }
 
     @Override
-    public void ChangeTaskRoundsResult(Object result,int task_rounds_status) {
+    public void ChangeTaskRoundsResult(Object result, int task_rounds_status) {
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code == 1) {
-            if (task_rounds_status==1){//开始打靶
+            if (task_rounds_status == 1) {//开始打靶
                 mCommandManagePersenter.editTaskInfo(mTaskInfoBean.getTask_id(), currentRounds, 1);
                 tv_change_location.setVisibility(View.GONE);
                 tv_start_shooting.setVisibility(View.GONE);
@@ -600,7 +622,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                 if (mHandler != null) {
                     mHandler.postDelayed(runnable, 3000);
                 }
-            }else {//切换下一轮次
+            } else {//切换下一轮次
                 isFinshRun = true;
                 tv_round.setText("第" + currentRounds + "轮");
                 if (mTaskRoundDatas != null && mTaskRoundDatas.size() < currentRounds) {
@@ -629,15 +651,16 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
             String datas = jsonObject.getString("datas");
             JSONArray jsonArray = JSONArray.parseArray(datas);
             mCommandManageDatas.clear();
+            personDatas.clear();
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject itemsObject = JSONObject.parseObject(jsonArray.get(i).toString());
                 String items = itemsObject.getString(String.valueOf(i + 1));
                 List<CommandManageBean.CommandManageItem> mDatas = JSONArray.parseArray(items, CommandManageBean.CommandManageItem.class);
-               for(int j = 0;j<mDatas.size();j++){
-                   if (!TextUtils.isEmpty(mDatas.get(j).getTask_id())){
-                       personDatas.add(mDatas.get(j));
-                   }
-               }
+                for (int j = 0; j < mDatas.size(); j++) {
+                    if (!TextUtils.isEmpty(mDatas.get(j).getTask_id())) {
+                        personDatas.add(mDatas.get(j));
+                    }
+                }
                 //添加个空的 显示组数
                 mDatas.add(0, new CommandManageBean.CommandManageItem());
                 CommandManageBean mCommandManageBean = new CommandManageBean();
@@ -649,7 +672,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
             }
             mCommandManageAdapter.setCurrentRounds(currentRounds);
             mCommandManageAdapter.notifyDataSetChanged();
-            Log.i("personDatas:",personDatas.size()+"");
+            Log.i("personDatas:", personDatas.size() + "");
         } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
@@ -659,9 +682,9 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
     public void ChangeGroupResult(Object result) {
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
-        if (code==1){
+        if (code == 1) {
 
-        }else {
+        } else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
     }

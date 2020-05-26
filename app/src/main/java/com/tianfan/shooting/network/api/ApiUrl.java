@@ -109,18 +109,6 @@ public final class ApiUrl {
 
         //删除像头靶位
         public static final String RemoveCameraCol = HOST + "anb_shot/camera/removeCameraCol.action";
-
-//        【查询摄像头靶位】
-//        http://120.79.192.60:8181/anb_shot/camera/findCameraCol.action
-//
-//                【添加像头靶位】
-//        http://120.79.192.60:8181/anb_shot/camera/addCameraCol.action?camera_id=2&camera_name=摄像头名称2&camera_col=2&camera_status=1
-//
-//                【修改像头靶位】
-//        http://120.79.192.60:8181/anb_shot/camera/editCameraCol.action?camera_id=3&camera_name=摄像头名称3&camera_col=3&camera_status=1
-//
-//                【删除像头靶位】
-//        http://120.79.192.60:8181/anb_shot/camera/editCameraCol.action?camera_id=3
     }
     public static class  EquipTypeApi{
 

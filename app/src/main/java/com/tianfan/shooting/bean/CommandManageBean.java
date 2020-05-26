@@ -48,6 +48,7 @@ public class CommandManageBean {
          */
 
         private String task_id;
+        private String task_rounds;
         private String person_id;
         private String person_idno;
         private String person_name;
@@ -66,6 +67,14 @@ public class CommandManageBean {
 
         public void setTask_id(String task_id) {
             this.task_id = task_id;
+        }
+
+        public String getTask_rounds() {
+            return task_rounds;
+        }
+
+        public void setTask_rounds(String task_rounds) {
+            this.task_rounds = task_rounds;
         }
 
         public String getPerson_id() {

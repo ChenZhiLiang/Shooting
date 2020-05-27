@@ -178,7 +178,6 @@ public class EditTaskPersonDialog extends Dialog implements View.OnClickListener
                 if (position==1){
                     Toast.makeText(mActivity,"靶位不能小于1",Toast.LENGTH_SHORT).show();
                 }else {
-
                     position--;
                     tv_number_position.setText(String.valueOf(position));
                 }

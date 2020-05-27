@@ -55,8 +55,10 @@ public class CommandManageItemAdapter extends BaseQuickAdapter<CommandManageBean
             helper.getView(R.id.image_number_translucence).setVisibility(View.GONE);
             tv_score.setVisibility(View.VISIBLE);
             if (item.getPerson_score()!=null&&item.getPerson_score().size()>0){
-                if (currentRounds!=-1){
-                    tv_score.setText(item.getPerson_score().get(currentRounds-1).getHit_count()+"/"+item.getPerson_score().get(currentRounds-1).getHit_score());
+                for (int i = 0;i<item.getPerson_score().size();i++){
+                    if (Integer.parseInt(item.getTask_rounds())==item.getPerson_score().get(i).getRounds()){
+                        tv_score.setText(item.getPerson_score().get(i).getHit_count()+"/"+item.getPerson_score().get(i).getHit_score());
+                    }
                 }
             }else {
                 tv_score.setText("0/0");

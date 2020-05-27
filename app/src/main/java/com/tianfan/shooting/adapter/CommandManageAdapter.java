@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class CommandManageAdapter extends BaseQuickAdapter<CommandManageBean, BaseViewHolder> {
 
-    private int currentRounds = 1;//当前轮次
+//    private int currentRounds = 1;//当前轮次
     private onCheckPositionInterface mOnCheckPositionInterface;
     public CommandManageAdapter(@Nullable List<CommandManageBean> data,onCheckPositionInterface mOnCheckPositionInterface) {
         super(R.layout.layout_command_manage, data);
@@ -38,7 +38,7 @@ public class CommandManageAdapter extends BaseQuickAdapter<CommandManageBean, Ba
         mRecycleRank.setLayoutManager(layoutManager);
         mRecycleRank.setNestedScrollingEnabled(false);
         CommandManageItemAdapter mCommandManageItemAdapter = new CommandManageItemAdapter(item.isSelectPostion(),helper.getAdapterPosition()+1,item.getDatas());
-        mCommandManageItemAdapter.setCurrentRounds(currentRounds);
+//        mCommandManageItemAdapter.setCurrentRounds(currentRounds);
         mRecycleRank.setAdapter(mCommandManageItemAdapter);
         mCommandManageItemAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
             @Override
@@ -57,7 +57,7 @@ public class CommandManageAdapter extends BaseQuickAdapter<CommandManageBean, Ba
         void onClickItem(CommandManageBean.CommandManageItem item,int postion);
     }
 
-    public void setCurrentRounds(int currentRounds) {
-        this.currentRounds = currentRounds;
-    }
+//    public void setCurrentRounds(int currentRounds) {
+//        this.currentRounds = currentRounds;
+//    }
 }

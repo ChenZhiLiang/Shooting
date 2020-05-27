@@ -161,7 +161,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                         }
                         currentGroup = postion;
                         mCommandManagePersenter.changeGroup(mTaskInfoBean.getTask_id(), String.valueOf(currentRounds));
-                        mCommandManageAdapter.setCurrentRounds(currentRounds);
+//                        mCommandManageAdapter.setCurrentRounds(currentRounds);
                         mCommandManageAdapter.notifyDataSetChanged();
                     }
                 });
@@ -670,7 +670,7 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                 }
                 mCommandManageDatas.add(mCommandManageBean);
             }
-            mCommandManageAdapter.setCurrentRounds(currentRounds);
+//            mCommandManageAdapter.setCurrentRounds(currentRounds);
             mCommandManageAdapter.notifyDataSetChanged();
             Log.i("personDatas:", personDatas.size() + "");
         } else {

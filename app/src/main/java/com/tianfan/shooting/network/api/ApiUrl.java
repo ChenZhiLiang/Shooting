@@ -95,6 +95,7 @@ public final class ApiUrl {
         //【查询任务器材】设置调整后的数量（加减数量）
         public static final String ChangeTaskEquipCount = HOST + "anb_shot/task/changeTaskEquipCount.action";
 
+        public static final String ImportTaskEquip = HOST + "anb_shot/task/importTaskEquip.action";
     }
 
 
@@ -150,6 +151,10 @@ public final class ApiUrl {
         //修改器材模板项目
         public static final String EditEquipModelItem = HOST+"anb_shot/equip/editEquipModelItem.action";
 
+        //导入器材模板项目
+        public static final String ImportEquipModelItem = HOST+"anb_shot/equip/importEquipModelItem.action";
+
+//        http://120.79.192.60:8181/anb_shot/equip/importEquipModelItem.action?equip_model_type_id=equip_model_type_20200527131318482692
         //删除器材模板项目
         public static final String RemoveEquipModelItem = HOST+"anb_shot/equip/removeEquipModelItem.action";
     }

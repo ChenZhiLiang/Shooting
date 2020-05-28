@@ -28,6 +28,7 @@ public class TaskEquipBean {
     private String equip_name;
     private String equip_unit;
     private int equip_count;
+    private int equip_count_take;
     private String equip_status;
 
     public String getTask_id() {
@@ -92,5 +93,13 @@ public class TaskEquipBean {
 
     public void setEquip_status(String equip_status) {
         this.equip_status = equip_status;
+    }
+
+    public int getEquip_count_take() {
+        return equip_count_take;
+    }
+
+    public void setEquip_count_take(int equip_count_take) {
+        this.equip_count_take = equip_count_take;
     }
 }

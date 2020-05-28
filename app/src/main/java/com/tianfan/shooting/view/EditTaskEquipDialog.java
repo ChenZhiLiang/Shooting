@@ -17,13 +17,9 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tianfan.shooting.R;
 import com.tianfan.shooting.adapter.AddEquipTypeAdapter;
-import com.tianfan.shooting.adapter.TaskRoundsAdapter;
-import com.tianfan.shooting.admin.ui.activity.CommandManageActivity;
 import com.tianfan.shooting.bean.EquipTypeBean;
-import com.tianfan.shooting.tools.SweetAlertDialogTools;
-import com.tianfan.shooting.view.sweetalert.SweetAlertDialog;
+import com.tianfan.shooting.bean.TaskEquipBean;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -32,13 +28,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @Name：Shooting
- * @Description：添加任务器材
+ * @Description：描述信息
  * @Author：Chen
- * @Date：2020/4/18 23:38
+ * @Date：2020/5/29 0:26
  * 修改人：Chen
- * 修改时间：2020/4/18 23:38
+ * 修改时间：2020/5/29 0:26
  */
-public class AddTaskEquipDialog extends Dialog implements View.OnClickListener {
+public class EditTaskEquipDialog extends Dialog implements View.OnClickListener {
 
     private TextView tv_equip_type;
     private TextView tv_equip_name;
@@ -54,21 +50,17 @@ public class AddTaskEquipDialog extends Dialog implements View.OnClickListener {
     private EditText edit_row_count_take;
     private ImageView image_count_take_reduce;
     private onClickComfirInterface mOnClickComfirInterface;
-    private List<EquipTypeBean> mEquipTypeDatas;
-    private View popupView_view;
-    private RecyclerView recycler_model;
-    private AddEquipTypeAdapter mAddEquipTypeAdapter;
-    private MyPopWindow window_equip_model;
-    public AddTaskEquipDialog(@NonNull Context context, List<EquipTypeBean> mEquipTypeDatas, onClickComfirInterface mOnClickComfirInterface) {
+    private TaskEquipBean mTaskEquipBean;
+    public EditTaskEquipDialog(@NonNull Context context, TaskEquipBean mTaskEquipBean, onClickComfirInterface mOnClickComfirInterface) {
         super(context, R.style.alert_dialog);
         this.mOnClickComfirInterface = mOnClickComfirInterface;
-        this.mEquipTypeDatas = mEquipTypeDatas;
+        this.mTaskEquipBean = mTaskEquipBean;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_add_task_equip);
+        setContentView(R.layout.dialog_edit_task_equip);
         getWindow().setGravity(Gravity.CENTER);
         setCanceledOnTouchOutside(false);
         initView();
@@ -88,7 +80,6 @@ public class AddTaskEquipDialog extends Dialog implements View.OnClickListener {
         image_reduce = findViewById(R.id.image_reduce);
         tv_cancle = findViewById(R.id.tv_cancle);
         tv_comfir = findViewById(R.id.tv_comfir);
-        tv_equip_type.setOnClickListener(this);
         image_add.setOnClickListener(this);
         image_reduce.setOnClickListener(this);
         tv_cancle.setOnClickListener(this);
@@ -96,46 +87,20 @@ public class AddTaskEquipDialog extends Dialog implements View.OnClickListener {
         image_count_take_add.setOnClickListener(this);
         image_count_take_reduce.setOnClickListener(this);
 
-    }
-    private void initPopMenu() {
-        popupView_view = getLayoutInflater().inflate(R.layout.layout_popupwindow_equip, null);
-        recycler_model = popupView_view.findViewById(R.id.recycler_model);
-        recycler_model.setLayoutManager(new LinearLayoutManager(getContext()));
-        //默认第一轮
-        mAddEquipTypeAdapter = new AddEquipTypeAdapter(mEquipTypeDatas);
-        mAddEquipTypeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                EquipTypeBean mEquipTypeBean = mEquipTypeDatas.get(position);
-                tv_equip_type.setText(mEquipTypeBean.getEquip_type_name());
-                tv_equip_name.setText(mEquipTypeBean.getEquip_name());
-                tv_equip_unit.setText(mEquipTypeBean.getEquip_unit());
-                window_equip_model.dismiss();
-            }
-        });
-        recycler_model.setAdapter(mAddEquipTypeAdapter);
-        // TODO: 2016/5/17 创建PopupWindow对象，指定宽度和高度
-        window_equip_model = new MyPopWindow(popupView_view, tv_equip_type.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
-        window_equip_model.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                WindowManager.LayoutParams lp = getWindow().getAttributes();
-                lp.alpha = 1f;
-                getWindow().setAttributes(lp);
-            }
-        });
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.alpha = 0.7f;
-        getWindow().setAttributes(lp);
-        window_equip_model.showAsDropDown(tv_equip_type, 0, 0);
+        if (mTaskEquipBean!=null){
+            tv_equip_type.setText(mTaskEquipBean.getEquip_type());
+            tv_equip_name.setText(mTaskEquipBean.getEquip_name());
+            tv_equip_unit.setText(mTaskEquipBean.getEquip_unit());
+            edit_row_count.setText(String.valueOf(mTaskEquipBean.getEquip_count()));
+            edit_row_count_take.setText(String.valueOf(mTaskEquipBean.getEquip_count_take()));
+        }
+
     }
 
     @Override
     public void onClick(View v) {
 
-        if (v==tv_equip_type){
-            initPopMenu();
-        }else if (v == image_add) {
+        if (v == image_add) {
             int count = Integer.parseInt(edit_row_count.getText().toString());
             count++;
             edit_row_count.setText(String.valueOf(count));
@@ -164,7 +129,7 @@ public class AddTaskEquipDialog extends Dialog implements View.OnClickListener {
             if (TextUtils.isEmpty(tv_equip_type.getText().toString())) {
                 Toast.makeText(getContext(), "请选择类型", Toast.LENGTH_SHORT).show();
             }else {
-                mOnClickComfirInterface.onResult(tv_equip_type.getText().toString(), tv_equip_name.getText().toString(), tv_equip_unit.getText().toString(), edit_row_count.getText().toString(),edit_row_count_take.getText().toString());
+                mOnClickComfirInterface.onResult(mTaskEquipBean,tv_equip_type.getText().toString(), tv_equip_name.getText().toString(), tv_equip_unit.getText().toString(), edit_row_count.getText().toString(),edit_row_count_take.getText().toString());
                 dismiss();
             }
 
@@ -175,6 +140,6 @@ public class AddTaskEquipDialog extends Dialog implements View.OnClickListener {
 
     public interface onClickComfirInterface {
 
-        void onResult(String type, String name, String unit, String count,String count_take);
+        void onResult(TaskEquipBean mTaskEquipBean,String type, String name, String unit, String count,String count_take);
     }
 }

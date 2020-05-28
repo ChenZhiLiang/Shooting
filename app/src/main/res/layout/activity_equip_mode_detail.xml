@@ -25,6 +25,14 @@
         android:layout_height="25dp"
         android:layout_alignParentLeft="true"
         android:src="@drawable/icon_return_home" />
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_toLeftOf="@+id/iv_delete"
+        android:id="@+id/input_by_excel"
+        android:src="@drawable/icon_input"
+        android:layout_alignParentRight="true"
+        android:layout_height="25dp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -122,11 +130,26 @@
                 android:paddingTop="5dp"
                 android:paddingRight="10dp"
                 android:paddingBottom="5dp"
-                android:text="数量"
+                android:text="应带数量"
                 android:textColor="#ffffff"
                 android:textSize="15dp"
                 android:textStyle="bold" />
-
+            <TextView
+                android:id="@+id/tv_equip_count_take"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="2"
+                android:background="#1f443c"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:text="实带数量"
+                android:textColor="#ffffff"
+                android:textSize="15dp"
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/tv_equip_status"
                 android:layout_width="0dp"

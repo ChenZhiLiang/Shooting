@@ -30,4 +30,6 @@ public interface TaskEquipView extends BaseView {
 
     //修改任务（任务器材流程）
     void editTaskInfoResult(Object result);
+
+    void importTaskEquipResult(Object result);
 }

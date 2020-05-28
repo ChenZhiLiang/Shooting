@@ -24,4 +24,7 @@ public interface EquipModeDetailView extends BaseView {
 
     //修改器材模板项目
     void EditEquipModelItemResult(Object result);
+
+    //导入器材模板项目
+    void ImportEquipModelItemResult(Object result);
 }

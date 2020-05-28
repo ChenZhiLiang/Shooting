@@ -1,7 +1,9 @@
 package com.tianfan.shooting.admin.taskdata;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,21 +22,31 @@ import com.tianfan.shooting.adapter.TaskEquipListAdapter;
 import com.tianfan.shooting.adapter.TaskEquipModelAdapter;
 import com.tianfan.shooting.admin.mvp.presenter.TaskEquipPresenter;
 import com.tianfan.shooting.admin.mvp.view.TaskEquipView;
+import com.tianfan.shooting.admin.ui.activity.EquipModeDetailActivity;
 import com.tianfan.shooting.base.BaseFragment;
 import com.tianfan.shooting.bean.EquipModelBean;
 import com.tianfan.shooting.bean.EquipTypeBean;
 import com.tianfan.shooting.bean.TaskEquipBean;
 import com.tianfan.shooting.bean.TaskInfoBean;
 import com.tianfan.shooting.tools.SweetAlertDialogTools;
+import com.tianfan.shooting.utills.Utils;
 import com.tianfan.shooting.view.AddTaskEquipDialog;
+import com.tianfan.shooting.view.EditTaskEquipDialog;
 import com.tianfan.shooting.view.MyPopWindow;
 import com.tianfan.shooting.view.sweetalert.SweetAlertDialog;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
+import me.rosuh.filepicker.config.FilePickerManager;
+
+import static com.tianfan.shooting.admin.taskdata.FraDuiyuan.IMPORT_TASK_PERSON;
 
 /**
  * CreateBy：lxf
@@ -46,6 +58,8 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
     TextView tv_title;
     @BindView(R.id.iv_back)
     ImageView iv_back;
+    @BindView(R.id.input_by_excel)
+    ImageView input_by_excel;
     @BindView(R.id.iv_clear)
     ImageView iv_clear;
     @BindView(R.id.image_equip_prepare)
@@ -111,16 +125,43 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
                 }else {
                     TaskEquipBean mTaskEquipBean = mTaskEquipDatas.get(position);
                     int count = mTaskEquipBean.getEquip_count();
+                    int count_take = mTaskEquipBean.getEquip_count_take();
                     if (view.getId() == R.id.img_add) {
                         count++;
-                        mTaskEquipPresenter.changeTaskEquipCount(task_id, mTaskEquipBean.getEquip_model_item_id(), count);
+                        mTaskEquipPresenter.changeTaskEquipCount(task_id, mTaskEquipBean.getEquip_model_item_id(), count,count_take);
                     } else if (view.getId() == R.id.img_reduce) {
                         if (count==0){
-                            showLoadFailMsg("数量不能小于0");
+                            showLoadFailMsg("应带数量不能小于0");
                         }else {
                             count--;
-                            mTaskEquipPresenter.changeTaskEquipCount(task_id, mTaskEquipBean.getEquip_model_item_id(), count);
+                            mTaskEquipPresenter.changeTaskEquipCount(task_id, mTaskEquipBean.getEquip_model_item_id(), count,count_take);
                         }
+                    }else if (view.getId() == R.id.img_add_take_count){
+                        count_take++;
+                        mTaskEquipPresenter.changeTaskEquipCount(task_id, mTaskEquipBean.getEquip_model_item_id(), count,count_take);
+                    }else if (view.getId() == R.id.img_reduce_take_count){
+                        if (count_take==0){
+                            showLoadFailMsg("实带数量不能小于0");
+                        }else {
+                            count_take--;
+                            mTaskEquipPresenter.changeTaskEquipCount(task_id, mTaskEquipBean.getEquip_model_item_id(), count,count_take);
+                        }
+                    }else if (view.getId()==R.id.tv_equip_count){
+                        new EditTaskEquipDialog(getContext(), mTaskEquipBean, new EditTaskEquipDialog.onClickComfirInterface() {
+                            @Override
+                            public void onResult(TaskEquipBean bean, String type, String name, String unit, String count, String count_take) {
+                                mTaskEquipPresenter.changeTaskEquipCount(task_id, bean.getEquip_model_item_id(),
+                                        Integer.parseInt(count),Integer.parseInt(count_take));
+                            }
+                        }).show();
+                    }else if (view.getId()==R.id.tv_equip_take_count){
+                        new EditTaskEquipDialog(getContext(), mTaskEquipBean, new EditTaskEquipDialog.onClickComfirInterface() {
+                            @Override
+                            public void onResult(TaskEquipBean bean, String type, String name, String unit, String count, String count_take) {
+                                mTaskEquipPresenter.changeTaskEquipCount(task_id, bean.getEquip_model_item_id(),
+                                       Integer.parseInt(count),Integer.parseInt(count_take));
+                            }
+                        }).show();
                     }
                 }
             }
@@ -170,7 +211,7 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
         mTaskEquipPresenter.findEquipModelType();
     }
 
-    @OnClick({R.id.tv_equip_model, R.id.iv_back, R.id.iv_clear,R.id.btn_add_task_equip,R.id.image_equip_prepare,R.id.image_equip_ture})
+    @OnClick({R.id.tv_equip_model, R.id.iv_back,R.id.input_by_excel, R.id.iv_clear,R.id.btn_add_task_equip,R.id.image_equip_prepare,R.id.image_equip_ture})
     public void onClick(View v) {
         if (v == tv_equip_model) {
             WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
@@ -179,7 +220,9 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
             window_equip_model.showAsDropDown(tv_equip_model, 0, 20);
         } else if (v == iv_back) {
             getActivity().finish();
-        } else if (v == iv_clear) {
+        } else if (v==input_by_excel){
+            FilePickerManager.INSTANCE.from(this).maxSelectable(1).forResult(IMPORT_TASK_PERSON);
+        }else if (v == iv_clear) {
             SweetAlertDialogTools.ShowDialog(getActivity(), "是否要清空器材？", new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -235,11 +278,11 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
             List<EquipTypeBean>mEquipTypeDatas = JSONArray.parseArray(datas, EquipTypeBean.class);
             AddTaskEquipDialog dialog = new AddTaskEquipDialog(getContext(),mEquipTypeDatas, new AddTaskEquipDialog.onClickComfirInterface() {
                 @Override
-                public void onResult(String type, String name, String unit, String count) {
+                public void onResult(String type, String name, String unit, String count,String count_take) {
                     if (mEquipModelBean!=null){
-                        mTaskEquipPresenter.addTaskEquip(task_id,mEquipModelBean.getEquip_model_type_id(),type,name,unit,count);
+                        mTaskEquipPresenter.addTaskEquip(task_id,mEquipModelBean.getEquip_model_type_id(),type,name,unit,count,count_take);
                     }else {
-                        mTaskEquipPresenter.addTaskEquip(task_id,mTaskEquipDatas.get(0).getEquip_model_type_id(),type,name,unit,count);
+                        mTaskEquipPresenter.addTaskEquip(task_id,mTaskEquipDatas.get(0).getEquip_model_type_id(),type,name,unit,count,count_take);
                     }
                 }
             });
@@ -343,10 +386,10 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code == 1) {
-            showLoadFailMsg("添加成功");
+            showLoadFailMsg("生成任务器材成功");
             mTaskEquipPresenter.findTaskEquip(task_id);
         } else {
-            showLoadFailMsg(jsonObject.getString("message"));
+            showLoadFailMsg("生成任务器材失败");
         }
     }
 
@@ -400,6 +443,19 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
     }
 
     @Override
+    public void importTaskEquipResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 1) {
+            showLoadFailMsg(jsonObject.getString("message"));
+            mTaskEquipPresenter.findTaskEquip(task_id);
+        } else {
+            showLoadFailMsg(jsonObject.getString("message"));
+
+        }
+    }
+
+    @Override
     public void showProgress() {
         mLoadingDialog.show();
     }
@@ -415,69 +471,22 @@ public class FragQiCai extends BaseFragment implements TaskEquipView{
 
         Toast.makeText(mActivity, err, Toast.LENGTH_SHORT).show();
     }
-
-//    @Override
-//    public void findEquipModelTypeResult(Object result) {
-//        JSONObject jsonObject = JSONObject.parseObject(result.toString());
-//        int code = jsonObject.getIntValue("code");
-//        if (code == 1) {
-//            String datas = jsonObject.getString("datas");
-//            List<EquipModelBean> mDatas = JSONArray.parseArray(datas, EquipModelBean.class);
-//            if (mEquipModelDatas.size() > 0) {
-//                mEquipModelDatas.clear();
-//            }
-//            mEquipModelDatas.addAll(mDatas);
-//            mTaskEquipModelAdapter.notifyDataSetChanged();
-//        } else {
-//            showLoadFailMsg(jsonObject.getString("message"));
-//        }
-//    }
-//
-//    @Override
-//    public void addEquipModelTypeResult(Object result) {
-//
-//    }
-//
-//    @Override
-//    public void removeEquipModelTypeResult(Object result) {
-//
-//    }
-//
-//    @Override
-//    public void addEquipModelItemResult(Object result) {
-//
-//    }
-//
-//    @Override
-//    public void removeEquipModelItemResult(Object result) {
-//
-//    }
-//
-//    @Override
-//    public void findEquipModelItemResult(Object result) {
-//        JSONObject jsonObject = JSONObject.parseObject(result.toString());
-//        int code = jsonObject.getIntValue("code");
-//        if (code == 1) {
-//            String datas = jsonObject.getString("datas");
-//            List<TaskEquipBean> mDatas = JSONArray.parseArray(datas, TaskEquipBean.class);
-//            if (mTaskEquipDatas.size() > 0) {
-//                mTaskEquipDatas.clear();
-//            }
-//            mTaskEquipDatas.addAll(mDatas);
-//            mTaskEquipListAdapter.notifyDataSetChanged();
-//        } else {
-//            showLoadFailMsg(jsonObject.getString("message"));
-//        }
-//    }
-//
-//    @Override
-//    public void EditEquipModelItemResult(Object result) {
-//        JSONObject jsonObject = JSONObject.parseObject(result.toString());
-//        int code = jsonObject.getIntValue("code");
-//        if (code == 1) {
-//            mTaskEquipModelPersenter.findEquipModelItem(mEquipModelBean.getEquip_model_type_id());
-//        } else {
-//            showLoadFailMsg(jsonObject.getString("message"));
-//        }
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("requestCode", "----" + requestCode);
+        Log.e("resultCode", "----" + resultCode);
+        if (requestCode == IMPORT_TASK_PERSON) {
+            if (FilePickerManager.INSTANCE.obtainData().size() > 0) {
+                String result = FilePickerManager.INSTANCE.obtainData().get(0);
+                File file = new File(result);
+                if (file.exists()) {
+                    File tempFile = Utils.nioTransferCopy(file);
+                    if (tempFile.exists()) {
+                        mTaskEquipPresenter.importTaskEquip(task_id, tempFile);
+                    }
+                }
+            }
+        }
+    }
 }

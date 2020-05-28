@@ -6,6 +6,8 @@ import com.tianfan.shooting.network.api.ApiUrl;
 import com.tianfan.shooting.network.okhttp.callback.ResultCallback;
 import com.tianfan.shooting.network.okhttp.request.RequestParams;
 
+import java.io.File;
+
 /**
  * @Name：Shooting
  * @Description：器材管理
@@ -145,7 +147,7 @@ public class TaskEquipPresenter {
      *  @time
      *  @describe 添加任务器材
      */
-    public void addTaskEquip(String task_id,String equip_model_item_id,String equip_type,String equip_name,String equip_unit,String equip_count){
+    public void addTaskEquip(String task_id,String equip_model_item_id,String equip_type,String equip_name,String equip_unit,String equip_count,String equip_count_take){
         mTaskEquipView.showProgress();
         String url = ApiUrl.TaskEquipApi.AddTaskEquip;
         RequestParams params = new RequestParams();
@@ -154,7 +156,9 @@ public class TaskEquipPresenter {
         params.put("equip_type",equip_type);
         params.put("equip_name",equip_name);
         params.put("equip_unit",equip_unit);
+        params.put("equip_count_take",equip_count_take);
         params.put("equip_count",equip_count);
+
         params.put("equip_status",String.valueOf(0));
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
@@ -179,12 +183,14 @@ public class TaskEquipPresenter {
      *  @time
      *  @describe
      */
-    public void changeTaskEquipCount(String task_id,String equip_model_item_id,int equip_count){
+    public void changeTaskEquipCount(String task_id,String equip_model_item_id,int equip_count,int equip_count_take){
         String url = ApiUrl.TaskEquipApi.ChangeTaskEquipCount;
         RequestParams params = new RequestParams();
         params.put("task_id",task_id);
         params.put("equip_model_item_id",equip_model_item_id);
         params.put("equip_count",String.valueOf(equip_count));
+        params.put("equip_count_take",String.valueOf(equip_count_take));
+
         params.put("equip_status",String.valueOf(0));
 
         mBaseMode.GetRequest(url, params, new ResultCallback() {
@@ -200,6 +206,30 @@ public class TaskEquipPresenter {
         });
     }
 
+    public void importTaskEquip(String task_id, File file){
+        mTaskEquipView.showProgress();
+        String url = ApiUrl.TaskEquipApi.ImportTaskEquip;
+        RequestParams params = new RequestParams();
+        params.put("task_id",task_id);
+        params.fileParams.put("file",file);
+
+        mBaseMode.MultiPostRequest(url, params, new ResultCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                if (file.exists()){
+                    file.delete();
+                }
+                mTaskEquipView.importTaskEquipResult(result);
+                mTaskEquipView.hideProgress();
+            }
+
+            @Override
+            public void onFailure(Object result) {
+                mTaskEquipView.showLoadFailMsg(result.toString());
+                mTaskEquipView.hideProgress();
+            }
+        });
+    }
     /**
      *  修改任务器材状态
      *  @author

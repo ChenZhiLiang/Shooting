@@ -35,7 +35,8 @@
             android:id="@+id/tv_qclx"
             android:gravity="center"
             android:text="器材类型管理"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:visibility="visible"/>
         <TextView
             android:layout_weight="1"
             android:layout_width="0dp"

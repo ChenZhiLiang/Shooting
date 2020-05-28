@@ -32,19 +32,26 @@ public class TaskEquipListAdapter extends BaseQuickAdapter<TaskEquipBean, BaseVi
 
         helper.addOnClickListener(R.id.img_add);
         helper.addOnClickListener(R.id.img_reduce);
-        helper.addOnClickListener(R.id.check_equip_status);
+        helper.addOnClickListener(R.id.img_add_take_count);
+        helper.addOnClickListener(R.id.img_reduce_take_count);
+        helper.addOnClickListener(R.id.tv_equip_take_count);
+        helper.addOnClickListener(R.id.tv_equip_count);
+
+//        helper.addOnClickListener(R.id.check_equip_status);
 
         helper.setText(R.id.tv_number,String.valueOf(helper.getAdapterPosition()+1));
         helper.setText(R.id.tv_equip_type,item.getEquip_type());
         helper.setText(R.id.tv_equip_name,item.getEquip_name());
         helper.setText(R.id.tv_equip_unit,item.getEquip_unit());
         helper.setText(R.id.tv_equip_count,String.valueOf(item.getEquip_count()));
-        CheckBox checkBox = helper.getView(R.id.check_equip_status);
-        if (!TextUtils.isEmpty(item.getEquip_status())&&Integer.parseInt(item.getEquip_status())==1){
-            checkBox.setChecked(true);
-        }else {
-            checkBox.setChecked(false);
-        }
+        helper.setText(R.id.tv_equip_take_count,String.valueOf(item.getEquip_count_take()));
+
+//        CheckBox checkBox = helper.getView(R.id.check_equip_status);
+//        if (!TextUtils.isEmpty(item.getEquip_status())&&Integer.parseInt(item.getEquip_status())==1){
+//            checkBox.setChecked(true);
+//        }else {
+//            checkBox.setChecked(false);
+//        }
 
     }
 }

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#282828"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:paddingLeft="@dimen/dp_10"
+    android:paddingTop="@dimen/dp_10"
+    android:paddingRight="@dimen/dp_10">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="统计分析"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/iv_return_home"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/icon_return_home" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/iv_return_home"
+        android:layout_marginTop="10dp"
+        android:background="#1f443c"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_10"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="任务名称"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <EditText
+                android:layout_width="120dp"
+                android:layout_height="@dimen/album_dp_30"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@color/search_editbg"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_14"
+                android:paddingLeft="@dimen/dp_10"
+                android:hint="名称查询"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/sp_16"
+                android:text="任务地点"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <EditText
+                android:layout_width="120dp"
+                android:layout_height="@dimen/album_dp_30"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@color/search_editbg"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_14"
+                android:paddingLeft="@dimen/dp_10"
+                android:hint="地点查询"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/sp_16"
+                android:text="任务时间"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <EditText
+                android:layout_width="120dp"
+                android:layout_height="@dimen/album_dp_30"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@color/search_editbg"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_14"
+                android:paddingLeft="@dimen/dp_10"
+                android:hint="选择时间"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/sp_16"
+                android:text="类型"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <EditText
+                android:layout_width="100dp"
+                android:layout_height="@dimen/album_dp_30"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@color/search_editbg"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_14"
+                android:paddingLeft="@dimen/dp_10"
+                android:hint="选择类型"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/album_dp_30"
+                android:layout_marginLeft="@dimen/album_dp_30"
+                android:background="@drawable/btn_normal"
+                android:text="查询"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/album_dp_20"
+            android:layout_marginTop="@dimen/album_dp_20"
+            android:layout_marginRight="@dimen/album_dp_20"
+            android:background="#ffffff"
+            android:orientation="horizontal"
+            android:padding="0.5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:background="#3c533d"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:text="序号"
+                android:textColor="#ffffff"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="0.8"
+                android:background="#3c533d"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:text="任务名称"
+                android:textColor="#ffffff"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="0.8"
+                android:background="#3c533d"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:text="任务地点"
+                android:textColor="#ffffff"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="0.8"
+                android:background="#3c533d"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:text="任务时间"
+                android:textColor="#ffffff"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="0.8"
+                android:background="#3c533d"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:text="类型"
+                android:textColor="#ffffff"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_task"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/album_dp_20"
+            android:layout_marginRight="@dimen/album_dp_20"
+            android:background="#1f443c"
+            android:visibility="visible" />
+        <!--<com.scwang.smartrefresh.layout.SmartRefreshLayout-->
+        <!--android:id="@+id/smrefresh"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--<androidx.recyclerview.widget.RecyclerView-->
+        <!--android:id="@+id/duiyuan_listview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="#1f443c"-->
+        <!--android:visibility="visible" />-->
+        <!--</com.scwang.smartrefresh.layout.SmartRefreshLayout>-->
+
+    </LinearLayout>
+
+
+</RelativeLayout>

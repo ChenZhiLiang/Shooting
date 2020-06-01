@@ -102,8 +102,9 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
 
                 break;
             case R.id.iv_fenxi:
-                intent.putExtra("type","fenxi");
-                intent.setClass(getApplicationContext(), ZiliaoActivity.class);
+//                intent.putExtra("type","fenxi");
+//                intent.setClass(getApplicationContext(), ZiliaoActivity.class);
+                intent.setClass(getApplicationContext(), StatisticAnalysisActivity.class);
 
                 break;
             case R.id.iv_setup:

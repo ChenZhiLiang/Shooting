@@ -169,8 +169,8 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
 
             @Override
             public void onClickItem(CommandManageBean.CommandManageItem item, int postion) {
-                if (item != null && TextUtils.isEmpty(item.getTask_id()) && (currentGroup + 1) == item.getPerson_row()) {
-                    ChangeTaskPersonRowcolDialog dialog = new ChangeTaskPersonRowcolDialog(CommandManageActivity.this, personDatas,
+                if (item != null &&  ((currentGroup + 1) == item.getPerson_row())) {
+                    ChangeTaskPersonRowcolDialog dialog = new ChangeTaskPersonRowcolDialog(CommandManageActivity.this, personDatas,item,
                             currentGroup + 1, postion, new ChangeTaskPersonRowcolDialog.onResultInterface() {
                         @Override
                         public void onSuccess(Object result) {

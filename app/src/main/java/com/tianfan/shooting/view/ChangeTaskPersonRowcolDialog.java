@@ -56,6 +56,7 @@ public class ChangeTaskPersonRowcolDialog extends Dialog implements View.OnClick
     private ChangeTaskPersonRowcolAdapter mChangeTaskPersonRowcolAdapter;
     private MyPopWindow window_equip_model;
     private List<CommandManageBean.CommandManageItem> personDatas;
+    private CommandManageBean.CommandManageItem mCommandManageItem;//当前靶位
     private Context mContext;
     private int person_row ;//行数
     private int person_col ;//列数
@@ -63,10 +64,11 @@ public class ChangeTaskPersonRowcolDialog extends Dialog implements View.OnClick
     private String task_id;
     private String person_id;
     private onResultInterface mOnResultInterface;
-    public ChangeTaskPersonRowcolDialog(@NonNull Context context, List<CommandManageBean.CommandManageItem> personDatas,
+    public ChangeTaskPersonRowcolDialog(@NonNull Context context, List<CommandManageBean.CommandManageItem> personDatas,CommandManageBean.CommandManageItem mCommandManageItem,
                                         int person_row, int person_col,onResultInterface mOnResultInterface) {
         super(context, R.style.alert_dialog);
         this.personDatas = personDatas;
+        this.mCommandManageItem = mCommandManageItem;
         this.mContext = context;
         this.person_col = person_col;
         this.person_row = person_row;
@@ -149,9 +151,36 @@ public class ChangeTaskPersonRowcolDialog extends Dialog implements View.OnClick
             if (TextUtils.isEmpty(tv_name.getText().toString())){
                 Toast.makeText(mContext,"请选择要调整的队员",Toast.LENGTH_SHORT).show();
             }else {
-                changeTaskPersonRowcol();
+                if (TextUtils.isEmpty(mCommandManageItem.getTask_id())){
+                    changeTaskPersonRowcol();
+                }else {
+                    exChangeTaskPersonRowcol();
+                }
             }
         }
+    }
+
+    //调换组员与靶位
+    public void exChangeTaskPersonRowcol(){
+        String url = ApiUrl.TaskPersonApi.ExChangeTaskPersonRowcol;
+        RequestParams params = new RequestParams();
+        params.put("task_id",task_id);
+        params.put("task_rounds",currentRounds);
+        params.put("person_id",person_id);
+        params.put("person_row",String.valueOf(person_row));
+        params.put("person_col",String.valueOf(person_col));
+        new BaseMode().GetRequest(url, params, new ResultCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                mOnResultInterface.onSuccess(result);
+                dismiss();
+            }
+
+            @Override
+            public void onFailure(Object result) {
+                mOnResultInterface.onFailure(result);
+            }
+        });
     }
 
 

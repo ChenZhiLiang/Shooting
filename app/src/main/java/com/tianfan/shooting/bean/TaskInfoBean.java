@@ -1,5 +1,10 @@
 package com.tianfan.shooting.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * @Name：Shooting
  * @Description：任务列表信息
@@ -8,7 +13,7 @@ package com.tianfan.shooting.bean;
  * 修改人：Chen
  * 修改时间：2020/4/9 23:07
  */
-public class TaskInfoBean {
+public class TaskInfoBean implements Parcelable {
 
 
     /**
@@ -41,6 +46,39 @@ public class TaskInfoBean {
     private String task_rounds_status;
     private String task_rows;
     private String task_status;
+
+
+    public TaskInfoBean(){
+
+    }
+    protected TaskInfoBean(Parcel in) {
+        task_id = in.readString();
+        task_name = in.readString();
+        task_site = in.readString();
+        task_date = in.readString();
+        task_row_count = in.readInt();
+        task_row_persons = in.readInt();
+        task_target_type = in.readString();
+        task_inuser = in.readString();
+        task_intime = in.readLong();
+        task_equips = in.readString();
+        task_rounds = in.readString();
+        task_rounds_status = in.readString();
+        task_rows = in.readString();
+        task_status = in.readString();
+    }
+
+    public static final Creator<TaskInfoBean> CREATOR = new Creator<TaskInfoBean>() {
+        @Override
+        public TaskInfoBean createFromParcel(Parcel in) {
+            return new TaskInfoBean(in);
+        }
+
+        @Override
+        public TaskInfoBean[] newArray(int size) {
+            return new TaskInfoBean[size];
+        }
+    };
 
     public String getTask_id() {
         return task_id;
@@ -152,5 +190,28 @@ public class TaskInfoBean {
 
     public void setTask_rows(String task_rows) {
         this.task_rows = task_rows;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(task_id);
+        parcel.writeString(task_name);
+        parcel.writeString(task_site);
+        parcel.writeString(task_date);
+        parcel.writeInt(task_row_count);
+        parcel.writeInt(task_row_persons);
+        parcel.writeString(task_target_type);
+        parcel.writeString(task_inuser);
+        parcel.writeLong(task_intime);
+        parcel.writeString(task_equips);
+        parcel.writeString(task_rounds);
+        parcel.writeString(task_rounds_status);
+        parcel.writeString(task_rows);
+        parcel.writeString(task_status);
     }
 }

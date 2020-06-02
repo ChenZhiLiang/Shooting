@@ -25,6 +25,7 @@ public class StatisticAnalysisTaskListAdapter extends BaseQuickAdapter<TaskInfoB
 
     @Override
     protected void convert(BaseViewHolder helper, TaskInfoBean item) {
+        helper.addOnClickListener(R.id.layout_task_item);
         helper.setText(R.id.tv_data_number, (helper.getAdapterPosition() + 1) + "");
         helper.setText(R.id.tv_task_name, item.getTask_name());
         helper.setText(R.id.tv_adress, item.getTask_site());

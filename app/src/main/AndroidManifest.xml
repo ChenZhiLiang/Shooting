@@ -193,10 +193,9 @@
         <activity android:name=".admin.ui.activity.StatisticAnalysisActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
-        <!--        SelectList-->
-
-
+        <activity android:name=".admin.ui.activity.TaskPersonScoreActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".admin.ui.mdziliao.SelectList"
             android:screenOrientation="landscape"

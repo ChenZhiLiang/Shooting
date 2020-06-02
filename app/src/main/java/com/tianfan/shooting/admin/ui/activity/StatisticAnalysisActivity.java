@@ -1,5 +1,6 @@
 package com.tianfan.shooting.admin.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -7,6 +8,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tianfan.shooting.R;
 import com.tianfan.shooting.adapter.StatisticAnalysisTaskListAdapter;
 import com.tianfan.shooting.admin.mvp.presenter.StatisticAnalysisPersenter;
@@ -60,6 +62,14 @@ public class StatisticAnalysisActivity extends AppCompatActivity implements Stat
         mStatisticAnalysisPersenter = new StatisticAnalysisPersenter(this);
         recyclerTask.setLayoutManager(new LinearLayoutManager(this));
         mStatisticAnalysisTaskListAdapter = new StatisticAnalysisTaskListAdapter(mTaskInfos);
+        mStatisticAnalysisTaskListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                TaskInfoBean mTaskInfoBean = mTaskInfos.get(position);
+
+                startActivity(new Intent(StatisticAnalysisActivity.this,TaskPersonScoreActivity.class).putExtra("TaskInfoBean",mTaskInfoBean));
+            }
+        });
         recyclerTask.setAdapter(mStatisticAnalysisTaskListAdapter);
         mStatisticAnalysisPersenter.findTaskInfo();
     }

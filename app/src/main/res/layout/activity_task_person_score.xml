@@ -27,17 +27,18 @@
         android:layout_alignParentLeft="true"
         android:src="@drawable/icon_return_home" />
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/layout_head"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/album_dp_80"
         android:layout_below="@id/iv_return_home"
         android:layout_marginTop="10dp"
         android:background="#1f443c"
-        android:orientation="vertical">
-
+        android:orientation="horizontal">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/layout_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/white"
             android:orientation="horizontal"
             android:padding="0.5dp">
@@ -47,10 +48,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
                 android:orientation="horizontal">
+
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="100dp"
                     android:layout_height="@dimen/album_dp_80"
-                    android:layout_weight="0.2"
                     android:background="#3c533d"
                     android:gravity="center"
                     android:text="序号"
@@ -63,9 +64,8 @@
                     android:background="@color/white" />
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/album_dp_100"
                     android:layout_height="@dimen/album_dp_80"
-                    android:layout_weight="0.2"
                     android:background="#3c533d"
                     android:gravity="center"
                     android:text="姓名"
@@ -78,9 +78,8 @@
                     android:background="@color/white" />
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="200.5dp"
                     android:layout_height="@dimen/album_dp_80"
-                    android:layout_weight="0.6"
                     android:background="#3c533d"
                     android:gravity="center"
                     android:orientation="vertical">
@@ -110,9 +109,8 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="@dimen/album_dp_100"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="命中数"
                             android:textColor="@color/white"
@@ -124,33 +122,44 @@
                             android:background="@color/white" />
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="@dimen/album_dp_100"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="环数"
                             android:textColor="@color/white"
                             android:textSize="@dimen/album_sp_16" />
                     </LinearLayout>
-
-
                 </LinearLayout>
             </LinearLayout>
-
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:background="@color/white" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="0dp"
-                android:layout_weight="0.8"
-                android:layout_height="@dimen/album_dp_80"
-                android:background="#3c533d" />
         </LinearLayout>
 
+        <com.tianfan.shooting.view.CustomHorizontalScrollView
+            android:id="@+id/hor_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/layout_left"
+            android:background="#3c533d"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_tab_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    android:scrollbars="none"/>
 
-    </LinearLayout>
+            </RelativeLayout>
+        </com.tianfan.shooting.view.CustomHorizontalScrollView>
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_head" />
 
 </RelativeLayout>

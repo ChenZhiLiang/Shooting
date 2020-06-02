@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@color/rank_bg1"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/lv"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="0.5dp">
+
+        <TextView
+            android:id="@+id/tv_number"
+            android:layout_width="@dimen/album_dp_100"
+            android:layout_height="match_parent"
+            android:background="@color/rank_bg1"
+            android:gravity="center"
+            android:text="序号"
+            android:textColor="@color/white"
+            android:textSize="@dimen/album_sp_16" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="@dimen/album_dp_100"
+            android:layout_height="match_parent"
+            android:background="@color/rank_bg1"
+            android:gravity="center"
+            android:text="姓名"
+            android:textColor="@color/white"
+            android:textSize="@dimen/album_sp_16" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_score"
+            android:layout_width="@dimen/album_dp_100"
+            android:layout_height="match_parent"
+            android:background="@color/rank_bg1"
+            android:gravity="center"
+            android:text="100"
+            android:textColor="@color/white"
+            android:textSize="@dimen/album_sp_16" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_all_score"
+            android:layout_width="@dimen/album_dp_100"
+            android:layout_height="match_parent"
+            android:background="@color/rank_bg1"
+            android:gravity="center"
+            android:text="90"
+            android:textColor="@color/white"
+            android:textSize="@dimen/album_sp_16" />
+    </LinearLayout>
+
+    <com.tianfan.shooting.view.CustomHorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/hor_item_scrollview"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_score_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </com.tianfan.shooting.view.CustomHorizontalScrollView>
+</LinearLayout>

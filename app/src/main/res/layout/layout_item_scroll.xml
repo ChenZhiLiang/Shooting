@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingTop="0.5dp"
+    android:paddingRight="0.5dp"
+    android:paddingBottom="0.5dp">
+
+    <LinearLayout
+        android:layout_width="200.5dp"
+        android:layout_height="@dimen/album_dp_80"
+        android:background="#3c533d"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="总成绩"
+            android:textColor="@color/white"
+            android:textSize="@dimen/album_sp_16" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/album_dp_100"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="命中数"
+                android:textColor="@color/white"
+                android:textSize="@dimen/album_sp_16" />
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/white" />
+
+            <TextView
+                android:layout_width="@dimen/album_dp_100"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="环数"
+                android:textColor="@color/white"
+                android:textSize="@dimen/album_sp_16" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

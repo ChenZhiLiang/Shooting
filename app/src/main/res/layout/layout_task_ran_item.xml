@@ -2,84 +2,82 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="@dimen/album_dp_80"
-    android:layout_height="95dp">
-
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_marginRight="10dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginBottom="5dp"
-    android:layout_marginTop="5dp"
-    android:id="@+id/lv"
-    android:padding="5dp"
-    android:background="@drawable/view_item_bg"
-    android:layout_width="60dp"
-    android:layout_height="85dp">
-
+    android:layout_height="95dp"
+    android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/relative_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:id="@+id/lv"
+        android:layout_width="60dp"
+        android:layout_height="85dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/view_item_bg"
+        android:padding="5dp">
 
-        >
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:layout_width="50dp"
-            android:id="@+id/iv"
-            android:src="@drawable/user_icon"
+
+        <RelativeLayout
+            android:id="@+id/relative_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_height="50dp"
-            android:scaleType="centerCrop"
-            app:riv_oval="false"
-            app:riv_corner_radius="@dimen/dp_10"
-            android:visibility="visible"
-            />
-        <LinearLayout
-            android:id="@+id/linear_status_show"
-            android:layout_width="@dimen/album_dp_50"
-            android:layout_height="@dimen/album_dp_50"
-            android:background="@drawable/bg_round_white"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:visibility="gone"
+
             >
-            <TextView
-                android:id="@+id/tv_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="缺勤"
-                android:layout_centerInParent="true"
-                android:textSize="@dimen/sp_14"
-                android:textColor="@color/red"
-                android:visibility="visible"/>
-        </LinearLayout>
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/user_icon"
+                android:visibility="visible"
+                app:riv_corner_radius="@dimen/dp_10"
+                app:riv_oval="false" />
+
+            <LinearLayout
+                android:id="@+id/linear_status_show"
+                android:layout_width="@dimen/album_dp_50"
+                android:layout_height="@dimen/album_dp_50"
+                android:background="@drawable/bg_round_white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="缺勤"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/sp_14"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/img_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/add_icon_wihte_mini"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relative_status"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="11"></TextView>
 
     </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/img_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/add_icon_wihte_mini"
-        android:layout_centerInParent="true"
-        android:visibility="gone"/>
-    <TextView
-        android:layout_width="50dp"
-        android:text="11"
-        android:id="@+id/tv_user_name"
-        android:layout_centerHorizontal="true"
-        android:maxLines="1"
-        android:gravity="center"
-        android:layout_marginTop="5dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relative_status">
-    </TextView>
-
-</RelativeLayout>
 
 </RelativeLayout>

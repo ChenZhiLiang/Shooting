@@ -27,6 +27,14 @@
         android:layout_alignParentLeft="true"
         android:src="@drawable/icon_return_home" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="切换靶位成绩"
+        android:textSize="@dimen/sp_16"
+        android:textColor="@color/white"/>
+
     <RelativeLayout
         android:id="@+id/layout_head"
         android:layout_width="match_parent"

@@ -59,6 +59,8 @@ public class StatisticAnalysisActivity extends AppCompatActivity implements Stat
     TextView tv_select_time;
     @BindView(R.id.sp_select_type)
     Spinner sp_select_type;
+    @BindView(R.id.btn_reset)
+    Button btn_reset;
     @BindView(R.id.btn_query_task)
     Button btn_query_task;
     @BindView(R.id.recycler_task)
@@ -115,7 +117,7 @@ public class StatisticAnalysisActivity extends AppCompatActivity implements Stat
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    @OnClick({R.id.iv_return_home,R.id.tv_select_time,R.id.btn_query_task})
+    @OnClick({R.id.iv_return_home,R.id.tv_select_time,R.id.btn_reset,R.id.btn_query_task})
     public void onClick(View v) {
         if (v == iv_return_home) {
             finish();
@@ -129,6 +131,11 @@ public class StatisticAnalysisActivity extends AppCompatActivity implements Stat
                 }
             });
             datePicker.show();
+        }else if (v==btn_reset){
+            edit_task_name.setText("");
+            edit_task_place.setText("");
+            selectType = "";
+            tv_select_time.setText("");
         }else if (v==btn_query_task){
             int task_target_type;
             if (TextUtils.isEmpty(selectType)||TextUtils.equals(selectType,"全部类型")){

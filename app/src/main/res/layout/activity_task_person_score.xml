@@ -72,7 +72,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/album_sp_16" />
 
-                <View
+               <!-- <View
                     android:layout_width="0.5dp"
                     android:layout_height="match_parent"
                     android:background="@color/white" />
@@ -129,7 +129,7 @@
                             android:textColor="@color/white"
                             android:textSize="@dimen/album_sp_16" />
                     </LinearLayout>
-                </LinearLayout>
+                </LinearLayout>-->
             </LinearLayout>
         </LinearLayout>
 
@@ -160,6 +160,7 @@
         android:id="@+id/recycler_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/layout_head" />
+        android:layout_below="@id/layout_head"
+        android:background="@color/rank_bg1"/>
 
 </RelativeLayout>

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.tianfan.shooting.R;
+import com.tianfan.shooting.admin.ui.activity.StatisticAnalysisActivity;
 import com.tianfan.shooting.bean.TaskInfoBean;
 import com.tianfan.shooting.network.okhttp.request.RequestParams;
 import androidx.annotation.NonNull;
@@ -49,16 +50,21 @@ public class CreateTaskDialog extends Dialog implements View.OnClickListener {
     private CreateCallBack mCreateCallBack;
 
     private TaskInfoBean mTaskInfos;//创建时为空  、编辑时不为空
+    private Context context;
     public CreateTaskDialog(@NonNull Context context, CreateCallBack mCreateCallBack) {
         super(context,R.style.alert_dialog);
         this.mCreateCallBack = mCreateCallBack;
+        this.context = context;
     }
 
     public CreateTaskDialog(Context context, TaskInfoBean mTaskInfos, CreateCallBack mCreateCallBack){
         super(context,R.style.alert_dialog);
+        this.context = context;
+
         this.mTaskInfos = mTaskInfos;
         this.mCreateCallBack = mCreateCallBack;
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +135,7 @@ public class CreateTaskDialog extends Dialog implements View.OnClickListener {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePicker = new DatePickerDialog(getContext());
+                DatePickerDialog datePicker = new DatePickerDialog(context);
                 datePicker.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {

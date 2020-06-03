@@ -68,15 +68,32 @@ public class TaskPersonScoreAdapter extends RecyclerView.Adapter<TaskPersonScore
     @Override
     public void onBindViewHolder(@NonNull final ItemViewHolder itemViewHolder, int i) {
         itemViewHolder.tvNumber.setText(String.valueOf(i+1));
-//        itemViewHolder.tvName.setText(datas.get(i).getPerson_name());
-//        itemViewHolder.tvScore.setText(datas.get(i).get);
+        itemViewHolder.tvName.setText(datas.get(i).getPerson_name());
         //右边滑动部分
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         itemViewHolder.rvItemRight.setLayoutManager(linearLayoutManager);
         itemViewHolder.rvItemRight.setHasFixedSize(true);
         TaskPersonScoreItemAdapter rightScrollAdapter = new TaskPersonScoreItemAdapter(context);
-        rightScrollAdapter.setDatas(datas.get(i).getPerson_score());
+        List<CommandManageBean.CommandManageItem.PersonScoreBean> PersonScoreBeans =new ArrayList<>();
+        if (datas.get(i).getPerson_score().size()==0){
+            //添加一个总成绩item
+            PersonScoreBeans.add(new CommandManageBean.CommandManageItem.PersonScoreBean());
+//            PersonScoreBeans.add(new CommandManageBean.CommandManageItem.PersonScoreBean());
+        }else {
+            CommandManageBean.CommandManageItem.PersonScoreBean mPersonScoreBean = new CommandManageBean.CommandManageItem.PersonScoreBean();
+            int score = 0;
+            int allScore = 0;
+            for (int j =0;j<datas.get(i).getPerson_score().size();j++){
+                score = score+datas.get(i).getPerson_score().get(j).getHit_count();
+                allScore = allScore+datas.get(i).getPerson_score().get(j).getHit_score();
+            }
+            mPersonScoreBean.setHit_count(score);
+            mPersonScoreBean.setHit_score(allScore);
+            PersonScoreBeans.add(mPersonScoreBean);
+            PersonScoreBeans.addAll(datas.get(i).getPerson_score());
+        }
+        rightScrollAdapter.setDatas(PersonScoreBeans);
         itemViewHolder.rvItemRight.setAdapter(rightScrollAdapter);
         //缓存当前holder
         if (!mViewHolderList.contains(itemViewHolder)) {
@@ -127,10 +144,10 @@ public class TaskPersonScoreAdapter extends RecyclerView.Adapter<TaskPersonScore
         TextView tvNumber;
         @BindView(R.id.tv_name)
         TextView tvName;
-        @BindView(R.id.tv_score)
-        TextView tvScore;
-        @BindView(R.id.tv_all_score)
-        TextView tvAllScore;
+//        @BindView(R.id.tv_score)
+//        TextView tvScore;
+//        @BindView(R.id.tv_all_score)
+//        TextView tvAllScore;
         @BindView(R.id.recycler_score_list)
         RecyclerView rvItemRight;
         @BindView(R.id.hor_item_scrollview)

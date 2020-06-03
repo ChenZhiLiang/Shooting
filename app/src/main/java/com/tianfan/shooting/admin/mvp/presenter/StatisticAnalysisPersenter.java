@@ -1,5 +1,7 @@
 package com.tianfan.shooting.admin.mvp.presenter;
 
+import android.text.TextUtils;
+
 import com.tianfan.shooting.admin.mvp.view.StatisticAnalysisView;
 import com.tianfan.shooting.base.BaseMode;
 import com.tianfan.shooting.network.api.ApiUrl;
@@ -50,4 +52,37 @@ public class StatisticAnalysisPersenter {
             }
         });
     }
+
+    public void findTaskInfo(String task_name,String task_site,int task_target_type,String task_date){
+        mStatisticAnalysisView.showProgress();
+        String url = ApiUrl.TaskApi.FindTaskInfo;
+        RequestParams params = new RequestParams();
+        if (!TextUtils.isEmpty(task_name)){
+            params.put("task_name",task_name);
+        }
+        if (!TextUtils.isEmpty(task_site)){
+            params.put("task_site",task_site);
+        }
+        if (!TextUtils.isEmpty(task_date)){
+            params.put("task_date",task_date);
+        }
+        if (task_target_type!=0){
+            params.put("task_target_type",String.valueOf(task_target_type));
+        }
+        params.put("task_status",String.valueOf(2));
+        mBaseMode.GetRequest(url, params, new ResultCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                mStatisticAnalysisView.hideProgress();
+                mStatisticAnalysisView.FindTaskInfoResult(result);
+            }
+
+            @Override
+            public void onFailure(Object result) {
+                mStatisticAnalysisView.hideProgress();
+                mStatisticAnalysisView.showLoadFailMsg(result.toString());
+            }
+        });
+    }
+
 }

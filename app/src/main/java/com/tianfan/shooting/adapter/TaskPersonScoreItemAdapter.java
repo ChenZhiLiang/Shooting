@@ -1,13 +1,17 @@
 package com.tianfan.shooting.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.tianfan.shooting.R;
 import com.tianfan.shooting.bean.CommandManageBean;
+
 import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,9 +48,15 @@ public class TaskPersonScoreItemAdapter extends RecyclerView.Adapter<TaskPersonS
 
     @Override
     public void onBindViewHolder(@NonNull ScrollViewHolder scrollViewHolder, int i) {
-//        scrollViewHolder.tv_score.setText(rightDatas.get(i).getHit_score()+"");
-//        scrollViewHolder.tv_all_score.setText(rightDatas.get(i).getAll_count()+"");
-
+//        if (rightDatas.get(i) != null&& !TextUtils.isEmpty(rightDatas.get(i).getTask_id())) {
+//            scrollViewHolder.tv_score.setText(rightDatas.get(i).getHit_score() + "");
+//            scrollViewHolder.tv_all_score.setText(rightDatas.get(i).getAll_count() + "");
+//        } else {
+//            scrollViewHolder.tv_score.setText("*");
+//            scrollViewHolder.tv_all_score.setText("*");
+//        }
+        scrollViewHolder.tv_score.setText(rightDatas.get(i).getHit_count()==0?"*":String.valueOf(rightDatas.get(i).getHit_count()));
+        scrollViewHolder.tv_all_score.setText(rightDatas.get(i).getHit_score()==0?"*":String.valueOf(rightDatas.get(i).getHit_score()));
     }
 
     @Override

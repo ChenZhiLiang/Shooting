@@ -1,9 +1,19 @@
 package com.tianfan.shooting.admin.ui.activity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
@@ -20,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,12 +51,24 @@ public class StatisticAnalysisActivity extends AppCompatActivity implements Stat
     @BindView(R.id.iv_return_home)
     ImageView iv_return_home;
 
+    @BindView(R.id.edit_task_name)
+    EditText edit_task_name;
+    @BindView(R.id.edit_task_place)
+    EditText edit_task_place;
+    @BindView(R.id.tv_select_time)
+    TextView tv_select_time;
+    @BindView(R.id.sp_select_type)
+    Spinner sp_select_type;
+    @BindView(R.id.btn_query_task)
+    Button btn_query_task;
     @BindView(R.id.recycler_task)
     RecyclerView recyclerTask;
     public LoadingDialog mLoadingDialog;
     private StatisticAnalysisPersenter mStatisticAnalysisPersenter;
     private StatisticAnalysisTaskListAdapter mStatisticAnalysisTaskListAdapter;
     List<TaskInfoBean> mTaskInfos = new ArrayList();
+    private ArrayAdapter  adapter;
+    private String selectType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +82,24 @@ public class StatisticAnalysisActivity extends AppCompatActivity implements Stat
     }
 
     private void initView() {
+        //将可选内容与ArrayAdapter连接起来
+        adapter = ArrayAdapter.createFromResource(this, R.array.type, android.R.layout.simple_spinner_item);
+        //设置下拉列表的风格
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //将adapter 添加到spinner中
+        sp_select_type.setAdapter(adapter);
+        sp_select_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectType = adapter.getItem(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         mStatisticAnalysisPersenter = new StatisticAnalysisPersenter(this);
         recyclerTask.setLayoutManager(new LinearLayoutManager(this));
         mStatisticAnalysisTaskListAdapter = new StatisticAnalysisTaskListAdapter(mTaskInfos);
@@ -66,7 +107,6 @@ public class StatisticAnalysisActivity extends AppCompatActivity implements Stat
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 TaskInfoBean mTaskInfoBean = mTaskInfos.get(position);
-
                 startActivity(new Intent(StatisticAnalysisActivity.this,TaskPersonScoreActivity.class).putExtra("TaskInfoBean",mTaskInfoBean));
             }
         });
@@ -74,10 +114,31 @@ public class StatisticAnalysisActivity extends AppCompatActivity implements Stat
         mStatisticAnalysisPersenter.findTaskInfo();
     }
 
-    @OnClick({R.id.iv_return_home})
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @OnClick({R.id.iv_return_home,R.id.tv_select_time,R.id.btn_query_task})
     public void onClick(View v) {
         if (v == iv_return_home) {
             finish();
+        }else if (v==tv_select_time){
+            DatePickerDialog datePicker = new DatePickerDialog(StatisticAnalysisActivity.this);
+            datePicker.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    String result = "" + year + "-" + (month + 1) + "-" + dayOfMonth;
+                    tv_select_time.setText(result);
+                }
+            });
+            datePicker.show();
+        }else if (v==btn_query_task){
+            int task_target_type;
+            if (TextUtils.isEmpty(selectType)||TextUtils.equals(selectType,"全部类型")){
+                task_target_type = 0;
+            }else if (TextUtils.equals(selectType,"胸环靶")){
+                task_target_type = 1;
+            }else {
+                task_target_type = 2;
+            }
+            mStatisticAnalysisPersenter.findTaskInfo(edit_task_name.getText().toString(),edit_task_place.getText().toString(),task_target_type,tv_select_time.getText().toString());
         }
     }
 
@@ -98,7 +159,14 @@ public class StatisticAnalysisActivity extends AppCompatActivity implements Stat
             }
             mStatisticAnalysisTaskListAdapter.notifyDataSetChanged();
 
-        } else {
+        } else if (code==2){
+            if (mTaskInfos.size() > 0) {
+                mTaskInfos.clear();
+            }
+            mStatisticAnalysisTaskListAdapter.notifyDataSetChanged();
+            showLoadFailMsg(jsonObject.getString("message"));
+
+        }else {
             showLoadFailMsg(jsonObject.getString("message"));
         }
     }

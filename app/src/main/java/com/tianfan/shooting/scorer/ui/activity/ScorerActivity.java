@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +27,9 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import com.hikvision.netsdk.ExceptionCallBack;
+import com.hikvision.netsdk.HCNetSDK;
+import com.hikvision.netsdk.NET_DVR_DEVICEINFO_V30;
 import com.tianfan.shooting.BuildConfig;
 import com.tianfan.shooting.R;
 import com.tianfan.shooting.admin.CameraListActivity;
@@ -58,6 +62,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hcnetsdk.HcnetUtils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -76,8 +81,11 @@ import ua.polohalo.zoomabletextureview.ZoomableTextureView;
  * @Description 记分员角色
  */
 public class ScorerActivity extends AppCompatActivity implements View.OnClickListener, ScorerView {
-    @BindView(R.id.cm_view)
-    ZoomableTextureView textureView;
+
+    @BindView(R.id.sur_player)
+    SurfaceView surPlayer;
+//    @BindView(R.id.cm_view)
+//    ZoomableTextureView textureView;
     public JSONObject userJson = new JSONObject();
     //名字
     private PromptDialog promptDialog;
@@ -173,6 +181,9 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     private ScorerPersenter mScorerPersenter;
     public LoadingDialog mLoadingDialog;
 
+    private HcnetUtils mHcnetUtils;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,14 +192,14 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
 //        EventBus.getDefault().register(this);
         promptDialog = new PromptDialog(this);
 //        textureView = findViewById(R.id.cm_view);
-        client = new EasyPlayerClient(this, BuildConfig.RTSP_KEY, textureView, null, null);
+//        client = new EasyPlayerClient(this, BuildConfig.RTSP_KEY, textureView, null, null);
         try {
             doInit();
+
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void doInit() {
 //        checkTarget = getIntent().getIntExtra("checkTarget",0);
@@ -201,10 +212,26 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         mScorerPersenter = new ScorerPersenter(this);
 //        getFuckData();
         initListen();
-//        client.start("rtsp://192.168.1.6/vod/mp4://BigBuckBunny_175k.mov", Client.TRANSTYPE_UDP, Client.TRANSTYPE_UDP,
+//        client.start("rtsp://admin:Abc1234567@192.168.10.113:554", Client.TRANSTYPE_UDP, Client.TRANSTYPE_UDP,
 //                Client.EASY_SDK_VIDEO_FRAME_FLAG
 //                        | Client.EASY_SDK_AUDIO_FRAME_FLAG, "", "", null);
 //        initCameraList();
+        mHcnetUtils = new HcnetUtils(surPlayer);
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Thread.sleep(3000);//休眠3秒
+                    mHcnetUtils.startPlay();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                /**
+                 * 要执行的操作
+                 */
+            }
+        }.start();
     }
 
     private Bitmap revertBitMap;
@@ -554,67 +581,10 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        if (EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().unregister(this);
-//        }
-//        if (disposable!=null){
-//            disposable.dispose();
-//        }
-
-    }
-
-
-//    List<String> CameraURLList = new ArrayList<>();
-//    List<String> spStrLIst = new ArrayList<>();
-//    List<String> positonList = new ArrayList<>();
-
- /*   void initCameraList() {
-        RequestTools.doAction().getData(RetrofitUtils.getService().getCameraList(new HashMap<>()), new GetResult<String>() {
-            @Override
-            public void fail(String msg) {
-            }
-
-            @Override
-            public void ok(String o) {
-                CameraURLList.clear();
-                spStrLIst.clear();
-                positonList.clear();
-                JSONArray jsonArray = JSONArray.parseArray(o);
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    Log.e("摄像机回调", "---》" + o);
-                    CameraURLList.add(jsonArray.getJSONObject(i).getString("camera_add"));
-                    spStrLIst.add(jsonArray.getJSONObject(i).getString("position") + "号位");
-                    positonList.add(jsonArray.getJSONObject(i).getString("position"));
-                }
-
-                client.start("rtsp://192.168.1.6/vod/mp4://BigBuckBunny_175k.mov", Client.TRANSTYPE_UDP, Client.TRANSTYPE_UDP,
-                        Client.EASY_SDK_VIDEO_FRAME_FLAG
-                                | Client.EASY_SDK_AUDIO_FRAME_FLAG, "", "", null);
-
-            }
-        });
-//        nowPosision = "1";
-//        title_cm.setText(checkTarget + "号靶位实时影像");
-
-    }*/
-
-  /*  @Subscribe(threadMode = ThreadMode.MAIN)
-    public void SelectCallback(CameraSelectEvent selectCalBack) {
-        try {
-            Toast.makeText(getApplicationContext(), selectCalBack.getResult(), Toast.LENGTH_SHORT).show();
-            client.stop();
-            client.start(selectCalBack.getResult(), Client.TRANSTYPE_UDP, Client.TRANSTYPE_UDP,
-                    Client.EASY_SDK_VIDEO_FRAME_FLAG
-                            | Client.EASY_SDK_AUDIO_FRAME_FLAG, "", "", null);
-//            nowPosision = selectCalBack.getPositon();
-//            title_cm.setText(nowPosision + "号靶位实时影像");
-            resetData();
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        if (mHcnetUtils!=null){
+            mHcnetUtils.stopPlay();
         }
-    }*/
-
-
+    }
     //点击事件监听
     @OnClick({R.id.iv_back, R.id.tv_switch, R.id.iv_ai_pic, R.id.tv_reset, R.id.tv_save})
     @Override
@@ -660,21 +630,6 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         }
 
     }
-
-/*
-    private void doUp() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("data5", tv_10h_data.getText().toString());
-        jsonObject.put("data6", tv_9h_data.getText().toString());
-        jsonObject.put("data7", tv_8h_data.getText().toString());
-        jsonObject.put("data8", tv_7h_data.getText().toString());
-        jsonObject.put("data9", tv_6h_data.getText().toString());
-        jsonObject.put("data10", tv_5h_data.getText().toString());
-        jsonObject.put("dataAllRing", tv_allring_data.getText().toString());
-        jsonObject.put("dataAllFa", tv_all_fa_data.getText().toString());
-        uploadataForYHXB(jsonObject);
-    }
-*/
 
     /**
      * @author
@@ -755,183 +710,6 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         tv_all_data.setText("0");
         icon_show.setImageBitmap(revertBitMap);
     }
-
-//    int count = 0;
-//    Disposable disposable;
-
-  /*  private void getFuckData() {
-        disposable = Observable.interval(0, 1, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long aLong) throws Exception {
-                        count = count + 1;
-                        Log.e("MainActivity", "----------RxJava 定时轮询任务----------" + count);
-                        Map map = new HashMap();
-                        map.put("position", "1");
-                        RequestTools.doAction().getData(RetrofitUtils.getService().getTaskStatus(map),
-                                new GetResult<String>() {
-                                    @Override
-                                    public void fail(String msg) {
-                                    }
-
-                                    @Override
-                                    public void ok(String s) {
-                                        dealFuckData(s);
-                                    }
-                                });
-                    }
-                });
-    }
-*/
-//    String timeFlag = "";
-//    String nameFlag = "";
-//    String nowGroupFlag = "";
-
-
-    /*private void dealFuckData(String s) {
-        Log.e("deal", "-----start--->");
-        JSONObject jsonObjectResPon = JSONObject.parseObject(s);
-        String nowGruop = jsonObjectResPon.getString("now_group");
-        if (!nowGroupFlag.equals(nowGruop)) {
-            nowGroupFlag = nowGruop;
-            resetData();
-        }
-        tv_ring_lb.setText("第" + nowGruop + "组");
-        Times = jsonObjectResPon.getString("now_times");
-        taskType = jsonObjectResPon.getString("task_type");
-        tasKey = jsonObjectResPon.getString("task_key");
-        if (!Times.equals(timeFlag)) {
-            timeFlag = Times;
-            tv_now_times_data.setText("第" + Times + "轮");
-            resetData();
-        }
-        JSONArray jsonArrayForUser = JSONArray.parseArray((JSONObject.parseObject(jsonObjectResPon.getString("task_data"))).getString("userData"));
-        for (int i = 0; i < jsonArrayForUser.size(); i++) {
-            JSONObject user = jsonArrayForUser.getJSONObject(i);
-            if (user.getString("gruop").equals(nowGruop) & user.getString("position").equals(checkTarget+"")) {
-                userJson = user;
-                name = user.getString("user_name");
-                if (!name.equals(nameFlag)) {
-                    tv_name.setText("" + user.getString("user_name"));
-                    nameFlag = name;
-                }
-            }
-        }
-    }*/
-
-    //上传数据
-  /*  private void uploadataForYHXB(JSONObject jsonObject) {
-        Log.e("取得的数据", "---》" + jsonObject);
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < 6; i++) {
-            JSONObject type = new JSONObject();
-            if (i == 0) {
-                type.put("type", "5");
-                type.put("result", jsonObject.getString("data5"));
-            } else if (i == 1) {
-                type.put("type", "6");
-                type.put("result", jsonObject.getString("data6"));
-            } else if (i == 2) {
-                type.put("type", "7");
-                type.put("result", jsonObject.getString("data7"));
-            } else if (i == 3) {
-                type.put("type", "8");
-                type.put("result", jsonObject.getString("data8"));
-            } else if (i == 4) {
-                type.put("type", "9");
-                type.put("result", jsonObject.getString("data9"));
-            } else if (i == 5) {
-                type.put("type", "10");
-                type.put("result", jsonObject.getString("data10"));
-            }
-            jsonArray.add(type);
-        }
-
-        Map map = new HashMap();
-        map.put("data", "" + jsonArray);
-        map.put("userInfo", "" + userJson);
-        map.put("nowTimes", Times);
-        map.put("type", taskType);
-        map.put("key", tasKey);
-        map.put("dataAllRing", jsonObject.getString("dataAllRing"));
-        map.put("dataAllFa", jsonObject.getString("dataAllFa"));
-        Log.e("sendDate--->", "--->" + map);
-        RequestTools.doAction().getData(RetrofitUtils.getService().upShootData(map),
-                new GetResult<String>() {
-                    @Override
-                    public void fail(String msg) {
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void ok(String s) {
-                        Toast.makeText(getApplicationContext(), "提交成功", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-*/
-  /*  private void upXY(JSONObject data) {
-        JSONObject jsonObject = new JSONObject();
-        data.put("data5", tv_10h_data.getText().toString());
-        data.put("data6", tv_9h_data.getText().toString());
-        data.put("data7", tv_8h_data.getText().toString());
-        data.put("data8", tv_7h_data.getText().toString());
-        data.put("data9", tv_6h_data.getText().toString());
-        data.put("data10", tv_5h_data.getText().toString());
-        data.put("dataAllRing", tv_allring_data.getText().toString());
-        data.put("dataAllFa", tv_all_fa_data.getText().toString());
-        data.put("nowTimes", Times);
-        data.put("taskKey", tasKey);
-        data.put("userName", "" + name);
-
-        Map map = new HashMap();
-        map.put("postion", "" + checkTarget);
-        map.put("xyData", "" + data);
-        map.put("shootData", "" + jsonObject);
-
-        RequestTools.doAction().getData(RetrofitUtils.getService().upXY(map),
-                new GetResult<String>() {
-                    @Override
-                    public void fail(String msg) {
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void ok(String s) {
-                        Log.e("xy上传", ">>>>>>>>>>>>." + s);
-                    }
-                });
-        doUp();
-
-    }*/
-
-
-    //上传数据
-  /*  private void uploadataForWHXB(String result) {
-        Map map = new HashMap();
-        map.put("data", "" + result);
-        map.put("userInfo", "" + userJson);
-        map.put("nowTimes", Times);
-        map.put("type", taskType);
-        map.put("key", tasKey);
-        Log.e("sendDate--->", "--->" + map);
-        RequestTools.doAction().getData(RetrofitUtils.getService().upShootData(map),
-                new GetResult<String>() {
-                    @Override
-                    public void fail(String msg) {
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void ok(String s) {
-                        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
-*/
     @Override
     public void FindTaskInfoResult(Object result) {
         JSONObject jsonObject = JSONObject.parseObject(result.toString());

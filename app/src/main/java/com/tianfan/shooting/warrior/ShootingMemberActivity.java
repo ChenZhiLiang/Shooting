@@ -1,6 +1,7 @@
 package com.tianfan.shooting.warrior;
 
 import android.os.Bundle;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hcnetsdk.HcnetUtils;
 
 /**
  * @Name：Shooting
@@ -35,6 +37,8 @@ public class ShootingMemberActivity extends AppCompatActivity implements Shootin
 
     @BindView(R.id.iv_back)
     ImageView iv_back;
+    @BindView(R.id.sur_player)
+    SurfaceView surPlayer;
     @BindView(R.id.tv_name)
     TextView tv_name;
     @BindView(R.id.tv_person_row)
@@ -63,6 +67,8 @@ public class ShootingMemberActivity extends AppCompatActivity implements Shootin
     private ShootingMemberPresenter mShootingMemberPresenter;
     private CameraBean mCameraBean;
     private TaskInfoBean mTaskInfoBean;
+    private HcnetUtils mHcnetUtils;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +78,22 @@ public class ShootingMemberActivity extends AppCompatActivity implements Shootin
         mLoadingDialog.setTitle("加载中");
         mLoadingDialog.setCancelable(false);
         initView();
-
+        mHcnetUtils = new HcnetUtils(surPlayer);
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Thread.sleep(3000);//休眠3秒
+                    mHcnetUtils.startPlay();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                /**
+                 * 要执行的操作
+                 */
+            }
+        }.start();
     }
 
     private void initView() {

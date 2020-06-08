@@ -709,6 +709,10 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         tv_0h_data.setText("");
         tv_all_data.setText("0");
         icon_show.setImageBitmap(revertBitMap);
+        scoreBitmaps.clear();
+        if (scoreList!=null&&scoreList.size()>0){
+            scoreList.clear();
+        }
     }
     @Override
     public void FindTaskInfoResult(Object result) {

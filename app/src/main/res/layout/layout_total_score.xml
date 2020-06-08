@@ -1,0 +1,122 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/album_dp_4"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_rounds"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:padding="@dimen/album_dp_6"
+        android:text="第一组"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_10h_data"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_weight="1"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:padding="@dimen/album_dp_6"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_9h_data"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_weight="1"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:padding="@dimen/album_dp_6"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_8h_data"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_weight="1"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:padding="@dimen/album_dp_6"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_7h_data"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_weight="1"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:padding="@dimen/album_dp_6"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_6h_data"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_weight="1"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:padding="@dimen/album_dp_6"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_5h_data"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_weight="1"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:padding="@dimen/album_dp_6"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_hit_count"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_weight="1"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:padding="@dimen/album_dp_6"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_hit_score"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_weight="1"
+        android:background="@color/rank_bg1"
+        android:gravity="center"
+        android:padding="@dimen/album_dp_6"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
+</LinearLayout>

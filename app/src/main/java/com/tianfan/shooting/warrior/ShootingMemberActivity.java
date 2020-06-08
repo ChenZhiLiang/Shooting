@@ -16,6 +16,8 @@ import com.tianfan.shooting.bean.CommandManageBean;
 import com.tianfan.shooting.bean.TaskInfoBean;
 import com.tianfan.shooting.bean.TaskPersonBean;
 import com.tianfan.shooting.view.LoadingDialog;
+import com.tianfan.shooting.view.TotalScoreDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.Nullable;
@@ -61,6 +63,8 @@ public class ShootingMemberActivity extends AppCompatActivity implements Shootin
     TextView tv_all_fa_data;
     @BindView(R.id.tv_status)
     TextView tv_status;
+    @BindView(R.id.tv_total_points)
+    TextView tv_total_points;
 
     public LoadingDialog mLoadingDialog;
 
@@ -69,6 +73,7 @@ public class ShootingMemberActivity extends AppCompatActivity implements Shootin
     private TaskInfoBean mTaskInfoBean;
     private HcnetUtils mHcnetUtils;
 
+    private List<CommandManageBean.CommandManageItem> mCommandManageItemDatas = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,10 +108,13 @@ public class ShootingMemberActivity extends AppCompatActivity implements Shootin
         mShootingMemberPresenter.findTaskInfo();
     }
 
-    @OnClick({R.id.iv_back})
+    @OnClick({R.id.iv_back,R.id.tv_total_points})
     public void onClick(View v){
         if (v==iv_back){
             finish();
+        }else if (v==tv_total_points){
+            TotalScoreDialog dialog  = new TotalScoreDialog(this,mTaskInfoBean.getTask_rows(),mCameraBean.getCamera_col(),mCommandManageItemDatas);
+            dialog.show();
         }
     }
     @Override
@@ -167,9 +175,9 @@ public class ShootingMemberActivity extends AppCompatActivity implements Shootin
         int code = jsonObject.getIntValue("code");
         if (code == 1) {
             String datas = jsonObject.getString("datas");
-            List<CommandManageBean.CommandManageItem> mDatas = JSONArray.parseArray(datas, CommandManageBean.CommandManageItem.class);
-            List<CommandManageBean.CommandManageItem.PersonScoreBean> mPersonScoreBean= mDatas.get(0).getPerson_score();
-            if (mDatas.size()>0&&mPersonScoreBean!=null&&mPersonScoreBean.size()>0){
+            mCommandManageItemDatas = JSONArray.parseArray(datas, CommandManageBean.CommandManageItem.class);
+            List<CommandManageBean.CommandManageItem.PersonScoreBean> mPersonScoreBean= mCommandManageItemDatas.get(0).getPerson_score();
+            if (mCommandManageItemDatas.size()>0&&mPersonScoreBean!=null&&mPersonScoreBean.size()>0){
                 for (int i=0;i<mPersonScoreBean.size();i++){
                     if (mPersonScoreBean.get(i).getRounds()==Integer.parseInt(mTaskInfoBean.getTask_rounds())){
                         tv_5h_data.setText(String.valueOf(mPersonScoreBean.get(i).getScore_5()));

@@ -1,7 +1,6 @@
 package com.tianfan.shooting.scorer.ui.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,68 +9,42 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
-import com.hikvision.netsdk.ExceptionCallBack;
-import com.hikvision.netsdk.HCNetSDK;
-import com.hikvision.netsdk.NET_DVR_DEVICEINFO_V30;
-import com.tianfan.shooting.BuildConfig;
 import com.tianfan.shooting.R;
-import com.tianfan.shooting.admin.CameraListActivity;
 import com.tianfan.shooting.admin.mvp.presenter.ScorerPersenter;
 import com.tianfan.shooting.admin.mvp.view.ScorerView;
-import com.tianfan.shooting.admin.ui.evendata.CameraSelectEvent;
 import com.tianfan.shooting.bean.CameraBean;
+import com.tianfan.shooting.bean.CommandManageBean;
 import com.tianfan.shooting.bean.TaskInfoBean;
-import com.tianfan.shooting.net.FileUpLoadTools;
-import com.tianfan.shooting.net.GetResult;
-import com.tianfan.shooting.net.RequestTools;
-import com.tianfan.shooting.net.RetrofitUtils;
-import com.tianfan.shooting.tools.PicSaveTools;
+import com.tianfan.shooting.bean.TaskPersonBean;
 import com.tianfan.shooting.view.LoadingDialog;
-
-
-import org.easydarwin.video.Client;
+import com.tianfan.shooting.view.TotalScoreDialog;
 
 import org.easydarwin.video.EasyPlayerClient;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hcnetsdk.HcnetUtils;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import me.leefeng.promptlibrary.PromptButton;
 import me.leefeng.promptlibrary.PromptButtonListener;
 import me.leefeng.promptlibrary.PromptDialog;
-import ua.polohalo.zoomabletextureview.ZoomableTextureView;
 
 /**
  * @CreateBy liangxingfu
@@ -157,6 +130,8 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     @BindView(R.id.tv_0h_data)
     TextView tv_0h_data;
 
+    @BindView(R.id.tv_total_points)
+    TextView tv_total_points;//总成绩
     @BindView(R.id.tv_allring_data)
     TextView tv_allring_data;
     @BindView(R.id.tv_all_fa_data)
@@ -182,6 +157,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     public LoadingDialog mLoadingDialog;
 
     private HcnetUtils mHcnetUtils;
+    private TaskInfoBean mTaskInfoBean;
 
 
     @Override
@@ -250,8 +226,6 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         icon_show.measure(w, h);
         showHight = icon_show.getMeasuredHeight();
         showWid = icon_show.getMeasuredWidth();
-
-
         Log.e("icon_show", "icshow>>>>XXXX>>>>" + showWid);
         Log.e("icon_show", "View>>>YYYY>>>>>>>>" + showHight);
         Bitmap bitMapShow = zoomImg(ShoInput, 909, 909);
@@ -586,7 +560,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
     //点击事件监听
-    @OnClick({R.id.iv_back, R.id.tv_switch, R.id.iv_ai_pic, R.id.tv_reset, R.id.tv_save})
+    @OnClick({R.id.iv_back, R.id.tv_switch, R.id.iv_ai_pic, R.id.tv_reset, R.id.tv_total_points,R.id.tv_save})
     @Override
     public void onClick(View v) {
 
@@ -609,7 +583,12 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }));
 
-        } else if (v.getId() == R.id.tv_save) {
+        } else if (v.getId()==R.id.tv_total_points){//总成绩
+            mScorerPersenter.findTaskInfo(1);
+
+//            TotalScoreDialog dialog  = new TotalScoreDialog(this);
+//            dialog.show();
+        }else if (v.getId() == R.id.tv_save) {
 
             if (!TextUtils.isEmpty(tv_all_data.getText().toString())&&Integer.parseInt(tv_all_data.getText().toString())>0){
                 promptDialog.showAlertSheet("是否保存提交？", true, new PromptButton("取消", new PromptButtonListener() {
@@ -621,7 +600,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                 }), new PromptButton("确定", new PromptButtonListener() {
                     @Override
                     public void onClick(PromptButton button) {
-                        mScorerPersenter.findTaskInfo();
+                        mScorerPersenter.findTaskInfo(0);
                     }
                 }));
             }else {
@@ -715,7 +694,7 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
     @Override
-    public void FindTaskInfoResult(Object result) {
+    public void FindTaskInfoResult(Object result,int type) {
         JSONObject jsonObject = JSONObject.parseObject(result.toString());
         int code = jsonObject.getIntValue("code");
         if (code == 1) {
@@ -731,10 +710,15 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 //判断是否已经有正在进行中的任务
                 if (underwayTask.size() > 0) {
-                    TaskInfoBean mTaskInfoBean = underwayTask.get(0);
-                    mScorerPersenter.recordTaskPersonScore(mTaskInfoBean.getTask_id(),mTaskInfoBean.getTask_rows(),String.valueOf(mCameraBean.getCamera_col()),mTaskInfoBean.getTask_rounds(),
-                            tv_0h_data.getText().toString(),tv_5h_data.getText().toString(),tv_6h_data.getText().toString(),tv_7h_data.getText().toString(),tv_8h_data.getText().toString(),
-                            tv_9h_data.getText().toString(),tv_10h_data.getText().toString());
+                    mTaskInfoBean = underwayTask.get(0);
+                    if (type==0){//提交成绩
+                        mScorerPersenter.recordTaskPersonScore(mTaskInfoBean.getTask_id(),mTaskInfoBean.getTask_rows(),String.valueOf(mCameraBean.getCamera_col()),mTaskInfoBean.getTask_rounds(),
+                                tv_0h_data.getText().toString(),tv_5h_data.getText().toString(),tv_6h_data.getText().toString(),tv_7h_data.getText().toString(),tv_8h_data.getText().toString(),
+                                tv_9h_data.getText().toString(),tv_10h_data.getText().toString());
+                    }else {//根据靶位查队员询
+                        mScorerPersenter.findTaskPerson(mTaskInfoBean.getTask_id(),mTaskInfoBean.getTask_rows(),String.valueOf(mCameraBean.getCamera_col()));
+                    }
+
                 } else {
                     showLoadFailMsg("暂无任务正在打靶");
                 }
@@ -755,6 +739,42 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
+    public void FindTaskPersonResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 1) {
+            String datas = jsonObject.getString("datas");
+            List<TaskPersonBean> mDatas = JSONArray.parseArray(datas, TaskPersonBean.class);
+            if (mDatas.size()>0){
+                if (mTaskInfoBean!=null){
+                    //查询某个队员的成绩
+                    mScorerPersenter.findTaskPersonScore(mDatas.get(0).getTask_id(),mTaskInfoBean.getTask_rounds(),mDatas.get(0).getPerson_id());
+                }
+            }
+        } else if (code==2){//表示该靶位无人 直接新增队员
+            showLoadFailMsg("该分组的靶位查找不到队员！");
+
+        }else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
+    }
+
+    @Override
+    public void FindTaskPersonScoreResult(Object result) {
+        JSONObject jsonObject = JSONObject.parseObject(result.toString());
+        int code = jsonObject.getIntValue("code");
+        if (code == 1) {
+            String datas = jsonObject.getString("datas");
+            List<CommandManageBean.CommandManageItem> mDatas = JSONArray.parseArray(datas, CommandManageBean.CommandManageItem.class);
+//            List<CommandManageBean.CommandManageItem.PersonScoreBean> mPersonScoreBean= mDatas.get(0).getPerson_score();
+            TotalScoreDialog dialog  = new TotalScoreDialog(this,mTaskInfoBean.getTask_rows(),mCameraBean.getCamera_col(),mDatas);
+            dialog.show();
+        } else {
+            showLoadFailMsg(jsonObject.getString("message"));
+        }
+    }
+
+    @Override
     public void showProgress() {
 
         mLoadingDialog.show();
@@ -767,7 +787,6 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void showLoadFailMsg(String err) {
-
         Toast.makeText(this, err, Toast.LENGTH_SHORT).show();
     }
 }

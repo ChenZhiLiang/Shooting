@@ -11,7 +11,10 @@ import com.tianfan.shooting.base.BaseView;
  * 修改时间：2020/5/24 23:33
  */
 public interface ScorerView extends BaseView {
-    void FindTaskInfoResult(Object result);
+    void FindTaskInfoResult(Object result,int type);
 
     void RecordTaskPersonScoreResult(Object result);
+
+    void FindTaskPersonResult(Object result);
+    void FindTaskPersonScoreResult(Object result);
 }

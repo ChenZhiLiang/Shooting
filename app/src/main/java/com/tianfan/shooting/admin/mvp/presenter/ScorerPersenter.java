@@ -30,15 +30,16 @@ public class ScorerPersenter {
      *  @author
      *  @time
      *  @describe 查询任务
+     * @param  type 0提交分数查询任务 1查询总成绩查询任务
      */
-    public void findTaskInfo(){
+    public void findTaskInfo(int type){
         mScorerView.showProgress();
         String url = ApiUrl.TaskApi.FindTaskInfo;
         RequestParams params = new RequestParams();
         mBaseMode.GetRequest(url, params, new ResultCallback() {
             @Override
             public void onSuccess(Object result) {
-                mScorerView.FindTaskInfoResult(result);
+                mScorerView.FindTaskInfoResult(result,type);
                 mScorerView.hideProgress();
             }
 
@@ -88,5 +89,61 @@ public class ScorerPersenter {
             }
         });
 
+    }
+
+    /**
+     *  @author
+     *  @time
+     *  @describe 根据靶位 组数 查找队员
+     */
+    public void findTaskPerson(String task_id,String person_row,String person_col){
+        mScorerView.showProgress();
+        String url = ApiUrl.TaskPersonApi.FindTaskPerson;
+        RequestParams params = new RequestParams();
+        params.put("task_id",task_id);
+        params.put("person_row",person_row);
+        params.put("person_col",person_col);
+        params.put("task_person_type","2");
+
+        mBaseMode.GetRequest(url, params, new ResultCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                mScorerView.FindTaskPersonResult(result);
+                mScorerView.hideProgress();
+            }
+
+            @Override
+            public void onFailure(Object result) {
+                mScorerView.showLoadFailMsg(result.toString());
+                mScorerView.hideProgress();
+            }
+        });
+    }
+
+    /**
+     *  @author
+     *  @time
+     *  @describe 查找队员分数
+     */
+    public void findTaskPersonScore(String task_id,String rounds,String person_id){
+        mScorerView.showProgress();
+        String url = ApiUrl.ScoreApi.FindTaskPersonScore;
+        RequestParams params = new RequestParams();
+        params.put("task_id",task_id);
+        params.put("rounds",rounds);
+        params.put("person_id",person_id);
+        mBaseMode.GetRequest(url, params, new ResultCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                mScorerView.FindTaskPersonScoreResult(result);
+                mScorerView.hideProgress();
+            }
+
+            @Override
+            public void onFailure(Object result) {
+                mScorerView.showLoadFailMsg(result.toString());
+                mScorerView.hideProgress();
+            }
+        });
     }
 }

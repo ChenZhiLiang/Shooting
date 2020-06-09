@@ -57,9 +57,6 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
 
     @BindView(R.id.sur_player)
     SurfaceView surPlayer;
-//    @BindView(R.id.cm_view)
-//    ZoomableTextureView textureView;
-    public JSONObject userJson = new JSONObject();
     //名字
     private PromptDialog promptDialog;
 
@@ -138,14 +135,8 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
     TextView tv_all_fa_data;
     @BindView(R.id.tv_all_data)
     TextView tv_all_data;
-    //    private String nowPosision = "";
     @BindView(R.id.title_cm)
     TextView title_cm;
-    String name = "";
-    String Times = "";
-    String taskType = "";
-    String tasKey = "";
-    private EasyPlayerClient client;
 
     private List<String> scoreList = new ArrayList<>();
     private List<Bitmap> scoreBitmaps = new ArrayList<>();
@@ -192,12 +183,13 @@ public class ScorerActivity extends AppCompatActivity implements View.OnClickLis
 //                Client.EASY_SDK_VIDEO_FRAME_FLAG
 //                        | Client.EASY_SDK_AUDIO_FRAME_FLAG, "", "", null);
 //        initCameraList();
-        mHcnetUtils = new HcnetUtils(surPlayer);
+
         new Thread() {
             @Override
             public void run() {
                 super.run();
                 try {
+                    mHcnetUtils = new HcnetUtils(surPlayer);
                     Thread.sleep(3000);//休眠3秒
                     mHcnetUtils.startPlay();
                 } catch (InterruptedException e) {

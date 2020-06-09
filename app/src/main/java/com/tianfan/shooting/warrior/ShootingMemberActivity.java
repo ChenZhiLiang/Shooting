@@ -83,12 +83,12 @@ public class ShootingMemberActivity extends AppCompatActivity implements Shootin
         mLoadingDialog.setTitle("加载中");
         mLoadingDialog.setCancelable(false);
         initView();
-        mHcnetUtils = new HcnetUtils(surPlayer);
         new Thread() {
             @Override
             public void run() {
                 super.run();
                 try {
+                    mHcnetUtils = new HcnetUtils(surPlayer);
                     Thread.sleep(3000);//休眠3秒
                     mHcnetUtils.startPlay();
                 } catch (InterruptedException e) {

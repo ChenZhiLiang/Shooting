@@ -159,8 +159,8 @@ public class CommandManageActivity extends AppCompatActivity implements CommandM
                                 mCommandManageDatas.get(i).setSelectPostion(false);
                             }
                         }
-                        currentGroup = postion;
-                        mCommandManagePersenter.changeGroup(mTaskInfoBean.getTask_id(), String.valueOf(currentRounds));
+                        currentGroup = postion+1;
+                        mCommandManagePersenter.changeGroup(mTaskInfoBean.getTask_id(), String.valueOf(currentGroup));
 //                        mCommandManageAdapter.setCurrentRounds(currentRounds);
                         mCommandManageAdapter.notifyDataSetChanged();
                     }
